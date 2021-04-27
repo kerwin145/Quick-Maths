@@ -83,18 +83,22 @@ public class MouseInput implements MouseListener{
 			if(clickInBounds(achPage.HomePage)) {gui.State = gui.State.TITLE;};
 						
 			if(achPage.getPageIndex() == 0){
-				for(int i = 0; i < achPage.achievementButtons.size(); i++) {
-						if(clickInBounds(achPage.achievementButtons.get(i))){
-							int group = i / 4;
-							int operation = i % 4;
-							achPage.setSelectedAchievement(achPage.achievementList[group][operation]);
-						}
+				for(int type = 0; type < achPage.achievementButtons.size(); type++) {
+					for(int operation = 0; operation < achPage.achievementButtons.get(type).size(); operation++) {
+						if(clickInBounds(achPage.achievementButtons.get(type).get(operation))){
+							achPage.setSelectedAchievement(achPage.getVanillaAchievementList().get(type).get(operation));
+						}	
+					}
 				}
+				
 				if(clickInBounds(achPage.nextSlide)) {achPage.setPageIndex(achPage.getPageIndex() + 1);}
+				
 			}
+			
 			else if (achPage.getPageIndex() == 1){
 				if(clickInBounds(achPage.prevSlide)) {achPage.setPageIndex(achPage.getPageIndex() - 1);}
 			}
+			
 		}//achievements
 
 	}

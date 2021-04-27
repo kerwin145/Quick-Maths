@@ -127,4 +127,6 @@ public class ResultsPage {
 	}
 	
 	public double getPercentCorrect() {return percentCorrect;}
+	
+	public AchievementCheck getAchCheck() {return achCheck;}
 }

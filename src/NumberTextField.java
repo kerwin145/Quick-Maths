@@ -75,6 +75,35 @@ public class NumberTextField {
 					else text = "-" + text; //add negative to the beginning
 				}
 				break;
+			case 96: text += "0";
+				break;
+			case 97: text += "1";
+				break;
+			case 98: text += "2";
+				break;
+			case 99: text += "3";
+				break;
+			case 100: text += "4";
+				break;
+			case 101: text += "5";
+			break;
+			case 102: text += "6";
+				break;
+			case 103: text += "7";
+				break;
+			case 104: text += "8";
+				break;
+			case 105: text += "9";
+				break;
+			case 110: if(text.length() > 0) text = text.substring(0, text.length() - 1); //backspace
+				break;
+			case 109: //"-"
+				if(allowNegatives) {
+					if (text.length() == 0) text = "-"; 
+					else if(text.substring(0, 1).equals("-")) text = text.substring(1, text.length()); //if number is negative, make the number positive
+					else text = "-" + text; //add negative to the beginning
+				}
+				break;
 			}//switch
 			
 			//delete the zero in front if the number is greater than 0

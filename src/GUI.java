@@ -125,7 +125,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 			
 			if (System.currentTimeMillis() - timer > 1000) {
 				timer += 1000;
-				System.out.println(updates + " Ticks, Fps " + frames);
+				//System.out.println(updates + " Ticks, Fps " + frames);
 				updates = 0;
 				frames = 0;
 			}
@@ -145,11 +145,9 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		if (State == STATE.QUESTIONROUND){
 			
 		}
-		try{writeObjectToDisk((Object)uData, "userDataSave.ser");}
+		try{writeObjectToDisk((Object)uData, "userData.ser");}
 		catch(IOException ioe) {ioe.printStackTrace();}
 	
-	
-		
 	}
 	
 	private void render(){
@@ -199,20 +197,18 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		System.out.println("It's a great day to debug");
 				
 		GUI gui = new GUI();
-		
-		File userDataSave = new File("userDataSave.ser");
-		
-		try {uData = (UserData) objectLoader("userDataSave.ser");}
+			
+		try {uData = (UserData) objectLoader("userData.ser");}
 		   catch(IOException ioe){
 		        ioe.printStackTrace();
+				File userDataSave = new File("userData.ser");
 	    }
 		    catch(ClassNotFoundException cnfe){
 		        cnfe.printStackTrace();
-	    }
+	    }		
+				
 		
-		//userDataSave.delete();
-		
-		UserData userData = gui.getUdata();
+		uData.resetData();
 				
 		gui.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		gui.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -225,7 +221,6 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		frame.pack(); 
 		frame.setLocationRelativeTo(null); //needs to be after pack
 		frame.setVisible(true);
-			
 		
 		gui.start(); 
 		
@@ -238,7 +233,6 @@ public class GUI extends Canvas implements Runnable, Serializable {
 
 		}
 		*/
-
 	}
 
 	public LevelSelect getLevSelect() {return levSelectPage;}
@@ -255,6 +249,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
         //Create object output stream and write object
         ObjectOutputStream objOutStr = new ObjectOutputStream(fileOutStr);
         objOutStr.writeObject(obj);
+       
         //Close all streams
         objOutStr.close();
         fileOutStr.close();

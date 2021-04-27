@@ -55,47 +55,88 @@ public class AchievementPages {
 	int yspacing = (int)(fntNormal.getSize() * 1.5), ySpacing2 = 120;
     int xspacing = 50, xSpacing2 = gui.WIDTH * gui.SCALE / 4;
 	int y3 = y2 + yspacing * 6;
-	
-	//vanilla achievements
-	Achievement beginnerAdd = new Achievement("Addition Amateur", "Complete an ADDITION set at EASY difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement beginnerSub = new Achievement("Simple Subtraction", "Complete a SUBTRACTION set at EASY difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement beginnerMult = new Achievement("Multiplication Mountain Man", "Complete a MULTIPLICATION set at EASY difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement beginnerDiv = new Achievement("Delightful Division", "Complete a DIVISION set at EASY difficulty with at least 10 problems and finish with a score of at least 60.", false);
 		
-	Achievement intermediateAdd = new Achievement("Addition Apprentice", "Complete an ADDITION set at MEDIUM difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement intermediateSub = new Achievement("Superb Subtraction", "Complete a SUBTRACTION set at MEDIUM difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement intermediateMult = new Achievement("Mischievous Multiplication", "Complete a MULTIPLICATION set at MEDIUM difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement intermediateDiv = new Achievement("Division ?", "Complete a DIVISION set at MEDIUM difficulty with at least 10 problems and finish with a score of at least 60.", false);
-
-	Achievement proficientAdd = new Achievement("Adept Addition", "Complete an ADDITION set at HARD difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement proficientSub = new Achievement("Subtraction Specialist", "Complete a SUBTRACTION set at HARD difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement proficientMult= new Achievement("Mega Multiplication", "Complete a MULTIPLICATION set at HARD difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement proficientDiv = new Achievement("Divine Division", "Complete a DIVISION set at HARD difficulty with at least 10 problems and finish with a score of at least 60.", false);
-
-	Achievement challengerAdd = new Achievement("Addition Afficianado", "Complete an ADDITION set at INSANE difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement challengerSub = new Achievement("Subtraction Senseii", "Complete a SUBTRACTION set at INSANE difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement challengerMult = new Achievement("Multiplication Master", "Complete a MULTIPLICATION set at INSANE difficulty with at least 10 problems and finish with a score of at least 60.", false);
-	Achievement challengerDiv =  new Achievement("Division Devotee", "Complete a DIVISION set at INSANE difficulty with at least 10 problems and finish with a score of at least 60.", false);
-
-	//arangement: outside is achievemt type, inside is specific operation
-	public Achievement[][] achievementList = {{beginnerAdd, beginnerSub, beginnerMult, beginnerDiv},
-											  {intermediateAdd, intermediateSub, intermediateMult, intermediateDiv},
-											  {proficientAdd, proficientSub, proficientMult, proficientDiv},
-											  {challengerAdd, challengerSub, challengerMult, challengerDiv}
-											 };
-	private Achievement achievementSelected = null; //the one selected. It will have its explanations portrayed. 
+	//vanilla achievements
+	private ArrayList<ArrayList<String>> vanillaAchievementExplList = new ArrayList<ArrayList<String>>();
+	private String[][] vanillaAchievementNameList = 
+			{{"Addition Amateur", "Simple Subtraction", "Multiplication Mountain Man", "Delightful Division"},
+			{"Addition Apprentice", "Superb Subtraction", "Mischievous Multiplication", "Division Derby"},
+			{"Adept Addition", "Subtraction Specialist", "Mega Multiplication", "Divine Division"},
+			{"Addition Afficianado", "Subtraction Senseii", "Multiplication Master", "Division Devotee"}};	
 	
-	public ArrayList<Rectangle> achievementButtons = new ArrayList<Rectangle>(); //later, when icons are made, set up a list of corresponding icons 
+	
+	public ArrayList<ArrayList<Achievement>> vanillaAchievementList = new ArrayList<ArrayList<Achievement>>(); //this is the ultimate vanilla achievement list. All the lists before this is set up. 
+	private Achievement achievementSelected = null; //the one selected. It will have its explanations portrayed. 
+	public ArrayList<ArrayList<Rectangle>> achievementButtons = new ArrayList<ArrayList<Rectangle>>(); //later, when icons are made, set up a list of corresponding icons 
+	private int achStage; //used only for the render loop.
+	
 
 	public AchievementPages(GUI gui){
 		this.gui = gui;
 		uData = gui.getUdata();
 		
-		for(int group = 0; group < achievementList.length; group++) {
-			for(int operation = 0; operation < achievementList[group].length; operation++) {
-				achievementButtons.add(new Rectangle(x1 + xSpacing2 * group, y2 + ySpacing2 * operation, 50, 50));
-				achievementList[group][operation].setUnlocked(uData.vanillaAchObtained[group][operation]);
+		//create an array list of array list of explanations.  
+		for(int type = 0; type < 4; type++) {
+			for(int operation = 0; operation < 4; operation++) {
+				vanillaAchievementExplList.add(new ArrayList<String>());
 			}
+		}
+	
+		String operationText = "", difficultyText = "", lengthText = "", scoreText = "";
+		String result;
+		//create explanations for all 16 explanation lists (total of 48 explanations)
+			for(int i = 0; i < vanillaAchievementExplList.size(); i++){
+					for(int j = 0; j < 3; j++) {//levels 
+						lengthText = " " + gui.getResultsPage().getAchCheck().vanillaSetLengthReq[j] + " ";
+						scoreText = " " + (int)(gui.getResultsPage().getAchCheck().vanillaSetScoreReq[j]*100) + ".";
+						
+						if(i / 4 == 0) //beginner explanations
+							difficultyText = " EASY ";
+						if(i / 4 == 1) 
+							difficultyText = " MEDIUM ";
+						if(i / 4 == 2) 
+							difficultyText = " HARD ";
+						if(i / 4 == 3) 
+							difficultyText = " INSANE ";
+						
+						if(i % 4 == 0) //addition explanations
+							operationText = " an ADDITION ";
+						else if(i % 4 == 1)
+							operationText = " a SUBTRACTION ";
+						else if(i % 4 == 2)
+							operationText = " a MULTIPLICATION ";
+						else if(i % 4 == 3)
+							operationText = " a DIVISION ";
+ 
+						
+						result = "Complete" + operationText + "set at" + difficultyText + "difficulty with at least" + lengthText
+								+ "problems and a score of at least" + scoreText;
+						vanillaAchievementExplList.get(i).add(result);
+						//System.out.println(result);	
+			}
+		}
+		
+		ArrayList<Achievement> tempAchievementList;
+		for(int type = 0; type < 4; type++) {
+			tempAchievementList = new ArrayList<Achievement>();
+			for(int operation = 0; operation < 4; operation++) {
+				tempAchievementList.add(new Achievement(vanillaAchievementNameList[type][operation], 
+						vanillaAchievementExplList.get(type * 4 + operation), 3));
+			}
+			vanillaAchievementList.add(tempAchievementList); 
+		}
+		
+		//set up achievement button list and sync unlock of achievement list with data file
+		
+		ArrayList<Rectangle> tempButtonList;
+		for(int type = 0; type < vanillaAchievementList.size(); type++) {
+			tempButtonList = new ArrayList<Rectangle>();
+			for(int operation = 0; operation < vanillaAchievementList.get(type).size(); operation++) {
+				tempButtonList.add(new Rectangle(x1 + xSpacing2 * type, y2 + ySpacing2 * operation, 50, 50));
+				vanillaAchievementList.get(type).get(operation).setCurrentStage(uData.vanillaAchLevel[type][operation]);
+			}
+			achievementButtons.add(tempButtonList);
+
 		}
 	}
 	
@@ -114,16 +155,22 @@ public class AchievementPages {
 		 */
 		//render the vanilla achievements:
 		g.setFont(fntSmall);
-		for(int group = 0; group < achievementList.length; group++) {
-			for(int operation = 0; operation < achievementList[group].length; operation++) {
-				if(achievementList[group][operation].isUnlocked()) g.setColor(Color.green);
-				else g.setColor(Color.gray);
-				//to convert index of the 2d achievement list to the 1d arraylist, we will tkae the group * achievementList.length + operation
-				g2d.draw(achievementButtons.get(group * achievementList.length + operation));
+		for(int type = 0; type < vanillaAchievementList.size(); type++) {
+			for(int operation = 0; operation < vanillaAchievementList.get(type).size(); operation++) {
+				
+				achStage = vanillaAchievementList.get(type).get(operation).getCurrentStage();
+				
+				if(achStage == 0) g.setColor(Color.gray);
+				if(achStage == 1) g.setColor(Color.green);
+				if(achStage == 2) g.setColor(Color.blue);
+				if(achStage == 3) g.setColor(Color.magenta);
+				
+				g2d.draw(achievementButtons.get(type).get(operation));
 				g.setColor(Color.black);
-				g.drawString(achievementList[group][operation].getDisplayText(), 
-						achievementButtons.get(group * achievementList.length + operation).x + achievementButtons.get(group * achievementList.length + operation).width + 5, 
-						achievementButtons.get(group * achievementList.length + operation).y + achievementButtons.get(group * achievementList.length + operation).height/2);
+				g.drawString(vanillaAchievementList.get(type).get(operation).getDisplayText(), 
+						achievementButtons.get(type).get(operation).x + achievementButtons.get(type).get(operation).width + 5, 
+						achievementButtons.get(type).get(operation).y + achievementButtons.get(type).get(operation).height/2);
+
 			}
 		}
 		
@@ -131,7 +178,6 @@ public class AchievementPages {
 		if(achievementSelected != null)
 		g.drawString(achievementSelected.getDisplayText() + ": " + achievementSelected.getExplanation(), achDescription.x + 5, achDescription.y + fntSmall.getSize());
 		else g.drawString("Click on the achievement icon to view its description!", achDescription.x + 5, achDescription.y + fntSmall.getSize());
-
 		
 		g.setColor(Color.black);
 		g2d.draw(HomePage);
@@ -197,10 +243,12 @@ public class AchievementPages {
 	public void setPageIndex(int hi){pageIndex = hi;}
 	
 	public void setSelectedAchievement(Achievement ach) {achievementSelected = ach;}
+	public ArrayList<ArrayList<Achievement>> getVanillaAchievementList(){return vanillaAchievementList;}
+	
 	public void updateAchievementsWithUserData(){
-		for(int group = 0; group < achievementList.length; group++) {
-			for(int operation = 0; operation < achievementList[group].length; operation++) {
-				achievementList[group][operation].setUnlocked(uData.vanillaAchObtained[group][operation]); 
+		for(int type = 0; type < vanillaAchievementList.size(); type++) {
+			for(int operation = 0; operation < vanillaAchievementList.get(type).size(); operation++) {
+				vanillaAchievementList.get(type).get(operation).setCurrentStage(uData.vanillaAchLevel[type][operation]);
 			}
 		}
 	}
