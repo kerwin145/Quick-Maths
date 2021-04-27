@@ -208,7 +208,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	    }		
 				
 		
-		uData.resetData();
+		//uData.resetData();
 				
 		gui.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		gui.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
