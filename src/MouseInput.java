@@ -6,8 +6,10 @@ public class MouseInput implements MouseListener{
 	
 	GUI gui;
 	LevelSelect levSelectPage;
+	LevelSelectSpecial levSelectPageSpecial;
 	TitlePage titlePage;
-	QuestionPage qPage;
+	QuestionPageNumber qPage;
+	QuestionPageYesNo qPageYN;
 	ResultsPage results;
 	AchievementPages achPage;
 	int mx = -1, my = -1;
@@ -15,8 +17,10 @@ public class MouseInput implements MouseListener{
 	public MouseInput(GUI gui) {
 		this.gui = gui;
 		levSelectPage = gui.getLevSelect();
+		levSelectPageSpecial = gui.getLevelSelectSpecial();
 		titlePage = gui.getTitlePage();
 		qPage = gui.getQuestionPage();
+		qPageYN = gui.getQuestionPageYesNo();
 		results = gui.getResultsPage();
 		achPage = gui.getAchPage();
 	}
@@ -28,7 +32,23 @@ public class MouseInput implements MouseListener{
 		if (gui.State == gui.State.TITLE) {
 			
 			if(clickInBounds(titlePage.playButton)) { gui.State = gui.State.LEVELSELECT;}
-			if(clickInBounds(titlePage.resumeButton) && !qPage.getSetFinished()) {gui.State = gui.State.QUESTIONROUND;}
+			if(clickInBounds(titlePage.playSpecialButton)) { gui.State = gui.State.LEVELSELECTSPECIAL;}
+			if(clickInBounds(titlePage.resumeButton)){
+				//System.out.println("Set Finished " + titlePage.setFinished + "Set Special Finished " + titlePage.setSpecialFinished);
+				if(titlePage.setFinished && !titlePage.setSpecialFinished){ //if you have a special round going on
+					if(titlePage.questionPage == titlePage.questionPage.Special){
+						gui.State = gui.State.QUESTIONROUNDNUMBER;
+					}
+					else if(titlePage.questionPage == titlePage.questionPage.SpecialYN){
+						gui.State = gui.State.QUESTIONROUNDYESNO;
+					}
+				}
+				else if(!titlePage.setFinished && titlePage.setSpecialFinished){//if you have a normal round going on 
+					gui.State = gui.State.QUESTIONROUNDNUMBER;
+				}
+
+			}
+				
 			if(clickInBounds(titlePage.achievementsButton)) {gui.State = gui.State.ACHIEVEMENTS;}
 			if(clickInBounds(titlePage.quitButton))	{System.exit(1);}
 		
@@ -46,41 +66,153 @@ public class MouseInput implements MouseListener{
 			if(clickInBounds(levSelectPage.MultChoose)) {levSelectPage.MultChosen();}
 			if(clickInBounds(levSelectPage.DivChoose)) {levSelectPage.DivChosen();}
 
+			if(levSelectPage.getQChosen()[1])
+				if(clickInBounds(levSelectPage.OnlyPositive)){levSelectPage.onlyPositive = !levSelectPage.onlyPositive;}
+			if (levSelectPage.getQChosen()[3])
+				if(clickInBounds(levSelectPage.PerfectDivisors)){levSelectPage.perfectDivisors = !levSelectPage.perfectDivisors;}
+						
 			if(clickInBounds(levSelectPage.easyDif)) {levSelectPage.setQuestionDifficulty(0);}
 			if(clickInBounds(levSelectPage.medDif)) {levSelectPage.setQuestionDifficulty(1);}
 			if(clickInBounds(levSelectPage.hardDif)) {levSelectPage.setQuestionDifficulty(2);}
 			if(clickInBounds(levSelectPage.insaneDif)) {levSelectPage.setQuestionDifficulty(3);}
 	
-			if(clickInBounds(levSelectPage.GenerateSet)) {
-				gui.State = gui.State.QUESTIONROUND;
+			if(clickInBounds(levSelectPage.GenerateSet) && levSelectPage.isSetReady()) {
 				qPage.initializeRound();
+				gui.State = gui.State.QUESTIONROUNDNUMBER;
 			}
 			
 			if(clickInBounds(levSelectPage.InfoBox)) {
 				levSelectPage.renderHelp = !levSelectPage.renderHelp;
 			}
 			
+			//System.out.println("Only Positive" + levSelectPage.onlyPositive + ". Perect Divisor " + levSelectPage.perfectDivisors);
+
 		}//levelselect
 		
-		else if (gui.State == gui.State.QUESTIONROUND) {
+		else if (gui.State == gui.State.LEVELSELECTSPECIAL) {
+			levSelectPageSpecial.numQuestionsInput.attemptFocus(mx, my);
+
+			//i should probably put these into a list. 
+			if(clickInBounds(levSelectPageSpecial.multBy2)){
+				levSelectPageSpecial.specialQuestionNum2 = 2;
+				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
+				levSelectPageSpecial.specialQChosenIndex = 0;
+			}
+			else if(clickInBounds(levSelectPageSpecial.multBy3)){
+				levSelectPageSpecial.specialQuestionNum2 = 3;
+				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
+				levSelectPageSpecial.specialQChosenIndex = 1;
+			}
+			else if(clickInBounds(levSelectPageSpecial.multBy4)){
+				levSelectPageSpecial.specialQuestionNum2 = 4;
+				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
+				levSelectPageSpecial.specialQChosenIndex = 2;
+			}
+			else if(clickInBounds(levSelectPageSpecial.multBy5)){
+				levSelectPageSpecial.specialQuestionNum2 = 5;
+				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
+				levSelectPageSpecial.specialQChosenIndex = 3;
+			}
+			else if(clickInBounds(levSelectPageSpecial.divBy2)){
+				levSelectPageSpecial.specialQuestionNum2 = 2;
+				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
+				levSelectPageSpecial.specialQChosenIndex = 4;
+			}
+			else if(clickInBounds(levSelectPageSpecial.divBy3)){
+				levSelectPageSpecial.specialQuestionNum2 = 3;
+				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
+				levSelectPageSpecial.specialQChosenIndex = 5;
+			}
+			else if(clickInBounds(levSelectPageSpecial.divBy4)){
+				levSelectPageSpecial.specialQuestionNum2 = 4;
+				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
+				levSelectPageSpecial.specialQChosenIndex = 6;
+			}
+			else if(clickInBounds(levSelectPageSpecial.divBy5)){
+				levSelectPageSpecial.specialQuestionNum2 = 5;
+				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
+				levSelectPageSpecial.specialQChosenIndex = 7;
+			}
+			
+			else if (clickInBounds(levSelectPageSpecial.isItDivisible)){
+				levSelectPageSpecial.specialQChosenIndex = 8;
+			}
+			else if (clickInBounds(levSelectPageSpecial.squaringNumberThatEndIn5)){
+				levSelectPageSpecial.specialQChosenIndex = 9;
+			}
+			else if (clickInBounds(levSelectPageSpecial.multBy11)){
+				levSelectPageSpecial.specialQChosenIndex = 10;
+			}
+				
+			else if(clickInBounds(levSelectPageSpecial.GenerateSet) && levSelectPageSpecial.isSetReady()) {
+				if(levSelectPageSpecial.specialQChosenIndex <= 7){
+					qPage.initializeRoundSpecial();
+					gui.State = gui.State.QUESTIONROUNDNUMBER;
+				}
+				if(levSelectPageSpecial.specialQChosenIndex == 8){
+					qPageYN.initializeRound();
+					gui.State = gui.State.QUESTIONROUNDYESNO;
+				}
+			}
+			
+			else if(clickInBounds(levSelectPageSpecial.easyDif)) levSelectPageSpecial.questionDifficulty = 0;
+			else if(clickInBounds(levSelectPageSpecial.medDif)) levSelectPageSpecial.questionDifficulty = 1;
+			else if(clickInBounds(levSelectPageSpecial.hardDif)) levSelectPageSpecial.questionDifficulty = 2;
+			else if(clickInBounds(levSelectPageSpecial.insaneDif)) levSelectPageSpecial.questionDifficulty = 3;
+			
+			if(clickInBounds(levSelectPageSpecial.HomePage))gui.State = gui.State.TITLE;
+				
+		}
+		
+		else if (gui.State == gui.State.QUESTIONROUNDNUMBER) {
 			
 			qPage.inputTextAnswer.attemptFocus(mx, my);
 			
 			if(clickInBounds(qPage.HomePage)) {gui.State = gui.State.TITLE;}
 			if(clickInBounds(qPage.submitAnswer)) {qPage.submitAnswer();}
 			if(clickInBounds(qPage.InfoBox)){qPage.renderHelp = !qPage.renderHelp;}
+			
+			if(clickInBounds(qPage.finishSet)){		
+				qPage.finishClicked = true; 
+				qPage.genSkipSetPassword();
+			}
+			else{qPage.finishClicked = false;}
+			
 		
-		}//question round
+		}//question round number
+		
+		else if (gui.State == gui.State.QUESTIONROUNDYESNO) {
+			
+			if(clickInBounds(qPageYN.Yes)) qPageYN.yesNo = 1;
+			if(clickInBounds(qPageYN.No)) qPageYN.yesNo = 0;
+	
+			if(clickInBounds(qPageYN.HomePage)) {gui.State = gui.State.TITLE;}
+			if(clickInBounds(qPageYN.submitAnswer)) {qPageYN.submitAnswer();}
+			if(clickInBounds(qPageYN.InfoBox)){qPageYN.renderHelp = !qPageYN.renderHelp;}
+			if(clickInBounds(qPageYN.AutoConfirm)){qPageYN.autoConfirm = !qPageYN.autoConfirm;}
+			
+			if(clickInBounds(qPageYN.finishSet)){		
+				qPageYN.finishClicked = true; 
+				qPageYN.genSkipSetPassword();
+			}
+			else{qPageYN.finishClicked = false;}
+		}//question round yn
 		
 		else if(gui.State == gui.State.RESULTS){
 			
 			if(clickInBounds(results.HomePage)) {gui.State = gui.State.TITLE;}
-			if(clickInBounds(results.playButton)) {gui.State = gui.State.LEVELSELECT;}
+			if(clickInBounds(results.playButton)) {
+				if(titlePage.questionPage == titlePage.questionPage.Normal)
+					gui.State = gui.State.LEVELSELECT;
+				else if(titlePage.questionPage == titlePage.questionPage.Special)
+					gui.State = gui.State.LEVELSELECTSPECIAL;
+				else if(titlePage.questionPage ==titlePage.questionPage.SpecialYN)
+					gui.State = gui.State.LEVELSELECTSPECIAL;
+			}
 			
 		}//results
 		
 		else if (gui.State == gui.State.ACHIEVEMENTS){
-			if(clickInBounds(achPage.HomePage)) {gui.State = gui.State.TITLE;};
 						
 			if(achPage.getPageIndex() == 0){
 				for(int type = 0; type < achPage.achievementButtons.size(); type++) {
@@ -89,16 +221,13 @@ public class MouseInput implements MouseListener{
 							achPage.setSelectedAchievement(achPage.getVanillaAchievementList().get(type).get(operation));
 						}	
 					}
-				}
-				
-				if(clickInBounds(achPage.nextSlide)) {achPage.setPageIndex(achPage.getPageIndex() + 1);}
-				
+				}				
 			}
 			
-			else if (achPage.getPageIndex() == 1){
-				if(clickInBounds(achPage.prevSlide)) {achPage.setPageIndex(achPage.getPageIndex() - 1);}
-			}
-			
+			if(clickInBounds(achPage.HomePage)) {gui.State = gui.State.TITLE;};
+			if(clickInBounds(achPage.nextSlide) && achPage.pageIndex < achPage.numPages-1) {achPage.setPageIndex(achPage.getPageIndex() + 1);}
+			if(clickInBounds(achPage.prevSlide) && achPage.pageIndex > 0) {achPage.setPageIndex(achPage.getPageIndex() - 1);}
+
 		}//achievements
 
 	}

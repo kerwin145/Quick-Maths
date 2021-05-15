@@ -132,12 +132,12 @@ public class NumberTextField {
 	public void attemptFocus(int x, int y) {
 		if ((x > this.x && x < this.x + width) && (y > this.y && y < this.y + height)) {
 			inFocus = true;
-			System.out.println("FOCUSED");
+			//System.out.println("FOCUSED");
 		}
 		else 
 			inFocus = false;
 		
-		System.out.println("INPUTS: (" + x + ", " + y + ") Bounds X: " + this.x + " WIDTH: " + width + " Y: " + this.y + " HEIGHT: " + height + inFocus);
+		//System.out.println("INPUTS: (" + x + ", " + y + ") Bounds X: " + this.x + " WIDTH: " + width + " Y: " + this.y + " HEIGHT: " + height + inFocus);
 	}
 	
 	public boolean getFocus() {

@@ -38,10 +38,11 @@ public class AchievementPages {
 	UserData uData;
 	
 	public int pageIndex = 0;
+	public int numPages = 4;
 	
 	public Rectangle HomePage = new Rectangle(gui.WIDTH * gui.SCALE - 140, 15, 120, 20);
 	public Rectangle nextSlide = new Rectangle(gui.WIDTH * gui.SCALE - 140, gui.HEIGHT * gui.SCALE - 50, 90, 30);
-	public Rectangle prevSlide = new Rectangle(50, gui.HEIGHT * gui.SCALE - 50, 90, 30);
+	public Rectangle prevSlide = new Rectangle(40, gui.HEIGHT * gui.SCALE - 50, 90, 30);
 	
 	public Rectangle achDescription = new Rectangle(60, gui.HEIGHT * gui.SCALE - 60, gui.WIDTH * gui.SCALE - 240, 40);
 
@@ -187,13 +188,24 @@ public class AchievementPages {
 		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
 		g.drawString("Next =>", nextSlide.x + 6, (int)(nextSlide.y + fnt1.getSize()*0.87));
 	
-		//have a box at the bottom to display the information of the achievement selected
 	}
 	
 	public void renderPage2(Graphics g) {
-		
+		g.setFont(fnt0);
+		g.drawString("Medals: Special", x1, y1);
+
+		renderFrame(g);
+
 	}
 	
+	public void renderPage3(Graphics g) {
+		g.setFont(fnt0);
+		g.drawString("Medals: Potpourri", x1, y1);
+		
+		renderFrame(g);
+	}
+	
+		
 	public void renderStats(Graphics g){
 		Graphics2D g2d = (Graphics2D)g;
 		
@@ -229,16 +241,30 @@ public class AchievementPages {
 				}
 			}
 		}
+		
 		g.setColor(Color.black);
 		g2d.draw(HomePage);
 		g2d.draw(prevSlide);
+		
 		g2d.setFont(fnt1);
-		
 		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
-		g.drawString("<= Prev", prevSlide.x + 6, (int)(prevSlide.y + fnt1.getSize()*0.87));
-		
+		g.drawString("Last <=", prevSlide.x + 6, (int)(prevSlide.y + fnt1.getSize()*0.87));
 	}
 	
+	public void renderFrame(Graphics g){
+		//on intermediate pages
+		Graphics2D g2d = (Graphics2D)g;
+		g.setColor(Color.black);
+		g2d.draw(HomePage);
+		g2d.draw(nextSlide);
+		g2d.draw(prevSlide);
+		
+		g2d.setFont(fnt1);
+		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
+		g.drawString("Next =>", nextSlide.x + 6, (int)(nextSlide.y + fnt1.getSize()*0.87));
+		g.drawString("Last <=", prevSlide.x + 6, (int)(prevSlide.y + fnt1.getSize()*0.87));
+	}
+
 	public int getPageIndex(){return pageIndex;}
 	public void setPageIndex(int hi){pageIndex = hi;}
 	

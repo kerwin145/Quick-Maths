@@ -14,10 +14,14 @@ public class QuestionPage {
 	
 	public int numQuestions = 0;
 	public int numCorrect = 0;
-	public boolean setFinished = true;
+	public boolean setFinished = true, setSpecialFinished = true;
 	private int currentQuestion = 0;
 	private int difficulty; //from 1 as easy to 4 as insane
-	private int type;//used only for updating useranalytics. 
+	public int questionSpecialNum2 = -1; //used for specific mult or division
+	public int questionSpecialType = -1; //2 for mult, 3 for division
+	private boolean onlyPositive, perfectDivisor;
+	
+	public int setType;
 	
 	String splashText = "";
 	boolean askForConfirm = false; //used when your answer is wrong
@@ -37,7 +41,7 @@ public class QuestionPage {
 
 	String[] difList = {"Easy", "Medium", "Hard", "Insane"}; //used for getdifficulty method, nothing much else
 
-	Font fnt0 = new Font("Arial", Font.BOLD, gui.HEIGHT * gui.SCALE / 8);
+	Font fnt0 = new Font("Arial", Font.ITALIC|Font.BOLD, gui.HEIGHT * gui.SCALE / 8);
 	Font fnt2 = new Font("Arial", Font.PLAIN, gui.HEIGHT * gui.SCALE / 12);
 	Font fntNormal = new Font("Garamond", Font.PLAIN, 15);
 	
@@ -177,41 +181,80 @@ public class QuestionPage {
 		if(currentQuestion == numQuestions) switchToResults();
 
 		else {
-			question = new Question(questionTypes, difficulty);
-			type = question.getType();
-			currentQuestion++;
-			inputTextAnswer.setText("0");
+			if(setType == 0)
+				question = new Question(questionTypes, difficulty, onlyPositive, perfectDivisor);
+			else if (setType == 1)
+				question = new Question(questionSpecialType, difficulty, questionSpecialNum2);
 			
+			currentQuestion++;
+			inputTextAnswer.setText("0");			
 		}
 
 	}
 	
 	public void initializeRound(){
-		
+		//reset question types
 		questionTypes.clear();
+		
 		boolean qChosen[] = gui.getLevSelect().getQChosen();
 		//go through the list of operations checked and add them to the questionTypes list. 
 		for (int i = 0; i < qChosen.length; i++){
 			if(qChosen[i]) questionTypes.add(i);
 		}
+		setType = 0;
 		currentQuestion = 0;
 		numCorrect = 0;
 		numQuestions = gui.getLevSelect().numQuestionsInput.retrieveNum();
 		difficulty = gui.getLevSelect().getQuestionDifficulty();
+		
+		//only one of these can be false at the same time. 
 		setFinished = false;
+		setSpecialFinished = true;
+		
+		inputTextAnswer.setText("0");
+		splashText = "";
+		warned = false;
+		askForConfirm = false;
+		onlyPositive = gui.getLevSelect().onlyPositive;
+		perfectDivisor = gui.getLevSelect().perfectDivisors;
+		
+		setType = 0;	
+		genQuestion();
+		
+	}
+	
+	public void initializeRoundSpecial(){
+		questionTypes.clear();
+		
+		currentQuestion = 0;
+		numCorrect = 0;
+		numQuestions = gui.getLevelSelectSpecial().numQuestionsInput.retrieveNum();
+
+		questionSpecialNum2 = gui.getLevelSelectSpecial().specialQuestionNum2;
+		questionSpecialType = gui.getLevelSelectSpecial().specialQTypeChosen;
+		difficulty = gui.getLevelSelectSpecial().questionDifficulty;
+		
+		setSpecialFinished = false;
+		setFinished = true;
+		
 		inputTextAnswer.setText("0");
 		splashText = "";
 		warned = false;
 		askForConfirm = false;
 		
+		setType = 1;	
 		genQuestion();
-		
 	}
 	
 	private void switchToResults() {
-		gui.State = gui.State.RESULTS;
 		setFinished = true;
-		gui.getResultsPage().initialize();
+		setSpecialFinished = true;
+		if(setType == 0)
+			gui.getResultsPage().initialize();
+		else if(setType == 1)
+			gui.getResultsPage().initializeSpecial();
+		gui.State = gui.State.RESULTS;
+
 	}
 	
 	public String randFromArray(String[] input){
@@ -219,7 +262,8 @@ public class QuestionPage {
 		//System.out.println("Array Lenght:" + random);
 		return input[random];
 	}
-	public boolean getSetFinished() {return setFinished;}
+	public boolean getSetNormalFinished() {return setFinished;}
+	public boolean getSetSpecialFinised() {return setSpecialFinished;}
 	
 	public String getDifficultyList(){
 		return difList[difficulty];

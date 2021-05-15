@@ -1,7 +1,7 @@
 
 public class AchievementCheck {
 	
-	QuestionPage qPage;
+	QuestionPageNumber qPage;
 	UserData uData;
 	ResultsPage resultsPage;
 	GUI gui;

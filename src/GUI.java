@@ -1,17 +1,10 @@
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,8 +13,9 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-//TODO make a class to set all the fonts, so classes can share the same fonts easier
-//TODO make a method in mouseinput to determine if mouse click is in bounds easier
+//TODO make help page for question select special 
+//TODO make the initialize methods belong to the level select not the question pages
+
 public class GUI extends Canvas implements Runnable, Serializable {
 	
 	//panel settings
@@ -34,10 +28,12 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	private boolean running = false;
 	private Thread thread;
 	
-	//pages
+	//perhaps these could be public oop
 	private TitlePage titlePage;
+	private QuestionPageNumber questionPageNumber;
+	private QuestionPageYesNo questionPageYN;
 	private LevelSelect levSelectPage;
-	private QuestionPage questionPage;
+	private LevelSelectSpecial levSelectPageSpecial;
 	private ResultsPage resultsPage;
 	private static UserData uData = new UserData();
 	private AchievementPages achPages;
@@ -53,17 +49,21 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	public static enum STATE{
 		TITLE, 
 		LEVELSELECT,
-		QUESTIONROUND,
+		QUESTIONROUNDNUMBER,
+		QUESTIONROUNDYESNO,
 		RESULTS,
-		ACHIEVEMENTS
+		ACHIEVEMENTS,
+		LEVELSELECTSPECIAL;
 	}
 	public static STATE State = STATE.TITLE;
 	
 	public void init(){
 		requestFocus();
 		titlePage = new TitlePage(this);
+		questionPageNumber = new QuestionPageNumber(this);
+		questionPageYN = new QuestionPageYesNo(this);
 		levSelectPage = new LevelSelect(this);
-		questionPage = new QuestionPage(this);
+		levSelectPageSpecial = new LevelSelectSpecial(this);
 		resultsPage = new ResultsPage(this);	
 		achPages = new AchievementPages(this);
 
@@ -142,8 +142,8 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		if(State == STATE.LEVELSELECT){
 			
 		}		
-		if (State == STATE.QUESTIONROUND){
-			
+		if (State == STATE.QUESTIONROUNDYESNO){
+			questionPageYN.tick();
 		}
 		try{writeObjectToDisk((Object)uData, "userData.ser");}
 		catch(IOException ioe) {ioe.printStackTrace();}
@@ -175,8 +175,11 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		else if(State == STATE.LEVELSELECT){
 			levSelectPage.render(g);
 		}	
-		else if(State == STATE.QUESTIONROUND) {
-			questionPage.render(g);
+		else if(State == STATE.QUESTIONROUNDNUMBER) {
+			questionPageNumber.render(g);
+		}
+		else if(State == STATE.QUESTIONROUNDYESNO){
+			questionPageYN.render(g);
 		}
 		else if(State == STATE.RESULTS){
 			resultsPage.render(g);
@@ -185,7 +188,14 @@ public class GUI extends Canvas implements Runnable, Serializable {
 			if(achPages.getPageIndex() == 0)
 				achPages.renderPage1(g);
 			else if (achPages.getPageIndex() == 1)
+				achPages.renderPage2(g);
+			else if (achPages.getPageIndex() == 2)
+				achPages.renderPage3(g);
+			else if (achPages.getPageIndex() == 3)
 				achPages.renderStats(g);
+		}
+		else if(State == STATE.LEVELSELECTSPECIAL){
+			levSelectPageSpecial.render(g);
 		}
 		//****************************---------****************************//
 		
@@ -237,11 +247,13 @@ public class GUI extends Canvas implements Runnable, Serializable {
 
 	public LevelSelect getLevSelect() {return levSelectPage;}
 	public TitlePage getTitlePage() {return titlePage;}
-	public QuestionPage getQuestionPage() {return questionPage;}
+	public QuestionPageNumber getQuestionPage() {return questionPageNumber;}
+	public QuestionPageYesNo getQuestionPageYesNo() {return questionPageYN;}
 	public ResultsPage getResultsPage() {return resultsPage;}
 	public UserData getUserData() {return uData;}
 	public void setUserData(UserData uData) {this.uData = uData;}
 	public AchievementPages getAchPage(){return achPages;}
+	public LevelSelectSpecial getLevelSelectSpecial(){return  levSelectPageSpecial;}
 	
 	public static void writeObjectToDisk(Object obj, String name) throws IOException {
         //Create file output stream

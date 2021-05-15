@@ -5,21 +5,22 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Random;
 
-
 public class ResultsPage {
 	
 	GUI gui;
-	QuestionPage qPage;
+	QuestionPageNumber qPage;
+	QuestionPageYesNo qPageYN;
 	AchievementCheck achCheck;
 	
 	int correct;
 	int totalQ;
+	String difficulty;
 	String splashText;
 	double percentCorrect;
-	String operationText;
+	String questionType;
 	Color percentColor;
 	Random rnd = new Random();
-
+	
 	String[] perfect = {"UNIVVVERSSSE BRAIN", "Absolute POGCHAMP", "You kno da wae", "WawaWeewa"};
 	String[] good = {"GALAXY BRAIN", "SHEEEeeesh", "NOICE", "Poggers", "*clap* *clap* *clap*", "Verryyy nice"};
 	String[] ok = {"Not bad", "A is for Average. B is for Dissapoint. DONT BE A DISSAPOINTMENT", "Hmmmmm", "Eeetss...ok"};
@@ -49,9 +50,9 @@ public class ResultsPage {
 		g.setFont(fnt0);
 		g.drawString("Result: ", x1, y1);
 		g.setFont(fntNormal);
-		g.drawString("You got: " + qPage.numCorrect + " out of " + qPage.numQuestions + " Correct!", x1, y2 );
-		g.drawString("Operations chosen: " + operationText , x1, y2 + spacing);
-		g.drawString("Difficulty: " + qPage.getDifficultyList(), x1, y2 + spacing*2);
+		g.drawString("You got: " + correct + " out of " + totalQ + " Correct!", x1, y2 );
+		g.drawString(questionType , x1, y2 + spacing);
+		g.drawString("Difficulty: " + difficulty, x1, y2 + spacing*2);
 		g.setColor(splashTextColor);
 		g.drawString(splashText, x1, y2 + spacing*4);
 
@@ -76,17 +77,66 @@ public class ResultsPage {
 	
 	public void initialize() {
 		qPage = gui.getQuestionPage();
+		
 		correct = qPage.numCorrect;
 		totalQ = qPage.numQuestions;
+		calculateScore(correct, totalQ);
 		percentCorrect = (double)correct/totalQ; 
+		difficulty = "" + qPage.getDifficulty();
+		dififcultyToString();
+		
 		splashText = setSplahText();
-		operationText = getOperationText();
-		percentColor = new Color((int)((1-percentCorrect) * 255), (int)(percentCorrect * 255), 0);
 		splashTextColor = randColor();
 		System.out.println("Percent Correct: " + percentCorrect);
 		
+		questionType = getquestionType();
+
 		achCheck.checkVanillaAch();
 		gui.getAchPage().updateAchievementsWithUserData();
+	}
+	
+	public void initializeSpecial(){
+		qPage = gui.getQuestionPage();
+		
+		correct = qPage.numCorrect;
+		totalQ = qPage.numQuestions;
+		calculateScore(correct, totalQ);
+		percentCorrect = (double)correct/totalQ;
+		difficulty = "" + qPage.getDifficulty();
+		dififcultyToString();
+		
+		splashText = setSplahText();
+		splashTextColor = randColor();
+		System.out.println("Percent Correct: " + percentCorrect);
+		
+		String questionSpecialTypeText = (qPage.questionSpecialType == 2) ? "*" : "/";
+		questionType = "Specific Question Type Chosen: " + questionSpecialTypeText + qPage.questionSpecialNum2;
+		
+	}
+	
+	public void initializeYN(){
+		qPageYN = gui.getQuestionPageYesNo();
+
+		correct = qPageYN.numCorrect;
+		totalQ = qPageYN.numQuestions;
+		calculateScore(correct, totalQ);
+		difficulty = "" + gui.getLevelSelectSpecial().questionDifficulty;
+		dififcultyToString();
+		
+		splashText = setSplahText();
+		splashTextColor = randColor();
+		System.out.println("Percent Correct: " + percentCorrect);
+		
+		questionType = "Question Type: Is it divisible?";
+	}
+	
+	public void calculateScore(int numCorrect, int totalQuestions){
+		if(totalQuestions > 0 )
+			percentCorrect = (double)numCorrect/totalQuestions; 
+		else percentCorrect = 0;
+		
+		percentColor = new Color((int)((1-percentCorrect) * 255), (int)(percentCorrect * 255), 0);
+
 	}
 	
 	public String randFromArray(String[] input){
@@ -106,14 +156,14 @@ public class ResultsPage {
 			return randFromArray(bad);
 	}
 	
-	private String getOperationText() {
-		operationText = "";
+	private String getquestionType() {
+		questionType = "";
 		
 		String[] operations = {"Addition", "Subtraction", "Multiplication", "Division"}; //since questiontypes is a list of integers, we need to connect this to a list of string to translate to english
 		for (int i = 0; i < qPage.getQuestionTypes().size(); i++) {
-			operationText += operations[qPage.getQuestionTypes().get(i)] + ", ";
+			questionType += operations[qPage.getQuestionTypes().get(i)] + ", ";
 		}
-		return operationText.substring(0, operationText.length() - 2); //cut off the comma at the end
+		return "Operations chosen: " + questionType.substring(0, questionType.length() - 2); //cut off the comma at the end
 	}
 	
 	public Color randColor(){
@@ -129,4 +179,25 @@ public class ResultsPage {
 	public double getPercentCorrect() {return percentCorrect;}
 	
 	public AchievementCheck getAchCheck() {return achCheck;}
+	
+	private void dififcultyToString(){
+		switch(Integer.parseInt(difficulty)){
+		case 0:
+			difficulty = "Easy";
+			break;
+		case 1:
+			difficulty = "Medium";
+			break;
+		case 2:
+			difficulty = "Hard";
+			break;
+		case 3:
+			difficulty = "Insane";
+			break;
+		default:
+			difficulty = "Huh?";
+			break;
+		
+		}
+	}
 }
