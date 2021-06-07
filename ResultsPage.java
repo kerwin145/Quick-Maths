@@ -17,6 +17,7 @@ public class ResultsPage {
 	String difficulty;
 	String splashText;
 	double percentCorrect;
+	String correctText;
 	String questionType;
 	Color percentColor;
 	Random rnd = new Random();
@@ -53,14 +54,19 @@ public class ResultsPage {
 		g.drawString("You got: " + correct + " out of " + totalQ + " Correct!", x1, y2 );
 		g.drawString(questionType , x1, y2 + spacing);
 		g.drawString("Difficulty: " + difficulty, x1, y2 + spacing*2);
+		if(gui.getTitlePage().questionPage == gui.getTitlePage().questionPage.SpecialYN )
+			g.drawString("Time Spent: " + qPageYN.timeMinutes + "' " +  qPageYN.timeSeconds + "\"", x1, y2 + spacing*3);
+		else
+			g.drawString("Time Spent: " + qPage.timeMinutes + "' " +  qPage.timeSeconds + "\"", x1, y2 + spacing*3);
+		
 		g.setColor(splashTextColor);
-		g.drawString(splashText, x1, y2 + spacing*4);
+		g.drawString(splashText, x1, y2 + spacing*5);
 
 		g.setColor(Color.black);
 		g.setFont(fnt0);
 		g.drawString("Score: ", (int)(gui.WIDTH * gui.SCALE - fnt0.getSize() * 5), (int)(gui.HEIGHT * gui.SCALE - fnt0.getSize() * 2));
 		g.setColor(percentColor);
-		g.drawString("" + ((int)(percentCorrect * 100)), (int)(gui.WIDTH * gui.SCALE - fnt0.getSize() * 5), (int)(gui.HEIGHT * gui.SCALE - fnt0.getSize()));
+		g.drawString(correctText, (int)(gui.WIDTH * gui.SCALE - fnt0.getSize() * 5), (int)(gui.HEIGHT * gui.SCALE - fnt0.getSize()));
 		
 		g.setColor(Color.black);
 		g2d.draw(HomePage);
@@ -81,13 +87,11 @@ public class ResultsPage {
 		correct = qPage.numCorrect;
 		totalQ = qPage.numQuestions;
 		calculateScore(correct, totalQ);
-		percentCorrect = (double)correct/totalQ; 
 		difficulty = "" + qPage.getDifficulty();
 		dififcultyToString();
 		
 		splashText = setSplahText();
 		splashTextColor = randColor();
-		System.out.println("Percent Correct: " + percentCorrect);
 		
 		questionType = getquestionType();
 
@@ -101,13 +105,11 @@ public class ResultsPage {
 		correct = qPage.numCorrect;
 		totalQ = qPage.numQuestions;
 		calculateScore(correct, totalQ);
-		percentCorrect = (double)correct/totalQ;
 		difficulty = "" + qPage.getDifficulty();
 		dififcultyToString();
 		
 		splashText = setSplahText();
 		splashTextColor = randColor();
-		System.out.println("Percent Correct: " + percentCorrect);
 		
 		String questionSpecialTypeText = (qPage.questionSpecialType == 2) ? "*" : "/";
 		questionType = "Specific Question Type Chosen: " + questionSpecialTypeText + qPage.questionSpecialNum2;
@@ -120,28 +122,37 @@ public class ResultsPage {
 		correct = qPageYN.numCorrect;
 		totalQ = qPageYN.numQuestions;
 		calculateScore(correct, totalQ);
-		difficulty = "" + gui.getLevelSelectSpecial().questionDifficulty;
+		difficulty = "" + gui.getQuestionPageYesNo().getDifficulty();
 		dififcultyToString();
 		
 		splashText = setSplahText();
 		splashTextColor = randColor();
-		System.out.println("Percent Correct: " + percentCorrect);
-		
+				
 		questionType = "Question Type: Is it divisible?";
 	}
 	
 	public void calculateScore(int numCorrect, int totalQuestions){
-		if(totalQuestions > 0 )
-			percentCorrect = (double)numCorrect/totalQuestions; 
-		else percentCorrect = 0;
+		percentCorrect = (double)correct/totalQ;
+
+		if(totalQuestions > 0 ){
+			correctText =  "" + Math.round(percentCorrect * 100); 
+			percentColor = new Color((int)((1-percentCorrect) * 255), (int)(percentCorrect * 255), 0);
+			//percentColor = new Color(0, 255, 0);
+		}
+		else{
+			correctText = ">_>";
+			double randomCorrect = 1-rnd.nextDouble();
+			percentColor = new Color((int)((1-randomCorrect) * 255), (int)(randomCorrect * 255), 0);
+		}
+		System.out.println("Percent Correct: " + percentCorrect);
 		
-		percentColor = new Color((int)((1-percentCorrect) * 255), (int)(percentCorrect * 255), 0);
+		
 
 	}
 	
 	public String randFromArray(String[] input){
 		int random = rnd.nextInt(input.length);
-		System.out.println("Array Lenght:" + random);
+		//System.out.println("Array Lenght:" + random);
 		return input[random];
 	}
 	

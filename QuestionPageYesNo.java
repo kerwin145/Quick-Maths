@@ -7,11 +7,6 @@ import java.awt.Rectangle;
 
 public class QuestionPageYesNo extends QuestionPageNumber{
 	//a pity that QuestionPageNumber is a bit too complex 
-
-	public int numQuestions = 0;
-	public int numCorrect = 0;
-	int currentQuestion = 0; //rip public
-	private int difficulty; //from 1 as easy to 4 as insane
 	
 	public Rectangle Yes = new Rectangle(fnt0.getSize(), (int)(gui.HEIGHT * gui.SCALE / 2), 120, 50);
 	public Rectangle No = new Rectangle(fnt0.getSize()*2 + Yes.width, (int)(gui.HEIGHT * gui.SCALE / 2), 120, 50);
@@ -49,12 +44,6 @@ public class QuestionPageYesNo extends QuestionPageNumber{
 				g2d.draw(Yes);
 				g2d.draw(No);
 			}
-			
-			g.setFont(fnt1);
-			g.setColor(Color.gray);
-			g.drawString("Q " + currentQuestion + "/" + numQuestions, gui.WIDTH * gui.SCALE - HomePage.width*3, (int)(HomePage.y + HomePage.height * 1.5));
-			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion - 1), gui.WIDTH * gui.SCALE - HomePage.width*3,  (int)(HomePage.y + HomePage.height * 3));
-
 			g.setFont(fntSplash);
 			g.drawString("Yes", Yes.x + 10, Yes.y + Yes.height-5);
 			g.drawString("No", No.x + 10, No.y + No.height-5);
@@ -73,13 +62,16 @@ public class QuestionPageYesNo extends QuestionPageNumber{
 	}
 	
 	public void tick(){
-		if(autoConfirm && yesNo != -1 && !askForConfirm){
+		if(autoConfirm && yesNo != -1 && (!askForConfirm || (warned))){
+			//if autoconfirm is on and answer is not null AND either ask for confirm is not on, or you have been warned (and thus askforconfrim is on)
 			submitAnswer();
 		}
+		baseTick();
 	}
 	
 	public void renderHelp(Graphics g) {
 		g.setFont(fntNormal);
+		g.setColor(Color.gray);
 		g.drawString("If turned on, your answers will", AutoConfirm.x, AutoConfirm.y + AutoConfirm.height + fntNormal.getSize());
 		g.drawString("automatically submit upon", AutoConfirm.x, AutoConfirm.y + AutoConfirm.height + fntNormal.getSize()*2);
 		g.drawString("choosing \"Yes\" or \"no\".", AutoConfirm.x, AutoConfirm.y + AutoConfirm.height + fntNormal.getSize()*3);
@@ -89,8 +81,12 @@ public class QuestionPageYesNo extends QuestionPageNumber{
 		g.drawString("Hotkey: Right arrow \u2192", No.x, No.y + No.height + fntNormal.getSize());
 		
 		g.drawString("Submit: Submit and check your answer", (int)(submitAnswer.x + submitAnswer.width * 1.5), submitAnswer.y + fntNormal.getSize());
-		g.drawString("(Hot key: \"Enter\")", (int)(submitAnswer.x + submitAnswer.width * 1.5), submitAnswer.y + fntNormal.getSize()*2);
-		
+		g.drawString("(Hot key: \"Space\")", (int)(submitAnswer.x + submitAnswer.width * 1.5), submitAnswer.y + fntNormal.getSize()*2);
+		if(!timerHidden)
+			g.drawString("Timer: Click to hide.", (int)(gui.WIDTH * gui.SCALE - HomePage.width*1.8),  (int)(HomePage.y + HomePage.height * 5));
+		else
+			g.drawString("Timer: Click to show.", (int)(gui.WIDTH * gui.SCALE - HomePage.width*1.8),  (int)(HomePage.y + HomePage.height * 5));
+
 	}
 	
 	public void submitAnswer(){
@@ -156,19 +152,7 @@ public class QuestionPageYesNo extends QuestionPageNumber{
 	}
 	
 	public void initializeRound(){
-		currentQuestion = 0;
-		numCorrect = 0;
-		numQuestions = gui.getLevelSelectSpecial().numQuestionsInput.retrieveNum();
-		difficulty = gui.getLevelSelectSpecial().questionDifficulty;
-		
-		gui.getTitlePage().setSpecialFinished = false;
-		gui.getTitlePage().setFinished = true;
-		
-		submitColor = Color.black;
-		splashText = "";
-		warned = false;
-		askForConfirm = false;
-		
+		baseInit(gui.getLevelSelectSpecial());
 		gui.getTitlePage().questionPage = gui.getTitlePage().questionPage.SpecialYN;
 
 		genQuestion();

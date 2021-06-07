@@ -50,8 +50,6 @@ public class LevelSelectSpecial extends QuestionSelectPage{
 	public int specialQTypeChosen = -1; //this will be for mult or div
 	public int specialQuestionNum2;
 		
-	public int questionDifficulty = 0;
-
 	public void render(Graphics g){
 		super.render(g);
 		Graphics2D g2d = (Graphics2D)g;
@@ -90,7 +88,7 @@ public class LevelSelectSpecial extends QuestionSelectPage{
 		g.drawString("divisible?", isItDivisible.x + 2, isItDivisible.y + isItDivisible.height/2 + fnt2.getSize() * 2/3);
 	
 		for (int i = 0; i < Difficulties.length; i++) {
-			if (i == questionDifficulty) {
+			if (i == difficulty) {
 				g.setColor(Color.blue);
 				g2d.draw(Difficulties[i]);
 			}

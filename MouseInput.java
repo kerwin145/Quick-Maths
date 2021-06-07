@@ -13,7 +13,7 @@ public class MouseInput implements MouseListener{
 	ResultsPage results;
 	AchievementPages achPage;
 	int mx = -1, my = -1;
-	
+		
 	public MouseInput(GUI gui) {
 		this.gui = gui;
 		levSelectPage = gui.getLevSelect();
@@ -46,6 +46,14 @@ public class MouseInput implements MouseListener{
 				else if(!titlePage.setFinished && titlePage.setSpecialFinished){//if you have a normal round going on 
 					gui.State = gui.State.QUESTIONROUNDNUMBER;
 				}
+				if((titlePage.questionPage == titlePage.questionPage.Special || titlePage.questionPage == titlePage.questionPage.Normal) && !qPage.askForConfirm) {
+					qPage.timerUnPause();
+					qPage.timeQuestionStartMillis += qPage.deltaMillisFix;
+				}
+				else if(titlePage.questionPage == titlePage.questionPage.SpecialYN && !qPageYN.askForConfirm) {
+					qPageYN.timerUnPause();
+					qPageYN.timeQuestionStartMillis += qPageYN.deltaMillisFix;
+				}
 
 			}
 				
@@ -71,10 +79,10 @@ public class MouseInput implements MouseListener{
 			if (levSelectPage.getQChosen()[3])
 				if(clickInBounds(levSelectPage.PerfectDivisors)){levSelectPage.perfectDivisors = !levSelectPage.perfectDivisors;}
 						
-			if(clickInBounds(levSelectPage.easyDif)) {levSelectPage.setQuestionDifficulty(0);}
-			if(clickInBounds(levSelectPage.medDif)) {levSelectPage.setQuestionDifficulty(1);}
-			if(clickInBounds(levSelectPage.hardDif)) {levSelectPage.setQuestionDifficulty(2);}
-			if(clickInBounds(levSelectPage.insaneDif)) {levSelectPage.setQuestionDifficulty(3);}
+			if(clickInBounds(levSelectPage.easyDif)) {levSelectPage.setDifficulty(0);}
+			if(clickInBounds(levSelectPage.medDif)) {levSelectPage.setDifficulty(1);}
+			if(clickInBounds(levSelectPage.hardDif)) {levSelectPage.setDifficulty(2);}
+			if(clickInBounds(levSelectPage.insaneDif)) {levSelectPage.setDifficulty(3);}
 	
 			if(clickInBounds(levSelectPage.GenerateSet) && levSelectPage.isSetReady()) {
 				qPage.initializeRound();
@@ -155,10 +163,10 @@ public class MouseInput implements MouseListener{
 				}
 			}
 			
-			else if(clickInBounds(levSelectPageSpecial.easyDif)) levSelectPageSpecial.questionDifficulty = 0;
-			else if(clickInBounds(levSelectPageSpecial.medDif)) levSelectPageSpecial.questionDifficulty = 1;
-			else if(clickInBounds(levSelectPageSpecial.hardDif)) levSelectPageSpecial.questionDifficulty = 2;
-			else if(clickInBounds(levSelectPageSpecial.insaneDif)) levSelectPageSpecial.questionDifficulty = 3;
+			else if(clickInBounds(levSelectPageSpecial.easyDif)) levSelectPageSpecial.setDifficulty(0);
+			else if(clickInBounds(levSelectPageSpecial.medDif)) levSelectPageSpecial.setDifficulty(1);
+			else if(clickInBounds(levSelectPageSpecial.hardDif)) levSelectPageSpecial.setDifficulty(2);
+			else if(clickInBounds(levSelectPageSpecial.insaneDif)) levSelectPageSpecial.setDifficulty(3);
 			
 			if(clickInBounds(levSelectPageSpecial.HomePage))gui.State = gui.State.TITLE;
 				
@@ -168,7 +176,10 @@ public class MouseInput implements MouseListener{
 			
 			qPage.inputTextAnswer.attemptFocus(mx, my);
 			
-			if(clickInBounds(qPage.HomePage)) {gui.State = gui.State.TITLE;}
+			if(clickInBounds(qPage.HomePage)) {
+				gui.State = gui.State.TITLE;
+				qPage.timerPause();
+			}
 			if(clickInBounds(qPage.submitAnswer)) {qPage.submitAnswer();}
 			if(clickInBounds(qPage.InfoBox)){qPage.renderHelp = !qPage.renderHelp;}
 			
@@ -178,6 +189,12 @@ public class MouseInput implements MouseListener{
 			}
 			else{qPage.finishClicked = false;}
 			
+			int x1 = (int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2);
+			int y1 = (int)(qPage.HomePage.y + qPage.HomePage.height * 3);
+			if(clickInBounds(new Rectangle(x1, y1 , qPage.timerTextLength, qPage.timerTextHeight))){
+				qPage.timerHidden = !qPage.timerHidden;
+				//System.out.println("@MouseInput timerHidden number clicked!");
+			}
 		
 		}//question round number
 		
@@ -186,16 +203,27 @@ public class MouseInput implements MouseListener{
 			if(clickInBounds(qPageYN.Yes)) qPageYN.yesNo = 1;
 			if(clickInBounds(qPageYN.No)) qPageYN.yesNo = 0;
 	
-			if(clickInBounds(qPageYN.HomePage)) {gui.State = gui.State.TITLE;}
+			if(clickInBounds(qPageYN.HomePage)) {
+				gui.State = gui.State.TITLE;
+				qPage.timerPause();
+			}
 			if(clickInBounds(qPageYN.submitAnswer)) {qPageYN.submitAnswer();}
 			if(clickInBounds(qPageYN.InfoBox)){qPageYN.renderHelp = !qPageYN.renderHelp;}
 			if(clickInBounds(qPageYN.AutoConfirm)){qPageYN.autoConfirm = !qPageYN.autoConfirm;}
+			
+			int x1 = (int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2);
+			int y1 = (int)(qPage.HomePage.y + qPage.HomePage.height * 3);
+			if(clickInBounds(new Rectangle(x1, y1 , qPageYN.timerTextLength, qPageYN.timerTextHeight)))
+				qPageYN.timerHidden = !qPageYN.timerHidden;
 			
 			if(clickInBounds(qPageYN.finishSet)){		
 				qPageYN.finishClicked = true; 
 				qPageYN.genSkipSetPassword();
 			}
 			else{qPageYN.finishClicked = false;}
+			
+			
+		
 		}//question round yn
 		
 		else if(gui.State == gui.State.RESULTS){
@@ -254,4 +282,5 @@ public class MouseInput implements MouseListener{
 		}
 		else return false;
 	}
+	
 }

@@ -11,6 +11,9 @@ public abstract class QuestionSelectPage {
 	private String beginText;
 	int buttonWidth1 = 60, buttonHeight1 = 60;
 
+	public int difficulty;
+	boolean logTime = false;
+	
 	boolean renderHelp;
 	public QuestionSelectPage(GUI gui){
 		this.gui = gui;
@@ -20,11 +23,12 @@ public abstract class QuestionSelectPage {
 
 	public Rectangle HomePage = new Rectangle(gui.WIDTH * gui.SCALE - 140, 15, 120, 20);
 	public Rectangle GenerateSet = new Rectangle(HomePage.x + HomePage.width - buttonWidth1*2, (int)((gui.HEIGHT * gui.SCALE) * .85), (buttonWidth1 * 2), buttonHeight1);
+	public Rectangle LogTime = new Rectangle(HomePage.x + HomePage.width - buttonWidth1*2, (int)(GenerateSet.y - GenerateSet.height/1.8) , (buttonWidth1 * 2), (int)(buttonHeight1/2.3));
 	public Rectangle InfoBox = new Rectangle(20, 20, 40, 40);
 
 	Font fnt0 = new Font("Times", Font.ITALIC, (int)(buttonHeight1/1.5));
 	Font fnt1 = new Font("Garamond", Font.BOLD, HomePage.height);
-	Font fnt2 = new Font("Garamond", Font.PLAIN, (int)(buttonHeight1/2.5));
+	Font fnt2 = new Font("Garamond", Font.PLAIN, HomePage.height);
 	Font fnt3 = new Font("Georgia", Font.PLAIN, (int)(InfoBox.width/1.5));
 	Font fntHeader = new Font("Times", Font.BOLD, (int)(buttonHeight1/2));
 	Font fntNormal = new Font("Garamond", Font.PLAIN, (int)(buttonHeight1/4));
@@ -64,6 +68,13 @@ public abstract class QuestionSelectPage {
 		g2d.draw(GenerateSet);
 		
 		g.setColor(Color.gray);
+		g.drawString("Log time", (int)LogTime.getX() + fnt3.getSize()/4, (int)(LogTime.getY() + LogTime.getHeight()/2) + 8);
+		if(logTime)g.setColor(Color.yellow);
+		else g.setColor(Color.gray);
+		g2d.draw(LogTime);
+		
+		
+		g.setColor(Color.gray);
 		g2d.draw(InfoBox);
 		g.setFont(fnt3);
 		g.drawString("i", (int)(InfoBox.x + fnt3.getSize() * 0.6), (int)(InfoBox.y  + fnt3.getSize()));
@@ -74,4 +85,7 @@ public abstract class QuestionSelectPage {
 	
 	abstract void renderHelp(Graphics g);
 	abstract boolean isSetReady();
+	public void setDifficulty(int diff){difficulty = diff;}
+	public int getQuestionDifficulty() {return difficulty;}
+
 }

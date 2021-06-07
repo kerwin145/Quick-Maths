@@ -7,7 +7,8 @@ import java.awt.Rectangle;
 public class TitlePage {
 	
 	GUI gui;
-	
+	QuestionPageNumber qPage;
+	QuestionPageYesNo qPageYN;
 	TitlePage (GUI gui){
 		this.gui = gui;
 	}
@@ -21,6 +22,7 @@ public class TitlePage {
 	
 	Font fnt0 = new Font("Arial", Font.BOLD, 50);
 	Font fnt1 = new Font("Arial", Font.BOLD, 25);
+	Font fnt2 = new Font("Garamond", Font.BOLD, 20);
 	
 	public boolean setFinished = true, setSpecialFinished = true;
 	public static enum PreviousPage{
@@ -33,8 +35,9 @@ public class TitlePage {
 	
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
+		qPage = gui.getQuestionPage();
+		qPageYN = gui.getQuestionPageYesNo();
 
-		
 		g.setFont(fnt0);
 		g.setColor(Color.black);
 		g.drawString("Quick Maths", 100, 100);
@@ -78,6 +81,25 @@ public class TitlePage {
 		g.drawString("Medals", achievementsButton.x + 10, achievementsButton.y + 30);
 		g.drawString("Quit", quitButton.x + 10, quitButton.y + 30);
 
+		g.setFont(fnt2);
+		g.setColor(Color.gray);
+		if(!(setFinished && setSpecialFinished)){
+			if(questionPage == questionPage.Normal || questionPage == questionPage.Special){
+				g.drawString("Q " + qPage.currentQuestion + "/" + qPage.numQuestions, (int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2), (int)(qPage.HomePage.y + qPage.HomePage.height * 1.5));
+				g.drawString("Correct: " + qPage.numCorrect + "/" + (qPage.currentQuestion - 1), (int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2),  (int)(qPage.HomePage.y + qPage.HomePage.height * 2.75));
+				g.drawString("Timer: " + qPage.timeMinutes + "' " +  qPage.timeSeconds + "\"", 
+							(int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2), 
+							(int)(qPage.HomePage.y + qPage.HomePage.height * 4));
+			}
+			else if(questionPage == questionPage.SpecialYN){
+				g.drawString("Q " + qPageYN.currentQuestion + "/" + qPageYN.numQuestions, (int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2), (int)(qPage.HomePage.y + qPage.HomePage.height * 1.5));
+				g.drawString("Correct: " + qPageYN.numCorrect + "/" + (qPageYN.currentQuestion - 1), (int)(gui.WIDTH * gui.SCALE - qPage.HomePage.width*2.2),  (int)(qPage.HomePage.y + qPage.HomePage.height * 2.75));
+				g.drawString("Timer: " + qPageYN.timeMinutes + "' " +  qPageYN.timeSeconds + "\"", 
+						(int)(gui.WIDTH * gui.SCALE - qPageYN.HomePage.width*2.2), 
+						(int)(qPageYN.HomePage.y + qPageYN.HomePage.height * 4));
+			}
+		}
+		
 	}
 	
 	public void renderHelp(Graphics g) {

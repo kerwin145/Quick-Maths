@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 
 public class LevelSelect extends QuestionSelectPage {
 	
-	public int questionDifficulty = 0;
 	public boolean addChosen = false, subChosen = false, multChosen = false, divChosen = false;
 	public boolean onlyPositive = false, perfectDivisors = false;
 	
@@ -68,7 +67,7 @@ public class LevelSelect extends QuestionSelectPage {
 		}
 		
 		for (int i = 0; i < Difficulties.length; i++) {
-			if (i == questionDifficulty) {
+			if (i == difficulty) {
 				g.setColor(Color.blue);
 				g2d.draw(Difficulties[i]);
 			}
@@ -157,10 +156,6 @@ public class LevelSelect extends QuestionSelectPage {
 	public void tick() {
 		
 	}
-
-	public int getQuestionDifficulty() {return questionDifficulty;}
-
-	public void setQuestionDifficulty(int questionDifficulty) {this.questionDifficulty = questionDifficulty;}
 
 	public boolean[] getQChosen(){
 		return qChosen;

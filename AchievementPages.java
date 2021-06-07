@@ -56,6 +56,7 @@ public class AchievementPages {
 	int yspacing = (int)(fntNormal.getSize() * 1.5), ySpacing2 = 120;
     int xspacing = 50, xSpacing2 = gui.WIDTH * gui.SCALE / 4;
 	int y3 = y2 + yspacing * 6;
+	int x2 = x1 + gui.WIDTH * gui.SCALE/2;
 		
 	//vanilla achievements
 	private ArrayList<ArrayList<String>> vanillaAchievementExplList = new ArrayList<ArrayList<String>>();
@@ -65,12 +66,10 @@ public class AchievementPages {
 			{"Adept Addition", "Subtraction Specialist", "Mega Multiplication", "Divine Division"},
 			{"Addition Afficianado", "Subtraction Senseii", "Multiplication Master", "Division Devotee"}};	
 	
-	
 	public ArrayList<ArrayList<Achievement>> vanillaAchievementList = new ArrayList<ArrayList<Achievement>>(); //this is the ultimate vanilla achievement list. All the lists before this is set up. 
 	private Achievement achievementSelected = null; //the one selected. It will have its explanations portrayed. 
 	public ArrayList<ArrayList<Rectangle>> achievementButtons = new ArrayList<ArrayList<Rectangle>>(); //later, when icons are made, set up a list of corresponding icons 
 	private int achStage; //used only for the render loop.
-	
 
 	public AchievementPages(GUI gui){
 		this.gui = gui;
@@ -210,11 +209,13 @@ public class AchievementPages {
 		Graphics2D g2d = (Graphics2D)g;
 		
 		g.setFont(fnt0);
-		g.drawString("Stats: ", x1, y1);
+		g.drawString("Stats I: ", x1, y1);
 
 		g.setFont(fntSmallBold);
 		g.drawString("Question Completed", x1, y2);
 		g.drawString("Question Correct", x1, y3);
+		g.drawString("Average Times", x2, y2);
+		g.drawString("Best Question Times", x2, y3);
 		g.setFont(fntSmall);
 		g.setColor(new Color(0, 115, 168));
 		//rows organized by question type, columns is difficulty. i.e. Addition: Easy, Medium,  Hard, Insane
@@ -241,6 +242,44 @@ public class AchievementPages {
 				}
 			}
 		}
+		
+		g.setColor(new Color(26, 184, 160));
+		for(int type = 0; type < uData.timeAverageSum.length; type++){
+			g.drawString(uData.typeText[type] + ": ", x2, y2 + (type + 1)*yspacing);
+			for(int difficulty = 0; difficulty < uData.timeAverageSum[type].length; difficulty++){
+				try{
+					double time = Math.round(uData.timeAverageSum[type][difficulty]/1000/uData.timeAverageCount[type][difficulty] * 1000)/1000.0;
+				g.drawString(""+  time + "s", x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y2 + (type + 1)*yspacing);
+				}catch(ArithmeticException e){
+					g.drawString(""+  0 + "s", x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y2 + (type + 1)*yspacing);
+				}
+				if(type == uData.questionsCompleted.length - 1){//when on the last iteration, print the headers and the vertical lines
+					g.drawString(uData.difficultyText[difficulty], x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y2); //draw dif
+					//g.drawLine((int)(x1 + (xspacing + 1) * difficulty  + fnt1.getSize() * 5.5), y2 + yspacing, 
+						//	(int)(x1 + (xspacing + 1) * difficulty  + fnt1.getSize() * 5.5), y2 + yspacing * uData.questionsCompleted.length);
+				}
+			}
+		}
+		
+		g.setColor(new Color(168, 50, 107));
+		for(int type = 0; type < uData.recordTimeIndividual.length; type++){
+			g.drawString(uData.typeText[type] + ": ", x2, y3 + (type + 1)*yspacing);
+			for(int difficulty = 0; difficulty < uData.recordTimeIndividual[type].length; difficulty++){
+				double time = uData.recordTimeIndividual[type][difficulty]/1000.0;
+				if(time == 0)
+					g.drawString("--" + "s", x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y3 + (type + 1)*yspacing);
+				else
+					g.drawString(time + "s", x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y3 + (type + 1)*yspacing);
+				if(type == uData.questionsCompleted.length - 1){//when on the last iteration, print the headers and the vertical lines
+					g.drawString(uData.difficultyText[difficulty], x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y3); //draw dif
+					//g.drawLine((int)(x1 + (xspacing + 1) * difficulty  + fnt1.getSize() * 5.5), y2 + yspacing, 
+						//	(int)(x1 + (xspacing + 1) * difficulty  + fnt1.getSize() * 5.5), y2 + yspacing * uData.questionsCompleted.length);
+				}
+		
+			}
+		}
+		
+		
 		
 		g.setColor(Color.black);
 		g2d.draw(HomePage);
@@ -279,5 +318,4 @@ public class AchievementPages {
 		}
 	}
 
-	
 }

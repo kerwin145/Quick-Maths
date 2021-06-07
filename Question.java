@@ -54,6 +54,7 @@ public class Question{
 	public Question(int type, int difficulty, int num2){
 		setSpefOperationNum1(type, difficulty, num2);
 		genQuestionText(type, num1, num2);
+		this.type = type;
 	}
 	
 	//is it divisible
@@ -154,5 +155,5 @@ public class Question{
 	public String getQuestionText(){return questionText;}
 	public int getAnswer(){return answer;}
 	public int getType(){return type;}
-	
+	public int getDifficulty(){return difficulty;}
 }

@@ -35,9 +35,9 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	private LevelSelect levSelectPage;
 	private LevelSelectSpecial levSelectPageSpecial;
 	private ResultsPage resultsPage;
-	private static UserData uData = new UserData();
+	static UserData uData = new UserData();
 	private AchievementPages achPages;
-	//private dataUpdater dataUpdater;
+	private dataUpdater dataUpdater;
 
 	private KeyInput key;
 	private MouseInput mouse;
@@ -45,6 +45,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	//create game objects
 	private Question question;
 	private Random r = new Random();
+
 	
 	public static enum STATE{
 		TITLE, 
@@ -66,6 +67,9 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		levSelectPageSpecial = new LevelSelectSpecial(this);
 		resultsPage = new ResultsPage(this);	
 		achPages = new AchievementPages(this);
+		dataUpdater = new dataUpdater(uData);
+		
+		//dataUpdater.resetData();
 
 		key = new KeyInput(this);
 		this.addKeyListener(key);
@@ -139,11 +143,11 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		if(State == STATE.TITLE){
 			//something.tick
 		}
-		if(State == STATE.LEVELSELECT){
-			
-		}		
-		if (State == STATE.QUESTIONROUNDYESNO){
+		else if (State == STATE.QUESTIONROUNDYESNO){
 			questionPageYN.tick();
+		}
+		else if (State == STATE.QUESTIONROUNDNUMBER){
+			questionPageNumber.tick();
 		}
 		try{writeObjectToDisk((Object)uData, "userData.ser");}
 		catch(IOException ioe) {ioe.printStackTrace();}
@@ -198,7 +202,6 @@ public class GUI extends Canvas implements Runnable, Serializable {
 			levSelectPageSpecial.render(g);
 		}
 		//****************************---------****************************//
-		
 		g.dispose();
 		bs.show();
 	}
@@ -217,9 +220,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		        cnfe.printStackTrace();
 	    }		
 				
-		
-		//uData.resetData();
-				
+					
 		gui.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		gui.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		gui.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
