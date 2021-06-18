@@ -1,3 +1,5 @@
+import k_Methods.stringGraphics;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -176,17 +178,16 @@ public class AchievementPages {
 		
 		g2d.draw(achDescription);
 		if(achievementSelected != null)
-		g.drawString(achievementSelected.getDisplayText() + ": " + achievementSelected.getExplanation(), achDescription.x + 5, achDescription.y + fntSmall.getSize());
-		else g.drawString("Click on the achievement icon to view its description!", achDescription.x + 5, achDescription.y + fntSmall.getSize());
-		
+			stringGraphics.drawStringCentered(achievementSelected.getDisplayText() + ": " + achievementSelected.getExplanation(), achDescription, g);
+		else stringGraphics.drawStringCentered("Click on the achievement icon to view its description!", achDescription, g);
+
 		g.setColor(Color.black);
 		g2d.draw(HomePage);
 		g2d.draw(nextSlide);
 		
 		g2d.setFont(fnt1);
-		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
-		g.drawString("Next =>", nextSlide.x + 6, (int)(nextSlide.y + fnt1.getSize()*0.87));
-	
+		stringGraphics.drawStringCentered("Home", HomePage, g);
+		stringGraphics.drawStringCentered("Next =>", nextSlide, g);
 	}
 	
 	public void renderPage2(Graphics g) {
@@ -248,7 +249,7 @@ public class AchievementPages {
 			g.drawString(uData.typeText[type] + ": ", x2, y2 + (type + 1)*yspacing);
 			for(int difficulty = 0; difficulty < uData.timeAverageSum[type].length; difficulty++){
 				try{
-					double time = Math.round(uData.timeAverageSum[type][difficulty]/1000/uData.timeAverageCount[type][difficulty] * 1000)/1000.0;
+					double time = Math.round(uData.timeAverageSum[type][difficulty]/uData.timeAverageCount[type][difficulty])/1000.0;
 				g.drawString(""+  time + "s", x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y2 + (type + 1)*yspacing);
 				}catch(ArithmeticException e){
 					g.drawString(""+  0 + "s", x2 + (difficulty + 1)*xspacing + fnt1.getSize() * 5, y2 + (type + 1)*yspacing);
@@ -286,8 +287,8 @@ public class AchievementPages {
 		g2d.draw(prevSlide);
 		
 		g2d.setFont(fnt1);
-		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
-		g.drawString("Last <=", prevSlide.x + 6, (int)(prevSlide.y + fnt1.getSize()*0.87));
+		stringGraphics.drawStringCentered("Home", HomePage, g);
+		stringGraphics.drawStringCentered("Last <=", prevSlide, g);
 	}
 	
 	public void renderFrame(Graphics g){
@@ -299,9 +300,9 @@ public class AchievementPages {
 		g2d.draw(prevSlide);
 		
 		g2d.setFont(fnt1);
-		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
-		g.drawString("Next =>", nextSlide.x + 6, (int)(nextSlide.y + fnt1.getSize()*0.87));
-		g.drawString("Last <=", prevSlide.x + 6, (int)(prevSlide.y + fnt1.getSize()*0.87));
+		stringGraphics.drawStringCentered("Home", HomePage, g);
+		stringGraphics.drawStringCentered("Next =>", nextSlide, g);
+		stringGraphics.drawStringCentered("Last <=", prevSlide, g);
 	}
 
 	public int getPageIndex(){return pageIndex;}

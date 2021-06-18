@@ -29,7 +29,7 @@ public class NumberTextField {
 		borders = new Rectangle(x, y, width, height);
 	}
 
-	public void render(Graphics g){
+	public void render(Graphics g, boolean isOn){
 		Font fnt0 = new Font("Garamond", Font.PLAIN, height);
 
 		Graphics2D g2d = (Graphics2D)g;
@@ -39,7 +39,10 @@ public class NumberTextField {
 		
 		g2d.draw(borders);
 		g.setColor(Color.black);
+
 		g.setFont(fnt0);
+		if(isOn)g.setColor(Color.black);
+		else g.setColor(Color.gray);
 		g.drawString(text, x + 2, (int)(y + height * 0.87));
 	}
 	
@@ -130,7 +133,7 @@ public class NumberTextField {
 	}
 	
 	public void attemptFocus(int x, int y) {
-		if ((x > this.x && x < this.x + width) && (y > this.y && y < this.y + height)) {
+		if ((x >= this.x && x <= this.x + width) && (y >= this.y && y <= this.y + height)) {
 			inFocus = true;
 			//System.out.println("FOCUSED");
 		}

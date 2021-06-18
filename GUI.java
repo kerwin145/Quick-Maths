@@ -69,7 +69,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		achPages = new AchievementPages(this);
 		dataUpdater = new dataUpdater(uData);
 		
-		//dataUpdater.resetData();
+		dataUpdater.resetData();
 
 		key = new KeyInput(this);
 		this.addKeyListener(key);

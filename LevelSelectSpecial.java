@@ -117,7 +117,7 @@ public class LevelSelectSpecial extends QuestionSelectPage{
 	}
 
 	boolean isSetReady() {
-		return (numQuestionsInput.retrieveNum() > 0) && (specialQChosenIndex > -1);
+		return (numQuestionsInput.retrieveNum() > 0 || endlessQuestions) && (specialQChosenIndex > -1);
 	}
 	
 }

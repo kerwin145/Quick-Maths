@@ -83,7 +83,9 @@ public class MouseInput implements MouseListener{
 			if(clickInBounds(levSelectPage.medDif)) {levSelectPage.setDifficulty(1);}
 			if(clickInBounds(levSelectPage.hardDif)) {levSelectPage.setDifficulty(2);}
 			if(clickInBounds(levSelectPage.insaneDif)) {levSelectPage.setDifficulty(3);}
-	
+
+			if(clickInBounds(levSelectPage.Endless)){levSelectPage.endlessQuestions  = !levSelectPage.endlessQuestions;}
+
 			if(clickInBounds(levSelectPage.GenerateSet) && levSelectPage.isSetReady()) {
 				qPage.initializeRound();
 				gui.State = gui.State.QUESTIONROUNDNUMBER;
@@ -167,7 +169,9 @@ public class MouseInput implements MouseListener{
 			else if(clickInBounds(levSelectPageSpecial.medDif)) levSelectPageSpecial.setDifficulty(1);
 			else if(clickInBounds(levSelectPageSpecial.hardDif)) levSelectPageSpecial.setDifficulty(2);
 			else if(clickInBounds(levSelectPageSpecial.insaneDif)) levSelectPageSpecial.setDifficulty(3);
-			
+
+			if(clickInBounds(levSelectPage.Endless)){levSelectPageSpecial.endlessQuestions  = !levSelectPageSpecial.endlessQuestions;}
+
 			if(clickInBounds(levSelectPageSpecial.HomePage))gui.State = gui.State.TITLE;
 				
 		}
@@ -178,7 +182,10 @@ public class MouseInput implements MouseListener{
 			
 			if(clickInBounds(qPage.HomePage)) {
 				gui.State = gui.State.TITLE;
-				qPage.timerPause();
+				if((titlePage.questionPage == titlePage.questionPage.Special || titlePage.questionPage == titlePage.questionPage.Normal) && !qPage.askForConfirm) {
+					qPage.timerPause();
+					qPage.timeQuestionStartMillis += qPage.deltaMillisFix;
+				}
 			}
 			if(clickInBounds(qPage.submitAnswer)) {qPage.submitAnswer();}
 			if(clickInBounds(qPage.InfoBox)){qPage.renderHelp = !qPage.renderHelp;}
@@ -205,7 +212,10 @@ public class MouseInput implements MouseListener{
 	
 			if(clickInBounds(qPageYN.HomePage)) {
 				gui.State = gui.State.TITLE;
-				qPage.timerPause();
+				if(titlePage.questionPage == titlePage.questionPage.SpecialYN && !qPageYN.askForConfirm) {
+					qPageYN.timerPause();
+					qPageYN.timeQuestionStartMillis += qPageYN.deltaMillisFix;
+				}			
 			}
 			if(clickInBounds(qPageYN.submitAnswer)) {qPageYN.submitAnswer();}
 			if(clickInBounds(qPageYN.InfoBox)){qPageYN.renderHelp = !qPageYN.renderHelp;}
@@ -236,6 +246,12 @@ public class MouseInput implements MouseListener{
 					gui.State = gui.State.LEVELSELECTSPECIAL;
 				else if(titlePage.questionPage ==titlePage.questionPage.SpecialYN)
 					gui.State = gui.State.LEVELSELECTSPECIAL;
+			}
+			if(clickInBounds(results.rollBack)){
+				if(!results.rolledBack && qPage.askToRollBack){
+					results.rollBack();
+					results.rolledBack = true;
+				}
 			}
 			
 		}//results

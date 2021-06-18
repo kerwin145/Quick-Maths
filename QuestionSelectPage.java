@@ -3,17 +3,18 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import k_Methods.stringGraphics;
 
 public abstract class QuestionSelectPage {
-	
+
 	GUI gui;
-	
+
 	private String beginText;
 	int buttonWidth1 = 60, buttonHeight1 = 60;
 
 	public int difficulty;
-	boolean logTime = false;
-	
+	public boolean endlessQuestions = false;
+
 	boolean renderHelp;
 	public QuestionSelectPage(GUI gui){
 		this.gui = gui;
@@ -23,7 +24,7 @@ public abstract class QuestionSelectPage {
 
 	public Rectangle HomePage = new Rectangle(gui.WIDTH * gui.SCALE - 140, 15, 120, 20);
 	public Rectangle GenerateSet = new Rectangle(HomePage.x + HomePage.width - buttonWidth1*2, (int)((gui.HEIGHT * gui.SCALE) * .85), (buttonWidth1 * 2), buttonHeight1);
-	public Rectangle LogTime = new Rectangle(HomePage.x + HomePage.width - buttonWidth1*2, (int)(GenerateSet.y - GenerateSet.height/1.8) , (buttonWidth1 * 2), (int)(buttonHeight1/2.3));
+	public Rectangle Endless = new Rectangle(numQuestionsInput.getX(), (int)(numQuestionsInput.getY() + numQuestionsInput.getHeight() * 1.25) , (int)(buttonWidth1 * 2.75), numQuestionsInput.getHeight());
 	public Rectangle InfoBox = new Rectangle(20, 20, 40, 40);
 
 	Font fnt0 = new Font("Times", Font.ITALIC, (int)(buttonHeight1/1.5));
@@ -40,16 +41,23 @@ public abstract class QuestionSelectPage {
 
 		g.setFont(fnt1);
 		g2d.draw(HomePage);
-		g.drawString("Home", HomePage.x + HomePage.width/4, (int)(HomePage.y + HomePage.height * 0.85));
-		
+		stringGraphics.drawStringCentered("Home", HomePage, g);
+
 		g.drawString("Number of Questions", numQuestionsInput.getX(), numQuestionsInput.getY() - numQuestionsInput.getHeight()/2);
-		numQuestionsInput.render(g);
-		
+		numQuestionsInput.render(g, !endlessQuestions);
+
+		g.setFont(fnt2);
+		g.setColor(Color.black);
+		stringGraphics.drawStringCentered("Endless Questions", Endless, g);
+		if(endlessQuestions) g.setColor(Color.orange);
+		else g.setColor(Color.gray);
+		g2d.draw(Endless);
+
 		g.setFont(fnt3);
-		if (isSetReady() && numQuestionsInput.retrieveNum() > 0)
+		if (isSetReady())
 			g.setColor(Color.blue);
 		else g.setColor(Color.gray);
-		
+
 		if(numQuestionsInput.retrieveNum()>10000)
 			beginText = "X_X";
 		else if(numQuestionsInput.retrieveNum()>1000)
@@ -63,29 +71,25 @@ public abstract class QuestionSelectPage {
 		else
 			beginText = "STahhp";
 
-		g.drawString(beginText, (int)GenerateSet.getX() + fnt3.getSize()/4, (int)GenerateSet.getY() + (int)(GenerateSet.getHeight()/2) + 10);
+		stringGraphics.drawStringCentered(beginText, GenerateSet, g);
+		//g.drawString(beginText, (int)GenerateSet.getX() + fnt3.getSize()/4, (int)GenerateSet.getY() + (int)(GenerateSet.getHeight()/2) + 10);
 
 		g2d.draw(GenerateSet);
-		
-		g.setColor(Color.gray);
-		g.drawString("Log time", (int)LogTime.getX() + fnt3.getSize()/4, (int)(LogTime.getY() + LogTime.getHeight()/2) + 8);
-		if(logTime)g.setColor(Color.yellow);
-		else g.setColor(Color.gray);
-		g2d.draw(LogTime);
-		
-		
+
 		g.setColor(Color.gray);
 		g2d.draw(InfoBox);
 		g.setFont(fnt3);
-		g.drawString("i", (int)(InfoBox.x + fnt3.getSize() * 0.6), (int)(InfoBox.y  + fnt3.getSize()));
-		
+		stringGraphics.drawStringCentered("i", InfoBox, g);
+
 		if(renderHelp) renderHelp(g);
-		
+
 	}
-	
+
 	abstract void renderHelp(Graphics g);
 	abstract boolean isSetReady();
 	public void setDifficulty(int diff){difficulty = diff;}
 	public int getQuestionDifficulty() {return difficulty;}
 
 }
+
+

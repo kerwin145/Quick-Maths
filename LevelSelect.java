@@ -1,5 +1,7 @@
 
 
+import k_Methods.stringGraphics;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -88,17 +90,18 @@ public class LevelSelect extends QuestionSelectPage {
 		g.drawString(" * ", MultChoose.x + MultChoose.width/2 - fnt0.getSize()/2, MultChoose.y + MultChoose.height/2 + fnt0.getSize()/2);
 		g.drawString(" / ", DivChoose.x + DivChoose.width/2 - fnt0.getSize()/2, DivChoose.y + DivChoose.height/2 + fnt0.getSize()/2);
 
+		String[] onlyPositiveText = {"Only", "Positive"}, perfectDivisorsText = {"Perfect", "Divisors"};
 		g.setFont(fntNormal2);
 		if(qChosen[1]){
 			g.setColor(Color.black);
-			drawStringMultiLine(g2d, "Only Positive", OnlyPositive.width, OnlyPositive.x + 2, OnlyPositive.y + OnlyPositive.height/3);
+			stringGraphics.drawStringCentered(onlyPositiveText, OnlyPositive, g);
 			if(onlyPositive)g.setColor(Color.orange);
 			else g.setColor(Color.gray);
 			g2d.draw(OnlyPositive);
 		}
 		if(qChosen[3]){
 			g.setColor(Color.black);
-			drawStringMultiLine(g2d, "Perfect Divisors", PerfectDivisors.width, PerfectDivisors.x + 2, PerfectDivisors.y + PerfectDivisors.height/3);
+			stringGraphics.drawStringCentered(perfectDivisorsText, PerfectDivisors, g);
 			if(perfectDivisors)g.setColor(Color.orange);
 			else g.setColor(Color.gray);
 			g2d.draw(PerfectDivisors);
@@ -108,13 +111,12 @@ public class LevelSelect extends QuestionSelectPage {
 		g.setFont(fntHeader);
 		g.drawString("Difficulty", easyDif.x, easyDif.y - easyDif.height/2);
 		g.setFont(fnt2);
-		g.drawString("Easy", easyDif.x + easyDif.width/3 - fnt2.getSize(), easyDif.y + easyDif.height/2 + fnt2.getSize()/2);
-		g.drawString("Medium", medDif.x + medDif.width/3 - fnt2.getSize(), medDif.y + medDif.height/2 + fnt2.getSize()/2);
-		g.drawString("Hard", hardDif.x + hardDif.width/3 - fnt2.getSize(), hardDif.y + hardDif.height/2 + fnt2.getSize()/2);
+		stringGraphics.drawStringCentered("Easy", easyDif, g);
+		stringGraphics.drawStringCentered("Medium", medDif, g);
+		stringGraphics.drawStringCentered("Hard", hardDif, g);
 		g.setFont(fntSmall);
-		g.drawString("INSANE: Don't tell me", insaneDif.x + fntSmall.getSize()/3, insaneDif.y + insaneDif.height/2 - 5);
-		g.drawString("ur not gonna use", insaneDif.x + fntSmall.getSize()/3, insaneDif.y + insaneDif.height/2 + fntSmall.getSize() - 5);
-		g.drawString("your calculator :]", insaneDif.x + fntSmall.getSize()/3, insaneDif.y + insaneDif.height/2 + fntSmall.getSize() * 2 -5);
+		String[] insaneDifText = {"INSANE: Don't tell", "me ur not gonna", "use ur calculator ;]" };
+		stringGraphics.drawStringCentered(insaneDifText, insaneDif, g);
 
 	}
 	
@@ -179,31 +181,8 @@ public class LevelSelect extends QuestionSelectPage {
 	
 	public boolean isSetReady() {
 		return (qChosen[0] || qChosen[1] || qChosen[2] || qChosen[3]) 
-				&& (numQuestionsInput.retrieveNum() > 0);
+				&& (numQuestionsInput.retrieveNum() > 0 || endlessQuestions);
 	}
-	
-//thanks stack overflow
-//https://stackoverflow.com/questions/4413132/problems-with-newline-in-graphics2d-drawstring
-	public static void drawStringMultiLine(Graphics2D g, String text, int lineWidth, int x, int y) {
-	    FontMetrics m = g.getFontMetrics();
-	    if(m.stringWidth(text) < lineWidth) {
-	        g.drawString(text, x, y);
-	    } else {
-	        String[] words = text.split(" ");
-	        String currentLine = words[0];
-	        for(int i = 1; i < words.length; i++) {
-	            if(m.stringWidth(currentLine+words[i]) < lineWidth) {
-	                currentLine += " "+words[i];
-	            } else {
-	                g.drawString(currentLine, x, y);
-	                y += m.getHeight();
-	                currentLine = words[i];
-	            }
-	        }
-	        if(currentLine.trim().length() > 0) {
-	            g.drawString(currentLine, x, y);
-	        }
-	    }
-	}
+
 }
 

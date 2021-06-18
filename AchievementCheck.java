@@ -35,7 +35,7 @@ public class AchievementCheck {
 		* If the achievement.currentStage is less than stages, then level the stage up and update the explanation text. 
 		*/
 		
-		if(qPage.getQuestionTypes().size() == 1) {
+		if(qPage.getQuestionTypes().size() == 1 && gui.getTitlePage().questionPage == gui.getTitlePage().questionPage.Normal) {
 			for(int type = 0; type < 4; type++) {
 				for(int operation = 0; operation < 4; operation++) {
 					tempAch = gui.getAchPage().getVanillaAchievementList().get(type).get(operation);

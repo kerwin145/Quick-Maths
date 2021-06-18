@@ -11,12 +11,12 @@ public class UserData implements Serializable{
 	public int[][] questionsCompleted = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}}; //groups are the question types, inner brackets are the question difficulties
 	public int[][] questionsCorrect = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}}; //groups are the question types, inner brackets are the question difficulties
 
-	public double[][] timeAverageSum = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
+	public long[][] timeAverageSum = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
 	public int[][] timeAverageCount = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
-	public double[][] tempTimeAverageSum = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
+	public long[][] tempTimeAverageSum = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
 	public int[][] tempTimeAverageCount = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
 	
-	public double[][] recordTimeIndividual = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
+	public long[][] recordTimeIndividual = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
 	
 	public int[][] vanillaAchLevel = {{0, 0, 0, 0},{0, 0, 0, 0},{0, 0, 0, 0},{0, 0, 0, 0}};
 

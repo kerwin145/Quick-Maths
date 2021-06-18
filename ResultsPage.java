@@ -22,8 +22,8 @@ public class ResultsPage {
 	Color percentColor;
 	Random rnd = new Random();
 	
-	String[] perfect = {"UNIVVVERSSSE BRAIN", "Absolute POGCHAMP", "You kno da wae", "WawaWeewa"};
-	String[] good = {"GALAXY BRAIN", "SHEEEeeesh", "NOICE", "Poggers", "*clap* *clap* *clap*", "Verryyy nice"};
+	String[] perfect = {"UNIVVVERSSSE BRAIN", "Absolute POGCHAMP", "You kno da wae", "WawaWeewa", "SHEEEeeesh"};
+	String[] good = {"GALAXY BRAIN", "Lessgo", "NOICE", "Poggers", "*clap* *clap* *clap*", "Verryyy nice"};
 	String[] ok = {"Not bad", "A is for Average. B is for Dissapoint. DONT BE A DISSAPOINTMENT", "Hmmmmm", "Eeetss...ok"};
 	String[] bad = {"tiny brain", "You do not da wae", "Welp you can only go uphill from here"};
 	Color splashTextColor;
@@ -34,11 +34,14 @@ public class ResultsPage {
 	Font fnt1 = new Font("Garamond", Font.BOLD, HomePage.height);
 	Font fntPlay= new Font("Arial", Font.BOLD, 25);
 	Font fntNormal = new Font("Garamond", Font.PLAIN, 30);
+	Font fntSmallish = new Font("Garamond", Font.PLAIN, 20);
 	
 	int x1 = 80, y1 = 80, y2 = gui.HEIGHT * gui.SCALE / 3;
 	int spacing = (int)(fntNormal.getSize() * 1.5);
 	
 	public Rectangle playButton = new Rectangle(x1, gui.HEIGHT * gui.SCALE - 100, 150, 50);
+	public Rectangle rollBack = new Rectangle(x1, (int)(y2 + spacing * 6.5), 150, 50);
+	boolean rolledBack = false;
 
 	public ResultsPage(GUI gui){
 		this.gui = gui;
@@ -58,6 +61,27 @@ public class ResultsPage {
 			g.drawString("Time Spent: " + qPageYN.timeMinutes + "' " +  qPageYN.timeSeconds + "\"", x1, y2 + spacing*3);
 		else
 			g.drawString("Time Spent: " + qPage.timeMinutes + "' " +  qPage.timeSeconds + "\"", x1, y2 + spacing*3);
+		
+		if(qPage.askToRollBack && !rolledBack){
+			g.setColor(Color.orange);
+			g2d.draw(rollBack);
+			g.setFont(fntPlay);
+			g.setColor(Color.black);
+			g.drawString("Roll Back", rollBack.x + 10, rollBack.y + 30);
+			g.setFont(fntSmallish);
+			g.drawString("Your average time for this set was abnoramlly high.", rollBack.x + rollBack.width + 20, rollBack.y + 15);
+			g.drawString("Would you like to roll back time data for this round?", rollBack.x + rollBack.width + 20, rollBack.y + 15 + fntNormal.getSize());
+		}
+		else if (rolledBack){
+			g.setColor(Color.gray);
+			g2d.draw(rollBack);
+			g.setFont(fntPlay);
+			g.drawString("Roll Back", rollBack.x + 10, rollBack.y + 30);
+			g.setColor(Color.black);
+			g.setFont(fntSmallish);
+			g.drawString("Data successfully rolled back.", rollBack.x + rollBack.width + 20, rollBack.y + 15);
+			g.drawString("Time average data for this round will not be counted.", rollBack.x + rollBack.width + 20, rollBack.y + 15 + fntNormal.getSize());
+		}
 		
 		g.setColor(splashTextColor);
 		g.drawString(splashText, x1, y2 + spacing*5);
@@ -83,12 +107,14 @@ public class ResultsPage {
 	
 	public void initialize() {
 		qPage = gui.getQuestionPage();
-		
+				
 		correct = qPage.numCorrect;
 		totalQ = qPage.numQuestions;
 		calculateScore(correct, totalQ);
 		difficulty = "" + qPage.getDifficulty();
 		dififcultyToString();
+		
+		rolledBack = false;		
 		
 		splashText = setSplahText();
 		splashTextColor = randColor();
@@ -97,6 +123,8 @@ public class ResultsPage {
 
 		achCheck.checkVanillaAch();
 		gui.getAchPage().updateAchievementsWithUserData();
+		
+		System.out.println("Total average deviation:"  + qPage.timeAverageDeviationAverage);
 	}
 	
 	public void initializeSpecial(){
@@ -108,6 +136,8 @@ public class ResultsPage {
 		difficulty = "" + qPage.getDifficulty();
 		dififcultyToString();
 		
+		rolledBack = false;		
+
 		splashText = setSplahText();
 		splashTextColor = randColor();
 		
@@ -145,9 +175,6 @@ public class ResultsPage {
 			percentColor = new Color((int)((1-randomCorrect) * 255), (int)(randomCorrect * 255), 0);
 		}
 		System.out.println("Percent Correct: " + percentCorrect);
-		
-		
-
 	}
 	
 	public String randFromArray(String[] input){
@@ -211,4 +238,14 @@ public class ResultsPage {
 		
 		}
 	}
+	
+	public void rollBack(){
+		for(int i = 0; i < gui.uData.timeAverageSum.length; i++)
+		{
+			for(int j = 0; j <gui.uData.timeAverageSum[i].length;j++){
+				gui.uData.timeAverageSum[i][j] -= gui.uData.tempTimeAverageSum[i][j];
+				gui.uData.timeAverageCount[i][j] -= gui.uData.tempTimeAverageCount[i][j];
+			}
+		}
+	}//rollback
 }
