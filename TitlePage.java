@@ -2,7 +2,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
+
+import javax.swing.ImageIcon;
+
+import k_Methods.MoColors;
+import k_Methods.RectanglePlus;
+import k_Methods.RectanglePlus.gradientFormat;
 
 public class TitlePage {
 	
@@ -13,18 +20,34 @@ public class TitlePage {
 		this.gui = gui;
 	}
 
-	public Rectangle playButton = new Rectangle(100, 150, 150, 50);
-	public Rectangle playSpecialButton = new Rectangle(100, 250, 150, 50);
-	public Rectangle resumeButton = new Rectangle(100, 350, 150, 50);
-	public Rectangle achievementsButton = new Rectangle(100, 450, 150, 50);
-	public Rectangle quitButton = new Rectangle(100, 550, 150, 50);
-
-	
-	Font fnt0 = new Font("Arial", Font.BOLD, 50);
-	Font fnt1 = new Font("Arial", Font.BOLD, 25);
+	Font fnt0 = new Font("Linux Libertine Display G", Font.BOLD, 50);
+	Font fnt1 = new Font("Bodoni MT", Font.BOLD, 25);
 	Font fnt2 = new Font("Garamond", Font.BOLD, 20);
 	
+	public RectanglePlus playButton = new RectanglePlus
+			(100, 150, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, true, gradientFormat.horizontal, MoColors.orange,
+			fnt1, Color.white, "Start");
+
+	public RectanglePlus playSpecialButton = new RectanglePlus
+			(100, 230, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, true, gradientFormat.horizontal, MoColors.magenta,
+			fnt1, Color.white, "Special");
+	
+	public RectanglePlus resumeButton = new RectanglePlus
+			(100, 310, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, true, gradientFormat.horizontal, MoColors.blue,
+			fnt1, Color.white, "Resume");
+	
+	public RectanglePlus achievementsButton = new RectanglePlus
+			(100, 390, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, MoColors.dodgerBlue, MoColors.blueViolet, gradientFormat.horizontal, MoColors.gold,
+			fnt1, Color.white, "Medals");
+	
+	public RectanglePlus quitButton = new RectanglePlus
+			(100, 470, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, MoColors.dodgerBlue, MoColors.blueViolet, gradientFormat.horizontal, MoColors.red,
+			fnt1, Color.white, "Quit");
+
+	Image background = new ImageIcon("backgrounds/quickMathsLevelSelectBackground2.jpg").getImage().getScaledInstance(gui.WIDTH * gui.SCALE, gui.HEIGHT * gui.SCALE, Image.SCALE_DEFAULT);
+
 	public boolean setFinished = true, setSpecialFinished = true;
+		
 	public static enum PreviousPage{
 		Normal,
 		Special,
@@ -34,52 +57,46 @@ public class TitlePage {
 
 	
 	public void render(Graphics g) {
+		
 		Graphics2D g2d = (Graphics2D)g;
 		qPage = gui.getQuestionPage();
 		qPageYN = gui.getQuestionPageYesNo();
-
+		
+		g.drawImage(background, 0, 0, null);
+		
 		g.setFont(fnt0);
-		g.setColor(Color.black);
+		g.setColor(Color.white);
 		g.drawString("Quick Maths", 100, 100);
 		
-		g.setFont(fnt1);
-		g.setColor(Color.orange);
-		g2d.draw(playButton);
-		
-		g.setColor(Color.magenta);
-		g2d.draw(playSpecialButton);
-		
-		g.setColor(Color.cyan);
-		g2d.draw(achievementsButton);
-		
-		g.setColor(Color.red);
-		g2d.draw(quitButton);
-			
-		g.setColor(Color.black);
 		if(!setFinished) {
-			g.drawString("Restart", playButton.x + 10, playButton.y + 30);
+			playButton.setText("Restart");
 		}
 		else {
-			g.drawString("Play", playButton.x + 10, playButton.y + 30);
+			playButton.setText("Play");
 		}
 		if(!setSpecialFinished) {
-			g.drawString("Restart", playSpecialButton.x + 10, playSpecialButton.y + 30);
+			playSpecialButton.setText("Restart");
 		}
 		else {
-			g.drawString("Special", playSpecialButton.x + 10, playSpecialButton.y + 30);
+			playSpecialButton.setText("Special");
 		}
+		
 		
 		if(!(setFinished && setSpecialFinished)){
-			g.setColor(Color.green);
+			//resumeButton.setTextColor(Color.green);
+			resumeButton.setText("Resume!");
 		}
-		else g.setColor(Color.gray);
-		g.drawString("Resume", resumeButton.x + 10, resumeButton.y + 30);
-		g2d.draw(resumeButton);
-
+		else {
+			//resumeButton.setTextColor(Color.gray);
+			resumeButton.setText("___");
+		}
+	
 		
-		g.setColor(Color.black);
-		g.drawString("Medals", achievementsButton.x + 10, achievementsButton.y + 30);
-		g.drawString("Quit", quitButton.x + 10, quitButton.y + 30);
+		playButton.draw(g2d);
+		playSpecialButton.draw(g2d);
+		resumeButton.draw(g2d);
+		achievementsButton.draw(g2d);
+		quitButton.draw(g2d);		
 
 		g.setFont(fnt2);
 		g.setColor(Color.gray);

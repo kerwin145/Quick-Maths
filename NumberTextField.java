@@ -4,6 +4,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import javax.swing.Box;
+
+import k_Methods.MoColors;
+import k_Methods.RectanglePlus;
+import k_Methods.RectanglePlus.gradientFormat;
+
 public class NumberTextField {
 	
 	/*wierd form of textfield.
@@ -14,10 +20,12 @@ public class NumberTextField {
 
 	private int x, y, width, height;
 	private String text;
-	private Rectangle borders;
+	private RectanglePlus box;
 	boolean allowNegatives;
 
 	private boolean inFocus = false;
+	
+	
 
 	NumberTextField(int x, int y, int width, int height, String text, boolean allowNegatives){
 		this.x = x;
@@ -26,24 +34,28 @@ public class NumberTextField {
 		this.height = height;
 		this.text = text;
 		this.allowNegatives = allowNegatives;
-		borders = new Rectangle(x, y, width, height);
+		box = new RectanglePlus(x, y, width, height);
+		
+		//public RectanglePlus(int x, int y, int width, int height, Color[] c1, Color[] c2, boolean doDarken, gradientFormat format, Color borderColor[], Font font, Color fontColor[], String text){
+
 	}
 
+	
+	//TODO NEXT TIME TO HAVE THE BACKGROUND NOT RENDER, JUST SET RECTANGLE WIDTH TO ZERO
 	public void render(Graphics g, boolean isOn){
 		Font fnt0 = new Font("Garamond", Font.PLAIN, height);
 
 		Graphics2D g2d = (Graphics2D)g;
 		
-		if (inFocus) g.setColor(Color.green);
-		else g.setColor(Color.gray);
-		
-		g2d.draw(borders);
-		g.setColor(Color.black);
-
 		g.setFont(fnt0);
-		if(isOn)g.setColor(Color.black);
-		else g.setColor(Color.gray);
+		if(isOn)g.setColor(Color.white);
+		else g.setColor(MoColors.silver);
 		g.drawString(text, x + 2, (int)(y + height * 0.87));
+		
+		if (inFocus) g.setColor(Color.green);
+		else g.setColor(MoColors.silver);
+				
+		box.draw(g2d);
 	}
 	
 	public void updateText(int keyCode) {
