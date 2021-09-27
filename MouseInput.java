@@ -74,11 +74,6 @@ public class MouseInput implements MouseListener{
 			if(clickInBounds(levSelectPage.MultChoose)) {levSelectPage.MultChosen();}
 			if(clickInBounds(levSelectPage.DivChoose)) {levSelectPage.DivChosen();}
 
-			if(levSelectPage.getQChosen()[1])
-				if(clickInBounds(levSelectPage.OnlyPositive)){levSelectPage.onlyPositive = !levSelectPage.onlyPositive;}
-			if (levSelectPage.getQChosen()[3])
-				if(clickInBounds(levSelectPage.PerfectDivisors)){levSelectPage.perfectDivisors = !levSelectPage.perfectDivisors;}
-						
 			if(clickInBounds(levSelectPage.easyDif)) {levSelectPage.setDifficulty(0);}
 			if(clickInBounds(levSelectPage.medDif)) {levSelectPage.setDifficulty(1);}
 			if(clickInBounds(levSelectPage.hardDif)) {levSelectPage.setDifficulty(2);}
@@ -104,54 +99,39 @@ public class MouseInput implements MouseListener{
 
 			//i should probably put these into a list. 
 			if(clickInBounds(levSelectPageSpecial.multBy2)){
-				levSelectPageSpecial.specialQuestionNum2 = 2;
-				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
-				levSelectPageSpecial.specialQChosenIndex = 0;
+				levSelectPageSpecial.setQuestionType(0);
 			}
 			else if(clickInBounds(levSelectPageSpecial.multBy3)){
-				levSelectPageSpecial.specialQuestionNum2 = 3;
-				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
-				levSelectPageSpecial.specialQChosenIndex = 1;
+				levSelectPageSpecial.setQuestionType(1);
 			}
 			else if(clickInBounds(levSelectPageSpecial.multBy4)){
-				levSelectPageSpecial.specialQuestionNum2 = 4;
-				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
-				levSelectPageSpecial.specialQChosenIndex = 2;
+				levSelectPageSpecial.setQuestionType(2);
 			}
 			else if(clickInBounds(levSelectPageSpecial.multBy5)){
-				levSelectPageSpecial.specialQuestionNum2 = 5;
-				levSelectPageSpecial.specialQTypeChosen = 2;//2 for multiplication
-				levSelectPageSpecial.specialQChosenIndex = 3;
+				levSelectPageSpecial.setQuestionType(3);
 			}
+			
 			else if(clickInBounds(levSelectPageSpecial.divBy2)){
-				levSelectPageSpecial.specialQuestionNum2 = 2;
-				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
-				levSelectPageSpecial.specialQChosenIndex = 4;
+				levSelectPageSpecial.setQuestionType(4);
 			}
 			else if(clickInBounds(levSelectPageSpecial.divBy3)){
-				levSelectPageSpecial.specialQuestionNum2 = 3;
-				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
-				levSelectPageSpecial.specialQChosenIndex = 5;
+				levSelectPageSpecial.setQuestionType(5);
 			}
 			else if(clickInBounds(levSelectPageSpecial.divBy4)){
-				levSelectPageSpecial.specialQuestionNum2 = 4;
-				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
-				levSelectPageSpecial.specialQChosenIndex = 6;
+				levSelectPageSpecial.setQuestionType(6);
 			}
 			else if(clickInBounds(levSelectPageSpecial.divBy5)){
-				levSelectPageSpecial.specialQuestionNum2 = 5;
-				levSelectPageSpecial.specialQTypeChosen = 3;//3 for division
-				levSelectPageSpecial.specialQChosenIndex = 7;
+				levSelectPageSpecial.setQuestionType(7);
 			}
 			
 			else if (clickInBounds(levSelectPageSpecial.isItDivisible)){
-				levSelectPageSpecial.specialQChosenIndex = 8;
+				levSelectPageSpecial.setQuestionType(8);
 			}
 			else if (clickInBounds(levSelectPageSpecial.squaringNumberThatEndIn5)){
-				levSelectPageSpecial.specialQChosenIndex = 9;
+				levSelectPageSpecial.setQuestionType(9);
 			}
 			else if (clickInBounds(levSelectPageSpecial.multBy11)){
-				levSelectPageSpecial.specialQChosenIndex = 10;
+				levSelectPageSpecial.setQuestionType(10);
 			}
 				
 			else if(clickInBounds(levSelectPageSpecial.GenerateSet) && levSelectPageSpecial.isSetReady()) {
@@ -170,7 +150,7 @@ public class MouseInput implements MouseListener{
 			else if(clickInBounds(levSelectPageSpecial.hardDif)) levSelectPageSpecial.setDifficulty(2);
 			else if(clickInBounds(levSelectPageSpecial.insaneDif)) levSelectPageSpecial.setDifficulty(3);
 
-			if(clickInBounds(levSelectPage.Endless)){levSelectPageSpecial.endlessQuestions  = !levSelectPageSpecial.endlessQuestions;}
+			if(clickInBounds(levSelectPageSpecial.Endless)){levSelectPageSpecial.endlessQuestions  = !levSelectPageSpecial.endlessQuestions;}
 
 			if(clickInBounds(levSelectPageSpecial.HomePage))gui.State = gui.State.TITLE;
 				
@@ -207,8 +187,8 @@ public class MouseInput implements MouseListener{
 		
 		else if (gui.State == gui.State.QUESTIONROUNDYESNO) {
 			
-			if(clickInBounds(qPageYN.Yes)) qPageYN.yesNo = 1;
-			if(clickInBounds(qPageYN.No)) qPageYN.yesNo = 0;
+			if(clickInBounds(qPageYN.yes)) qPageYN.yesNo = 1;
+			if(clickInBounds(qPageYN.no)) qPageYN.yesNo = 0;
 	
 			if(clickInBounds(qPageYN.HomePage)) {
 				gui.State = gui.State.TITLE;
@@ -239,7 +219,7 @@ public class MouseInput implements MouseListener{
 		else if(gui.State == gui.State.RESULTS){
 			
 			if(clickInBounds(results.HomePage)) {gui.State = gui.State.TITLE;}
-			if(clickInBounds(results.playButton)) {
+			if(clickInBounds(results.newRound)) {
 				if(titlePage.questionPage == titlePage.questionPage.Normal)
 					gui.State = gui.State.LEVELSELECT;
 				else if(titlePage.questionPage == titlePage.questionPage.Special)

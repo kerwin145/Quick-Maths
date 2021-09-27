@@ -42,7 +42,9 @@ public class KeyInput extends KeyAdapter{
 					qPage.initializeRound();	
 				}
 			}
-			//System.out.println(key);//test 
+			
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				gui.State = gui.State.TITLE;
 		}
 		
 		else if (gui.State == gui.State.LEVELSELECTSPECIAL) {
@@ -58,6 +60,9 @@ public class KeyInput extends KeyAdapter{
 					gui.State = gui.State.QUESTIONROUNDYESNO;
 				}
 			}
+			
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				gui.State = gui.State.TITLE;
 		}
 		
 		else if (gui.State == gui.State.QUESTIONROUNDNUMBER) {
@@ -76,6 +81,15 @@ public class KeyInput extends KeyAdapter{
 				}
 			}
 			qPage.finishClicked = false;
+			
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				if((titlePage.questionPage == titlePage.questionPage.Special || titlePage.questionPage == titlePage.questionPage.Normal) && !qPage.askForConfirm) {
+					qPage.timerPause();
+					qPage.timeQuestionStartMillis += qPage.deltaMillisFix;
+				}
+					gui.State = gui.State.TITLE;
+			}
+			
 
 		}	
 		
@@ -96,7 +110,6 @@ public class KeyInput extends KeyAdapter{
 				rightPressed = true;
 				leftPressed = false;
 			}
-		
 
 			char testPass = e.getKeyChar();
 			if(qPageYN.finishClicked){
@@ -107,12 +120,21 @@ public class KeyInput extends KeyAdapter{
 				}
 			}
 			qPageYN.finishClicked = false;
+			
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				if(titlePage.questionPage == titlePage.questionPage.SpecialYN && !qPageYN.askForConfirm) {
+					qPageYN.timerPause();
+					qPageYN.timeQuestionStartMillis += qPageYN.deltaMillisFix;
+				}
+				gui.State = gui.State.TITLE;
+			}
 		}	
 		
 		else if(gui.State == gui.State.ACHIEVEMENTS){
 			if(e.getKeyCode() == KeyEvent.VK_RIGHT && achPage.pageIndex < achPage.numPages-1) {achPage.setPageIndex(achPage.getPageIndex() + 1);}
 			if(e.getKeyCode() == KeyEvent.VK_LEFT  && achPage.pageIndex > 0) {achPage.setPageIndex(achPage.getPageIndex() - 1);}
-
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				gui.State = gui.State.TITLE;
 		}
 		
 		else if(gui.State == gui.State.RESULTS){
@@ -122,6 +144,9 @@ public class KeyInput extends KeyAdapter{
 				else if(titlePage.questionPage == titlePage.questionPage.Special || titlePage.questionPage == titlePage.questionPage.SpecialYN)
 					gui.State = gui.State.LEVELSELECTSPECIAL;
 			}
+			
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+				gui.State = gui.State.TITLE;
 			
 		}
 	}
