@@ -1,130 +1,143 @@
 
 
-import k_Methods.MoColors;
-import k_Methods.RectanglePlus;
 import k_Methods.stringGraphics;
-import k_Methods.RectanglePlus.gradientFormat;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 public class LevelSelect extends QuestionSelectPage {
 	
+	public boolean addChosen = false, subChosen = false, multChosen = false, divChosen = false;
+	public boolean onlyPositive = false, perfectDivisors = false;
+	
 	LevelSelect (GUI gui){
 		super(gui);
 	}
 	
-	public boolean addChosen = false, subChosen = false, multChosen = false, divChosen = false;
-	
 	int spacing1 = 80;
 	int buttonWidth1 = 60, buttonHeight1 = 60;
+	public Rectangle AddChoose = new Rectangle(120, 150, buttonWidth1, buttonHeight1);
+	public Rectangle SubChoose = new Rectangle(120 + buttonWidth1 + spacing1, 150, buttonWidth1, buttonHeight1);
+	public Rectangle MultChoose = new Rectangle(120 + buttonWidth1*2 + spacing1*2, 150, buttonWidth1, buttonHeight1);
+	public Rectangle DivChoose = new Rectangle(120 + buttonWidth1*3 + spacing1*3, 150, buttonWidth1, buttonHeight1);
 	
-	Color[] OperationsButtonColors1a = {MoColors.orange, MoColors.dodgerBlue};
-	Color[] OperationsButtonColors2a = {MoColors.salmon, MoColors.aqua};
-	Color[] OperationsButtonBorder_a = {Color.gray, MoColors.chartreuse};
-	
-	Color[] OperationsButtonColors1b = {MoColors.orange, MoColors.dodgerBlue, MoColors.darkTurquoise};
-	Color[] OperationsButtonColors2b = {MoColors.salmon, MoColors.aqua, MoColors.aqua};
-	Color[] OperationsButtonBorder_b = {Color.gray, MoColors.chartreuse};
-
-	Color[] OperationsFontColor = {Color.white};
-	
-	public RectanglePlus AddChoose = new RectanglePlus
-			(120, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1a, OperationsButtonColors2a, true, gradientFormat.vertical, OperationsButtonBorder_a,
-			fnt0, OperationsFontColor, "+");
-	
-	public RectanglePlus SubChoose = new RectanglePlus
-			(120 + buttonWidth1 + spacing1, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1b, OperationsButtonColors2b, true, gradientFormat.vertical, OperationsButtonBorder_b,
-			fnt0, OperationsFontColor, "-");
-			
-	public RectanglePlus MultChoose = new RectanglePlus
-			(120 + buttonWidth1*2 + spacing1*2, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1a, OperationsButtonColors2a, true, gradientFormat.vertical, OperationsButtonBorder_a,
-			fnt0, OperationsFontColor, "x");
-	
-	public RectanglePlus DivChoose = new RectanglePlus
-			(120 + buttonWidth1*3 + spacing1*3, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1b, OperationsButtonColors2b, true, gradientFormat.vertical, OperationsButtonBorder_b,
-			fnt0, OperationsFontColor, "÷");
-	
-	private RectanglePlus[] qTypes = {AddChoose, SubChoose, MultChoose, DivChoose};
+	private Rectangle[] qTypes = {AddChoose, SubChoose, MultChoose, DivChoose};
 	private boolean[] qChosen = {addChosen, subChosen, multChosen, divChosen};
 	
-	public boolean onlyPositive = false, perfectDivisors = false;
-
-	public Rectangle onlyPositiveTextBox = new Rectangle(SubChoose.x - (int)(buttonWidth1 * .25), (int)(SubChoose.y + SubChoose.height * 1.05), (int)(buttonWidth1 * 1.5), buttonHeight1);
-	public Rectangle perfectDivisorsTextBox = new Rectangle(DivChoose.x - (int)(buttonWidth1 * .25), (int)(DivChoose.y + DivChoose.height * 1.05), (int)(buttonWidth1 * 1.5), buttonHeight1);
+	//these will generate small rectangles under
+	//public Rectangle OnlyPositive = new Rectangle((int)(120 + buttonWidth1 + spacing1 - buttonWidth1 * 0.25), (int)(150 + buttonHeight1 * 1.25), (int)(buttonWidth1 * 1.5), buttonHeight1/2);
+	//public Rectangle PerfectDivisors = new Rectangle((int)(120 + buttonWidth1*3 + spacing1*3 - buttonWidth1 * 0.25), (int)(150 + buttonHeight1 * 1.25), (int)(buttonWidth1 * 1.5), buttonHeight1/2);
 	
-	int buttonY2 = (int)(AddChoose.height * 3 + AddChoose.y), buttonWidth2 = 100, buttonHeight = 50;
-
-	public RectanglePlus easyDif = new RectanglePlus
-			(120, buttonY2, buttonWidth2, buttonHeight1, easyDifColor1, easyDifColor2, true, gradientFormat.horizontal, easyDifBorder,
-			fnt2,easyDifFontColor, "Easy");
-	public RectanglePlus medDif = new RectanglePlus
-			(120 + buttonWidth2 + spacing1, buttonY2, buttonWidth2, buttonHeight1, medDifColor1, medDifColor2, true, gradientFormat.horizontal, medDifBorder,
-			fnt2, medDifFontColor, "Medium");
-	public RectanglePlus hardDif = new RectanglePlus
-			(120 + buttonWidth2*2 + spacing1*2, buttonY2, buttonWidth2, buttonHeight1, hardDifColor1, hardDifColor2, true, gradientFormat.horizontal, hardDifBorder,
-			fnt2, hardDifFontColor, "Hard");
-	public RectanglePlus insaneDif = new RectanglePlus
-			(120 + buttonWidth2*3 + spacing1*3, buttonY2, buttonWidth2, buttonHeight1, insaneDifColor1, insaneDifColor2, true, gradientFormat.horizontal, insaneDifBorder,
-			fnt2, insaneDifFontColor, "Insane");
+	public Rectangle OnlyPositive = new Rectangle((int)(120 + buttonWidth1 + spacing1), (int)(150 + buttonHeight1 * 1.25), (int)(buttonWidth1), buttonHeight1);
+	public Rectangle PerfectDivisors = new Rectangle((int)(120 + buttonWidth1*3 + spacing1*3), (int)(150 + buttonHeight1 * 1.25), (int)(buttonWidth1), buttonHeight1);
+		
+	int buttonY2 = (int)(AddChoose.height * 3 + AddChoose.y), buttonWidth2 = 90, buttonHeight = 50;
+	public Rectangle easyDif = new Rectangle (120, buttonY2, buttonWidth2, buttonHeight1);
+	public Rectangle medDif = new Rectangle(120 + buttonWidth2 + spacing1, buttonY2, buttonWidth2, buttonHeight1);
+	public Rectangle hardDif = new Rectangle(120 + buttonWidth2*2 + spacing1*2, buttonY2, buttonWidth2, buttonHeight1);
+	public Rectangle insaneDif = new Rectangle(120 + buttonWidth2*3 + spacing1*3, buttonY2, buttonWidth2, buttonHeight1);
 	
-	public Rectangle insaneTextBox = new Rectangle(insaneDif.x, (int)(insaneDif.y + insaneDif.height * 1.05), buttonWidth2, buttonHeight1);
+	public Rectangle[] Difficulties = {easyDif, medDif, hardDif, insaneDif};
 	
-	public RectanglePlus[] Difficulties = {easyDif, medDif, hardDif, insaneDif};
+	Font fnt0 = new Font("Times", Font.ITALIC, (int)(AddChoose.height/1.5));
+	Font fnt1 = new Font("Garamond", Font.BOLD, HomePage.height);
+	Font fnt2 = new Font("Garamond", Font.PLAIN, (int)(AddChoose.height/2.5));
+	Font fnt3 = new Font("Georgia", Font.PLAIN, (int)(InfoBox.width/1.5));
+	Font fntHeader = new Font("Times", Font.BOLD, (int)(AddChoose.height/2));
+	Font fntNormal = new Font("Garamond", Font.PLAIN, (int)(AddChoose.height / 4));
+	Font fntNormal2 = new Font("Garamond", Font.PLAIN, (int)(AddChoose.height/3.5));
 	
 	public void render(Graphics g){
 		super.render(g);
 		Graphics2D g2d = (Graphics2D)g;
 		
-		g.setColor(Color.gray);
-		//g.fillRect(100, 130, buttonWidth1*4 + spacing1*4, 600);
-
-		g.setFont(fntHeader);
-		g.setColor(Color.white);
-		g.drawString("Operation", AddChoose.x, AddChoose.y - AddChoose.height/2);
+		//render the current chosen question type box to be green and the others gray
+		//also has the benefit of still rendering when quesitontype is null
+		for (int i = 0; i < qTypes.length; i++) {
+			if (qChosen[i] == true) {
+				g.setColor(Color.orange);
+				g2d.draw(qTypes[i]);
+			}
+			else {
+				g.setColor(Color.gray);
+				g2d.draw(qTypes[i]);
+			}
+		}
 		
-				
-		for (int i = 0; i < qTypes.length; i++) 
-			qTypes[i].draw(g2d);		
-		
-		
-		g.setFont(fntNormal);
-		g.setColor(Color.white);
-		if(qChosen[1]) {
-			if(onlyPositive)
-				stringGraphics.drawStringFlow("Answers will only be > or = to 0.", onlyPositiveTextBox, g2d);
-			else	
-				stringGraphics.drawStringFlow("Answers will be integers.", onlyPositiveTextBox, g2d);
-		}	
-		
-		if(qChosen[3]) {
-			if(perfectDivisors)
-				stringGraphics.drawStringFlow("Answers will have no remainder.", perfectDivisorsTextBox, g2d);
-			else	
-				stringGraphics.drawStringFlow("Answers will be rounded down to nearest whole number.", perfectDivisorsTextBox, g2d);
-		}	
-		
-		if(difficulty == 3) {
-			stringGraphics.drawStringFlow("Don't tell me ur not gonna use ur calcultor :]", insaneTextBox, g2d);
+		for (int i = 0; i < Difficulties.length; i++) {
+			if (i == difficulty) {
+				g.setColor(Color.blue);
+				g2d.draw(Difficulties[i]);
+			}
+			else {
+				g.setColor(Color.gray);
+				g2d.draw(Difficulties[i]);
+			}
 		}
 
-		g.setColor(Color.white);
+		g.setFont(fntHeader);
+		g.setColor(Color.black);
+		g.drawString("Operation", AddChoose.x, AddChoose.y - AddChoose.height/2);
+
+		g.setFont(fnt0);
+		g.setColor(Color.black);
+		g.drawString(" + ", AddChoose.x + AddChoose.width/2 - fnt0.getSize()/2, AddChoose.y + AddChoose.height/2 + fnt0.getSize()/2);
+		g.drawString(" - ", SubChoose.x + SubChoose.width/2 - fnt0.getSize()/2, SubChoose.y + SubChoose.height/2 + fnt0.getSize()/2);
+		g.drawString(" * ", MultChoose.x + MultChoose.width/2 - fnt0.getSize()/2, MultChoose.y + MultChoose.height/2 + fnt0.getSize()/2);
+		g.drawString(" / ", DivChoose.x + DivChoose.width/2 - fnt0.getSize()/2, DivChoose.y + DivChoose.height/2 + fnt0.getSize()/2);
+
+		String[] onlyPositiveText = {"Only", "Positive"}, perfectDivisorsText = {"Perfect", "Divisors"};
+		g.setFont(fntNormal2);
+		if(qChosen[1]){
+			g.setColor(Color.black);
+			stringGraphics.drawStringCentered(onlyPositiveText, OnlyPositive, g);
+			if(onlyPositive)g.setColor(Color.orange);
+			else g.setColor(Color.gray);
+			g2d.draw(OnlyPositive);
+		}
+		if(qChosen[3]){
+			g.setColor(Color.black);
+			stringGraphics.drawStringCentered(perfectDivisorsText, PerfectDivisors, g);
+			if(perfectDivisors)g.setColor(Color.orange);
+			else g.setColor(Color.gray);
+			g2d.draw(PerfectDivisors);
+		}
+		
+		g.setColor(Color.black);
 		g.setFont(fntHeader);
 		g.drawString("Difficulty", easyDif.x, easyDif.y - easyDif.height/2);
-		
-		for (int i = 0; i < Difficulties.length; i++) 
-				Difficulties[i].draw(g2d);
+		g.setFont(fnt2);
+		stringGraphics.drawStringCentered("Easy", easyDif, g);
+		stringGraphics.drawStringCentered("Medium", medDif, g);
+		stringGraphics.drawStringCentered("Hard", hardDif, g);
+		g.setFont(fntSmall);
+		String[] insaneDifText = {"INSANE: Don't tell", "me ur not gonna", "use ur calculator ;]" };
+		stringGraphics.drawStringCentered(insaneDifText, insaneDif, g);
 
 	}
 	
 	public void renderHelp(Graphics g) {
 		g.setFont(fntNormal);
-		g.setColor(Color.white);
+		g.setColor(Color.gray);
 		g.drawString("Click to Select an operation", (int)(DivChoose.x + DivChoose.width + 5), AddChoose.y + fntNormal.getSize());
 		g.drawString("You can also select more than one", (int)(DivChoose.x + DivChoose.width + 5), AddChoose.y + fntNormal.getSize()*2); 
 		g.drawString("operation for your problem set. ", (int)(DivChoose.x + DivChoose.width + 5), AddChoose.y + fntNormal.getSize()*3);
+		
+		if(qChosen[1]) {
+			g.drawString("If selected, all questions", (int)(OnlyPositive.x + OnlyPositive.width + 5), OnlyPositive.y + fntNormal.getSize());
+			g.drawString("will have answers.",(int)(OnlyPositive.x + OnlyPositive.width + 5), OnlyPositive.y + fntNormal.getSize()*2);
+			g.drawString("greater than or equal to 0.",(int)(OnlyPositive.x + OnlyPositive.width + 5), OnlyPositive.y + fntNormal.getSize()*3);
+		}
+		if(qChosen[3]) {
+			g.drawString("If selected, all questions", (int)(PerfectDivisors.x + PerfectDivisors.width + 5), PerfectDivisors.y + fntNormal.getSize());
+			g.drawString("will divide perfectly.",(int)(PerfectDivisors.x + PerfectDivisors.width + 5), PerfectDivisors.y + fntNormal.getSize()*2);
+			g.drawString("If unselected, answers", (int)(PerfectDivisors.x + PerfectDivisors.width + 5), PerfectDivisors.y + fntNormal.getSize()*3);
+			g.drawString("will be rounded down.", (int)(PerfectDivisors.x + PerfectDivisors.width + 5), PerfectDivisors.y + fntNormal.getSize()*4);
+		}
 		
 		//approximate difficulties: Easy K-5th Grade, Medium 3rd - 8th Grade, Hard ~6th Grade+
 		g.drawString("Approximate grade level equivalencies", (int)(insaneDif.x + insaneDif.width*1.5), insaneDif.y + fntNormal.getSize());
@@ -151,49 +164,24 @@ public class LevelSelect extends QuestionSelectPage {
 	}
 
 	public void AddChosen() {
-		AddChoose.nextState();
-		
-		qChosen[0] = (AddChoose.getColorState() == 0) ? false : true;
+		qChosen[0] = !qChosen[0];
 	}
 
 	public void SubChosen() {
-		SubChoose.nextState();
-		
-		qChosen[1] = (SubChoose.getColorState() == 0) ? false : true;
-		if(SubChoose.getColorState()==2) onlyPositive = true;
-		else onlyPositive = false;
+		qChosen[1] = !qChosen[1];
 	}
 
 	public void MultChosen() {
-		MultChoose.nextState();
-
-		qChosen[2] = (MultChoose.getColorState() == 0) ? false : true;
+		qChosen[2] = !qChosen[2];
 	}
 
 	public void DivChosen() {
-		DivChoose.nextState();
-		
-		qChosen[3] = (DivChoose.getColorState() == 0) ? false : true;
-		
-		if(DivChoose.getColorState()==2)perfectDivisors = true;
-		else perfectDivisors = false;
+		qChosen[3] = !qChosen[3];
 	}
 	
 	public boolean isSetReady() {
 		return (qChosen[0] || qChosen[1] || qChosen[2] || qChosen[3]) 
-				&& (numQuestionsInput.retrieveNum() > 0 || endlessQuestions)
-				&& (difficulty != -1);
-	}
-	
-	public void setDifficulty(int difficulty) {
-		this.difficulty = difficulty;
-		for(int i = 0; i < Difficulties.length; i++) {
-			if (i == difficulty) {
-				Difficulties[i].setColorState(1);
-			}
-			else
-				Difficulties[i].setColorState(0);
-		}
+				&& (numQuestionsInput.retrieveNum() > 0 || endlessQuestions);
 	}
 
 }

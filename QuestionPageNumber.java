@@ -1,18 +1,12 @@
-import k_Methods.MoColors;
-import k_Methods.RectanglePlus;
 import k_Methods.stringGraphics;
-import k_Methods.RectanglePlus.gradientFormat;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.swing.ImageIcon;
 
 public class QuestionPageNumber {
 
@@ -71,49 +65,24 @@ public class QuestionPageNumber {
 
 	String[] difList = {"Easy", "Medium", "Hard", "Insane"}; //used for getdifficulty method, nothing much else
 
-	Font fnt0 = new Font("Cambria Math", Font.BOLD, gui.HEIGHT * gui.SCALE / 8);
-	Font fnt1 = new Font("Lucida Bright", Font.BOLD, 15);
-	Font fnt1Small = new Font("Lucida Bright", Font.BOLD, 12);
-	Font fnt2 = new Font("Lucida Bright", Font.PLAIN, gui.HEIGHT * gui.SCALE / 15);
+	Font fnt0 = new Font("Arial", Font.ITALIC|Font.BOLD, gui.HEIGHT * gui.SCALE / 8);
+	Font fnt2 = new Font("Arial", Font.ITALIC, gui.HEIGHT * gui.SCALE / 15);
 	Font fntNormal = new Font("Garamond", Font.PLAIN, 15);
 
 	int width1 = gui.WIDTH * gui.SCALE /4;
-	int textSpacing = 5;
-	
-	NumberTextField inputTextAnswer = new NumberTextField(fnt0.getSize() + fnt2.getSize() * 4, gui.HEIGHT * gui.SCALE / 2, width1, 52, "0", true);
-	
-	public RectanglePlus HomePage = new RectanglePlus(gui.WIDTH * gui.SCALE - 150, 15, 130, 20,  
-			MoColors.royalBlue, MoColors.deepSkyBlue, true, gradientFormat.horizontal, MoColors.navy,
-			fnt1, Color.white, "Home");
-	
-	Font fntTimer = new Font("Garamond", Font.BOLD, HomePage.height);
+	NumberTextField inputTextAnswer = new NumberTextField(fnt0.getSize() + fnt2.getSize() * 7/2, gui.HEIGHT * gui.SCALE / 2, width1, 50, "0", true);
+	public Rectangle HomePage = new Rectangle(gui.WIDTH * gui.SCALE - 140, 15, 120, 20);
+	Font fnt1 = new Font("Garamond", Font.BOLD, HomePage.height);
 	Font fntSplash = new Font("Garamond", Font.PLAIN, inputTextAnswer.getHeight());
 	Font fnt1Plain = new Font("Garamond", Font.PLAIN, HomePage.height);
 
-	//state one is normal, two is incorrect, three is warn
-	Color[] submitColor1 ={MoColors.dodgerBlue, MoColors.orange, MoColors.orange};
-	Color[] submitColor2 = {MoColors.aqua, MoColors.salmon, MoColors.aqua};
-	Color[] submitBorderColor = {MoColors.chartreuse, MoColors.orange};
-	Color[] submitTextColor = {Color.white, Color.white};
-	public RectanglePlus submitAnswer = new RectanglePlus(inputTextAnswer.getX() + inputTextAnswer.getWidth() + 60, inputTextAnswer.getY(), 50, 50,
-			submitColor1, submitColor2, true, gradientFormat.horizontal, submitBorderColor,
-			fntSplash, submitTextColor, "->");
-	
+	public Rectangle submitAnswer = new Rectangle(inputTextAnswer.getX() + inputTextAnswer.getWidth() + 60, inputTextAnswer.getY(), 50, 50);
 	public Rectangle InfoBox = new Rectangle(20, 20, 40, 40);
 	Font fnt3 = new Font("Georgia", Font.PLAIN, (int)(InfoBox.width/1.5));;
 
-	Color[] finishSetColor1 = {MoColors.orange, MoColors.dodgerBlue};
-	Color[] finishSetColor2 = {MoColors.salmon, MoColors.aqua };
-	Color[] finishSetBorderColor = {Color.gray, MoColors.chartreuse};
-	Color[] finishSetTextColor = {Color.white, Color.white};
-	
 	private char finishSetPassword;
-	public RectanglePlus finishSet = new RectanglePlus(HomePage.x, gui.HEIGHT * gui.SCALE - 45, 130, 30,
-			finishSetColor1, finishSetColor2, true, gradientFormat.horizontal, finishSetBorderColor,
-			fnt1, finishSetTextColor, "Finish Set");
+	public Rectangle finishSet = new Rectangle(HomePage.x, gui.HEIGHT * gui.SCALE - 45, 120, 30);
 	public boolean finishClicked = false;
-
-	Image background = new ImageIcon("backgrounds/quickMathsLevelSelectBackground4.jpg").getImage().getScaledInstance(gui.WIDTH * gui.SCALE, gui.HEIGHT * gui.SCALE, Image.SCALE_DEFAULT);
 
 	public QuestionPageNumber (GUI gui){
 		this.gui = gui;
@@ -122,10 +91,9 @@ public class QuestionPageNumber {
 
 	public void render(Graphics g){
 		Graphics2D g2d = (Graphics2D)g;
-		renderNotQuestion(g);
 
 		if(question != null){
-			g.setColor(Color.white);
+			g.setColor(Color.black);
 			g.setFont(fnt0);
 			g.drawString(question.getQuestionText(), (int)(fnt0.getSize()), (int)(gui.HEIGHT * gui.SCALE / 2 - fnt0.getSize()) );
 
@@ -135,6 +103,7 @@ public class QuestionPageNumber {
 
 		}
 
+		renderNotQuestion(g);
 		if(renderHelp) renderHelp(g);
 
 	}
@@ -142,54 +111,52 @@ public class QuestionPageNumber {
 	public void renderHelp(Graphics g) {
 
 		g.setFont(fntNormal);
-		g.setColor(Color.white);
+		g.setColor(Color.gray);
 		g.drawString("Submit: Submit and check your answer", (int)(submitAnswer.x + submitAnswer.width * 1.5), submitAnswer.y + fntNormal.getSize());
 		g.drawString("(Hot key: \"Space\")", (int)(submitAnswer.x + submitAnswer.width * 1.5), submitAnswer.y + fntNormal.getSize()*2);
 		if(!timerHidden)
-			g.drawString("Timer: Click to hide.", HomePage.x - 200, (int)(HomePage.y + HomePage.height + fntTimer.getSize()*3 + textSpacing*3));
+			g.drawString("Timer: Click to hide.", (int)(gui.WIDTH * gui.SCALE - HomePage.width*1.8),  (int)(HomePage.y + HomePage.height * 5));
 		else
-			g.drawString("Timer: Click to show.", HomePage.x - 200, (int)(HomePage.y + HomePage.height + fntTimer.getSize()*3 + textSpacing*3));
+			g.drawString("Timer: Click to show.", (int)(gui.WIDTH * gui.SCALE - HomePage.width*1.8),  (int)(HomePage.y + HomePage.height * 5));
 
 	}
 
 	public void renderNotQuestion(Graphics g){
 		Graphics2D g2d = (Graphics2D)g;
 
-		g.drawImage(background, 0, 0, null);
-
 		if (warned)
 			splashText = "Are you sure?";
 		g.setFont(fntSplash);
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		g.drawString(splashText, fnt0.getSize(), (int)(inputTextAnswer.getY() + inputTextAnswer.getHeight() * 2));
 		g.setColor(new Color(39, 201, 14));
 		g.drawString(splashText2, fnt0.getSize(), (int)(inputTextAnswer.getY() + inputTextAnswer.getHeight() * 3));
 
-		submitAnswer.draw(g2d);
-		HomePage.draw(g2d);
+		g.setColor(submitColor);
+		g2d.draw(submitAnswer);
+		stringGraphics.drawStringCentered("->", submitAnswer, g);
+
+		g.setColor(Color.black);
+		g2d.draw(HomePage);
+		g2d.setFont(fnt1);
+		stringGraphics.drawStringCentered("Home", HomePage, g);
+
+		g2d.draw(finishSet);
+		stringGraphics.drawStringCentered("Finish Set", finishSet, g);
 
 		if(finishClicked){
-			finishSet.setColorState(1);
-			finishSet.setFont(fnt1Small); 
-			finishSet.setText("Press " + "\"" + finishSetPassword + "\"" + " to confirm.");
+			g.setFont(fnt1Plain);
+			g.drawString("Type: " + "\"" + finishSetPassword + "\"" + " to continue.", gui.WIDTH * gui.SCALE - HomePage.width*3, finishSet.y + fnt1Plain.getSize());
 		}
-		else {
-			finishSet.setFont(fnt1); 
-			finishSet.setText("Finish Set");
-			finishSet.setColorState(0);	
-		}
-		
-		finishSet.draw(g2d);
-		
-		g.setFont(fntTimer);
-		g.setColor(Color.white);
+		g.setFont(fnt1);
+		g.setColor(Color.gray);
 		if(!endlessQuestions) {
-			g.drawString("Q " + currentQuestion + "/" + numQuestions, HomePage.x - 200, (int) (HomePage.y + HomePage.height));
-			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion - 1), HomePage.x - 200, (int) (HomePage.y + HomePage.height + fntTimer.getSize() + textSpacing));
+			g.drawString("Q " + currentQuestion + "/" + numQuestions, (int) (gui.WIDTH * gui.SCALE - HomePage.width * 2.2), (int) (HomePage.y + HomePage.height * 1.5));
+			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion - 1), (int) (gui.WIDTH * gui.SCALE - HomePage.width * 2.2), (int) (HomePage.y + HomePage.height * 2.75));
 		}
 		else{
-			g.drawString("Q " + currentQuestion + "/ --", HomePage.x - 200, (int) (HomePage.y + HomePage.height));
-			g.drawString("Correct: " + numCorrect + "/ --", HomePage.x - 200, (int) (HomePage.y + HomePage.height  + fntTimer.getSize() + textSpacing));
+			g.drawString("Q " + currentQuestion + "/ --", (int) (gui.WIDTH * gui.SCALE - HomePage.width * 2.2), (int) (HomePage.y + HomePage.height * 1.5));
+			g.drawString("Correct: " + numCorrect + "/ --", (int) (gui.WIDTH * gui.SCALE - HomePage.width * 2.2), (int) (HomePage.y + HomePage.height * 2.75));
 
 		}
 		timerTextLength = g.getFontMetrics().stringWidth(timerText);
@@ -198,7 +165,7 @@ public class QuestionPageNumber {
 			timerText = "Timer: " + timeMinutes + "' " +  timeSeconds + "\"";
 		else
 			timerText = "Timer: --";
-		g.drawString(timerText, HomePage.x - 200, (int)(HomePage.y + HomePage.height + fntTimer.getSize()*2 + textSpacing*2));
+		g.drawString(timerText, (int)(gui.WIDTH * gui.SCALE - HomePage.width*2.2), (int)(HomePage.y + HomePage.height * 4));
 
 
 		g2d.draw(InfoBox);
@@ -250,6 +217,7 @@ public class QuestionPageNumber {
 				genQuestion();
 				timerUnPause();
 				splashText = "";
+				submitColor = Color.black;
 				askForConfirm = false;
 			}
 		}
@@ -303,21 +271,18 @@ public class QuestionPageNumber {
 		//System.out.println("Total time spent at type: " + question.getType() + " difficulty: " + difficulty + " is " + gui.uData.timeAverageSum[question.getType()][difficulty]/1000.0);
 		//System.out.println("Question end: " + timeQuestionEndMillis + ", start: " + timeQuestionStartMillis + "difference: " + (timeQuestionEndMillis-timeQuestionStartMillis));
 
-		submitAnswer.setColorState(0);
-
 		genQuestion();
 
 	}
 
 	public void warn() {
 		warned = true;
-		submitAnswer.setColorState(2);
 	}
 
 	public void reversed() {
 		warned = false;
 		splashText = randFromArray(almostThere) + " (Answer was " + question.getAnswer() + ")";
-		submitAnswer.setColorState(1);
+		submitColor = Color.orange;
 		dataUpdater.updateQuestionComplete(question.getType(), difficulty);
 		timerPause();
 		askForConfirm = true;
@@ -326,7 +291,7 @@ public class QuestionPageNumber {
 	public void incorrect() {
 		warned = false;
 		splashText = randFromArray(incorrect) + " (Answer was " + question.getAnswer() + ")";
-		submitAnswer.setColorState(1);
+		submitColor = Color.orange;
 		dataUpdater.updateQuestionComplete(question.getType(), difficulty);
 		timerPause();
 		askForConfirm = true;
@@ -339,8 +304,6 @@ public class QuestionPageNumber {
 		}
 
 		else {
-			submitAnswer.setColorState(0);
-
 			if(setType == 0)
 				question = new Question(questionTypes, difficulty, onlyPositive, perfectDivisor);
 			else if (setType == 1)
@@ -385,7 +348,7 @@ public class QuestionPageNumber {
 		questionSpecialType = gui.getLevelSelectSpecial().specialQTypeChosen;
 
 		gui.getTitlePage().questionPage = gui.getTitlePage().questionPage.Special;
-		endlessQuestions = gui.getLevelSelectSpecial().endlessQuestions;
+		endlessQuestions = gui.getQuestionPage().endlessQuestions;
 
 		inputTextAnswer.attemptFocus(inputTextAnswer.getX(), inputTextAnswer.getY());
 		inputTextAnswer.setText("0");
@@ -430,6 +393,8 @@ public class QuestionPageNumber {
 		splashText2 = "";
 		warned = false;
 		askForConfirm = false;
+
+		submitColor = Color.black;
 
 		timeNaught = System.currentTimeMillis();
 		deltaMillis = 0;

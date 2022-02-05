@@ -1,8 +1,6 @@
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,8 +20,8 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	
 	//panel settings
 	private static final long serialVersionUID = 1L;
-	public static final int WIDTH = 600;
-	public static final int HEIGHT = (int)(WIDTH / 16 * 9);
+	public static final int WIDTH = 560;
+	public static final int HEIGHT = WIDTH / 8 * 5;
 	public static final int SCALE = 2;
 	public  final String TITLE = "Quick Maths";
 	
@@ -47,6 +45,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 	//create game objects
 	private Question question;
 	private Random r = new Random();
+
 	
 	public static enum STATE{
 		TITLE, 
@@ -70,7 +69,7 @@ public class GUI extends Canvas implements Runnable, Serializable {
 		achPages = new AchievementPages(this);
 		dataUpdater = new dataUpdater(uData);
 		
-		//dataUpdater.resetData();
+		dataUpdater.resetData();
 
 		key = new KeyInput(this);
 		this.addKeyListener(key);
@@ -173,12 +172,6 @@ public class GUI extends Canvas implements Runnable, Serializable {
 			g.drawString(""+y, 5, y);
 		
 		g.clearRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);//some reason menu pages render is not going away
-		
-		Graphics2D g2d = (Graphics2D)g;
-		// g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        // g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 		
 		if(State == STATE.TITLE){
 			titlePage.render(g);
