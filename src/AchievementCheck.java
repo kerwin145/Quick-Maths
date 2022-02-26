@@ -3,20 +3,21 @@ public class AchievementCheck {
 	
 	QuestionPageNumber qPage;
 	UserData uData;
-	ResultsPage resultsPage;
 	GUI gui;
+	TitlePage titlePage;
 	
-	public double[] vanillaSetScoreReq = {0.7, 0.8, 0.95};
-	public int[] vanillaSetLengthReq = {10, 15, 20};
+		
+	
+	public double[] vanillaSetScoreReq = {0.7, 0.8, 0.9};
+	public int[] vanillaSetLengthReq = {10, 20, 30};
 	
 	Achievement tempAch;
 	
 	//for achievements that rely on the results/conditions of the recently completed problem set
 	//called on the results page initialize
-	public AchievementCheck(ResultsPage resultsPage, GUI gui) {
-		this.resultsPage = resultsPage;
+	public AchievementCheck(GUI gui) {
 		this.gui = gui;
-		qPage = gui.getQuestionPage();
+		titlePage = gui.getTitlePage();
 		this.uData = gui.getUdata();
 		
 	}
@@ -26,7 +27,8 @@ public class AchievementCheck {
 		this.uData = uData;
 	}
 
-	public void checkVanillaAch() {
+	private void updateVanillaAch() {
+		qPage = gui.getQuestionPage();
 		/*if one is question type is selected.
 		* loop through the array of vainlla operations:
 		* Get achievement list from achievement pages and set a temp achievement to i index.
@@ -35,25 +37,37 @@ public class AchievementCheck {
 		* If the achievement.currentStage is less than stages, then level the stage up and update the explanation text. 
 		*/
 		
-		if(qPage.getQuestionTypes().size() == 1 && gui.getTitlePage().questionPage == gui.getTitlePage().questionPage.Normal) {
+		if(qPage.getQuestionTypes().size() == 1 && titlePage.questionPage == titlePage.questionPage.Normal) {
 			for(int type = 0; type < 4; type++) {
 				for(int operation = 0; operation < 4; operation++) {
 					tempAch = gui.getAchPage().getVanillaAchievementList().get(type).get(operation);
 					//if the operation and type match the achievement, and question set and results satisfy requirements
 					if(qPage.getQuestionTypes().contains(operation) && qPage.getDifficulty() == type
-							&& resultsPage.getPercentCorrect() >= vanillaSetScoreReq[tempAch.getCurrentStage()] 
-							&& qPage.getNumQuestions() >= vanillaSetLengthReq[tempAch.getCurrentStage()]) {
+							&& qPage.getAccuracy() >= vanillaSetScoreReq[tempAch.getCurrentStage()] 
+							//note current question -1 gives the number of completed questions
+							&& qPage.currentQuestion-1 >= vanillaSetLengthReq[tempAch.getCurrentStage()]) {
 						
-						uData.vanillaAchLevel[type][operation] = uData.vanillaAchLevel[type][operation] + 1;
+						
+						//update user data
+
+						//update vanilla achievement list
 						if(tempAch.getCurrentStage() < tempAch.getStages()) {
 							tempAch.updateCurrentStage();
 						}	
+						
+						uData.vanillaAchLevel[type][operation] = tempAch.getCurrentStage();
+						gui.getAchPage().vanillaAchievementList.get(type).get(operation).setCurrentStage(this.uData.vanillaAchLevel[type][operation]);
+
 					}//end check req
 				}//end inner for
 			}//end outer for
 		}//end if 
 		
 		
+	}
+	
+	public void updateAchievements() {
+		updateVanillaAch();
 	}
 
 }

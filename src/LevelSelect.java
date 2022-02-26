@@ -61,6 +61,7 @@ public class LevelSelect extends QuestionSelectPage
         buttonWidth1 = 60;
         buttonHeight1 = 60;
         
+        /*
         OperationsButtonColors1a = new Color[] { MoColors.orange, MoColors.dodgerBlue };
         OperationsButtonColors2a = new Color[] { MoColors.salmon, MoColors.aqua };
         OperationsButtonBorder_a = new Color[] { Color.gray, MoColors.chartreuse };
@@ -68,11 +69,12 @@ public class LevelSelect extends QuestionSelectPage
         OperationsButtonColors2b = new Color[] { MoColors.salmon, MoColors.aqua, MoColors.aqua };
         OperationsButtonBorder_b = new Color[] { Color.gray, MoColors.chartreuse };
         OperationsFontColor = new Color[] { Color.white };
+        */
         
         AddChoose = new Rectangle_(120, 120, buttonWidth1, buttonHeight1);
         AddChoose.setGradientFormat(gradientFormat.vertical);
-        AddChoose.setBackgroundColors(new Color[] { MoColors.orange, MoColors.dodgerBlue });
-        AddChoose.setBackgroundColors2(new Color[] { MoColors.salmon, MoColors.aqua });
+        AddChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
+        											 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
         AddChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse });
         AddChoose.setBorderThickness(2);
         AddChoose.setFont(fnt0);
@@ -81,8 +83,8 @@ public class LevelSelect extends QuestionSelectPage
         
         SubChoose = new Rectangle_(120 + buttonWidth1 + spacing1, 120, buttonWidth1, buttonHeight1);
         SubChoose.setGradientFormat(gradientFormat.vertical);
-        SubChoose.setBackgroundColors(new Color[] {MoColors.orange, MoColors.dodgerBlue, MoColors.darkTurquoise});
-        SubChoose.setBackgroundColors2(new Color[] { MoColors.salmon, MoColors.aqua, MoColors.aqua  });
+        SubChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
+													 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
         SubChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse, MoColors.chartreuse });
         SubChoose.setBorderThickness(2);
         SubChoose.setFont(fnt0);
@@ -91,8 +93,8 @@ public class LevelSelect extends QuestionSelectPage
         
         MultChoose = new Rectangle_(120 + buttonWidth1 * 2 + spacing1 * 2, 120, buttonWidth1, buttonHeight1);
         MultChoose.setGradientFormat(gradientFormat.vertical);
-        MultChoose.setBackgroundColors(new Color[] { MoColors.orange, MoColors.dodgerBlue });
-        MultChoose.setBackgroundColors2(new Color[] { MoColors.salmon, MoColors.aqua });
+        MultChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
+			 										 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
         MultChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse });
         MultChoose.setBorderThickness(2);
         MultChoose.setFont(fnt0);
@@ -101,8 +103,8 @@ public class LevelSelect extends QuestionSelectPage
         
         DivChoose = new Rectangle_(120 + buttonWidth1 * 3 + spacing1 * 3, 120, buttonWidth1, buttonHeight1);
         DivChoose.setGradientFormat(gradientFormat.vertical);
-        DivChoose.setBackgroundColors(new Color[] {MoColors.orange, MoColors.dodgerBlue, MoColors.darkTurquoise});
-        DivChoose.setBackgroundColors2(new Color[] { MoColors.salmon, MoColors.aqua, MoColors.aqua  });
+        DivChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
+			 									 	 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
         DivChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse, MoColors.chartreuse });
         DivChoose.setBorderThickness(2);
         DivChoose.setFont(fnt0);
@@ -130,40 +132,36 @@ public class LevelSelect extends QuestionSelectPage
         
         easyDif = new Rectangle_(120, buttonY2, buttonWidth2, buttonHeight1);
         easyDif.setGradientFormat(gradientFormat.vertical);
-        easyDif.setBackgroundColors(easyDifColor1);
-        easyDif.setBackgroundColors2(easyDifColor2);
+        easyDif.setBackgroundColors(easyDifBackgroundColors);
         easyDif.setBorderColors(easyDifBorder);
-        easyDif.setFontColors(easyDifFontColor);
+        easyDif.setFontColor(Color.white);
         easyDif.setBorderThickness(2);
         easyDif.setFont(fnt2);
         easyDif.setText("Easy");
         
         medDif = new Rectangle_(120  + buttonWidth2 + spacing1, buttonY2, buttonWidth2, buttonHeight1);
         medDif.setGradientFormat(gradientFormat.vertical);
-        medDif.setBackgroundColors(medDifColor1);
-        medDif.setBackgroundColors2(medDifColor2);
+        medDif.setBackgroundColors(medDifBackgroundColors);
         medDif.setBorderColors(medDifBorder);
-        medDif.setFontColors(medDifFontColor);
+        medDif.setFontColor(Color.white);
         medDif.setBorderThickness(2);
         medDif.setFont(fnt2);
         medDif.setText("Medium");
         
         hardDif = new Rectangle_(120  + buttonWidth2 * 2 + spacing1 * 2, buttonY2, buttonWidth2, buttonHeight1);
         hardDif.setGradientFormat(gradientFormat.vertical);
-        hardDif.setBackgroundColors(hardDifColor1);
-        hardDif.setBackgroundColors2(hardDifColor2);
+        hardDif.setBackgroundColors(hardDifBackgroundColors);
         hardDif.setBorderColors(hardDifBorder);
-        hardDif.setFontColors(hardDifFontColor);
+        hardDif.setFontColor(Color.white);
         hardDif.setBorderThickness(2);
         hardDif.setFont(fnt2);
         hardDif.setText("Hard");
         
         insaneDif = new Rectangle_(120 + buttonWidth2 * 3 + spacing1 * 3, buttonY2, buttonWidth2, buttonHeight1);
         insaneDif.setGradientFormat(gradientFormat.vertical);
-        insaneDif.setBackgroundColors(insaneDifColor1);
-        insaneDif.setBackgroundColors2(insaneDifColor2);
+        insaneDif.setBackgroundColors(insaneDifBackgroundColors);
         insaneDif.setBorderColors(insaneDifBorder);
-        insaneDif.setFontColors(insaneDifFontColor);
+        insaneDif.setFontColor(Color.white);
         insaneDif.setBorderThickness(2);
         insaneDif.setFont(fnt2);
         insaneDif.setText("Insane");
@@ -192,8 +190,7 @@ public class LevelSelect extends QuestionSelectPage
         
         challenge1 = new Rectangle_(120, buttonY3, buttonWidth1, buttonHeight1);
         challenge1.setGradientFormat(gradientFormat.vertical);
-        challenge1.setBackgroundColors(new Color[] {MoColors.silver, MoColors.papayaWhip});
-        challenge1.setBackgroundColors2(new Color[] {MoColors.gainsboro, MoColors.silver});
+        challenge1.setBackgroundColors(new Color[][]{new Color[] {MoColors.silver, MoColors.gainsboro}, new Color[] {MoColors.papayaWhip, MoColors.silver}}); 
         challenge1.setBorderColors(new Color[] {MoColors.gray, MoColors.navajoWhite});
         challenge1.setFontColor(MoColors.darkSlateGray);
         challenge1.setBorderThickness(2);
@@ -203,8 +200,7 @@ public class LevelSelect extends QuestionSelectPage
         
         challenge2 = new Rectangle_(120 + buttonWidth1 + spacing1, buttonY3, buttonWidth1, buttonHeight1);
         challenge2.setGradientFormat(gradientFormat.vertical);
-        challenge2.setBackgroundColors(new Color[] {MoColors.gainsboro, MoColors.pink});
-        challenge2.setBackgroundColors2(new Color[] {MoColors.gray, MoColors.silver});
+        challenge2.setBackgroundColors(new Color[][]{new Color[] {MoColors.gainsboro, MoColors.gray}, new Color[] {MoColors.pink, MoColors.silver}}); 
         challenge2.setBorderColors(new Color[] {MoColors.gray, MoColors.IndianRed});
         challenge2.setFontColor(MoColors.darkSlateGray);
         challenge2.setBorderThickness(2);
@@ -214,8 +210,7 @@ public class LevelSelect extends QuestionSelectPage
         
         challenge3 = new Rectangle_(120 + buttonWidth1*2 + spacing1*2, buttonY3, buttonWidth1, buttonHeight1);
         challenge3.setGradientFormat(gradientFormat.vertical);
-        challenge3.setBackgroundColors(new Color[] {MoColors.gray, MoColors.thistle});
-        challenge3.setBackgroundColors2(new Color[] {MoColors.darkGray, MoColors.silver});
+        challenge3.setBackgroundColors(new Color[][]{new Color[] {MoColors.gray, MoColors.darkGray}, new Color[] {MoColors.thistle, MoColors.silver}}); 
         challenge3.setBorderColors(new Color[] {MoColors.gray, MoColors.mediumVioletRed});
         challenge3.setFontColor(MoColors.darkSlateGray);
         challenge3.setBorderThickness(2);

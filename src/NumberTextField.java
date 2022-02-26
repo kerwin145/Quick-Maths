@@ -30,7 +30,7 @@ public class NumberTextField
         this.allowNegatives = allowNegatives;
         this.box = new Rectangle_(x, y, width, height);
         box.setBorderThickness(2);
-        box.setBackgroundColor(MoColors.white);
+        box.addBackgroundColor(MoColors.white);
         box.setBackgroundOpacity(.2);
     }
     

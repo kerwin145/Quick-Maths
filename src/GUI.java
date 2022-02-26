@@ -30,24 +30,23 @@ public class GUI extends Canvas implements Runnable, Serializable
     private boolean running;
     private Thread thread;
     private TitlePage titlePage;
+    
     private QuestionPageNumber questionPageNumber;
     private QuestionPageYesNo questionPageYN;
     private LevelSelect levSelectPage;
     private LevelSelectSpecial levSelectPageSpecial;
     private ResultsPage resultsPage;
-    static UserData uData;
-    private AchievementPages achPages;
+    static UserData uData = new UserData();;
     private dataUpdater dataUpdater;
+    private AchievementPages achPages;
+    private AchievementCheck achCheck;
     private KeyInput key;
     private MouseInput mouse;
-    private Question question;
     private Random r;
-    public static STATE State;
+    public static STATE State = STATE.TITLE;
     
-    static {
-        GUI.uData = new UserData();
-        GUI.State = STATE.TITLE;
-    }
+
+   
     
     public GUI() {
         this.running = false;
@@ -57,15 +56,20 @@ public class GUI extends Canvas implements Runnable, Serializable
     public void init() {
         this.requestFocus();
         this.titlePage = new TitlePage(this);
+        dataUpdater = new dataUpdater(uData);
+        this.achCheck = new AchievementCheck(this);
+        this.dataUpdater = new dataUpdater(GUI.uData);
         this.questionPageNumber = new QuestionPageNumber(this);
         this.questionPageYN = new QuestionPageYesNo(this);
         this.levSelectPage = new LevelSelect(this);
         this.levSelectPageSpecial = new LevelSelectSpecial(this);
         this.resultsPage = new ResultsPage(this);
         this.achPages = new AchievementPages(this);
-        this.dataUpdater = new dataUpdater(GUI.uData);
         this.addKeyListener(this.key = new KeyInput(this));
         this.addMouseListener(this.mouse = new MouseInput(this));
+        
+        dataUpdater.resetData();
+       
     }
     
     private synchronized void start() {
@@ -201,6 +205,8 @@ public class GUI extends Canvas implements Runnable, Serializable
         catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
         }
+        
+
         gui.setPreferredSize(new Dimension(1200, 666));
         gui.setMaximumSize(new Dimension(1200, 666));
         gui.setMinimumSize(new Dimension(1200, 666));
@@ -270,6 +276,15 @@ public class GUI extends Canvas implements Runnable, Serializable
     
     public UserData getUdata() {
         return GUI.uData;
+    }
+    
+    
+    public dataUpdater getDataUpdater(){
+    	return dataUpdater;
+    }
+    
+    public AchievementCheck getAchCheck() {
+    	return achCheck;
     }
     
     public enum STATE

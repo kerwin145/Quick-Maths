@@ -104,7 +104,7 @@ public class ResultsPage {
 	
 	public ResultsPage(GUI gui){
 		this.gui = gui;
-		achCheck = new AchievementCheck(this, gui);
+		achCheck = new AchievementCheck(gui);
 	}
 	
 	public void render(Graphics g){
@@ -180,8 +180,7 @@ public class ResultsPage {
 		
 		questionType = getquestionType();
 
-		achCheck.checkVanillaAch();
-		gui.getAchPage().updateAchievementsWithUserData();
+		achCheck.updateAchievements();
 		
 		System.out.println("Total average deviation:"  + qPage.timeAverageDeviationAverage);
 	}

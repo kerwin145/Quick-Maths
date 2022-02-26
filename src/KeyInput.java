@@ -68,7 +68,7 @@ public class KeyInput extends KeyAdapter{
 		else if (gui.State == gui.State.QUESTIONROUNDNUMBER) {
 			qPage.inputTextAnswer.updateText(key);
 			
-			if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER){
 				qPage.submitAnswer();
 			}
 			
@@ -95,7 +95,7 @@ public class KeyInput extends KeyAdapter{
 		
 		else if (gui.State == gui.State.QUESTIONROUNDYESNO) {
 			qPage.inputTextAnswer.updateText(key);
-			if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER){
 				qPageYN.submitAnswer();
 			}
 			if(e.getKeyCode() == KeyEvent.VK_UP){

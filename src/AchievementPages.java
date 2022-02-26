@@ -278,7 +278,7 @@ public class AchievementPages
     public ArrayList<ArrayList<Achievement>> getVanillaAchievementList() {
         return this.vanillaAchievementList;
     }
-    
+  /* 
     public void updateAchievementsWithUserData() {
         for (int type = 0; type < this.vanillaAchievementList.size(); ++type) {
             for (int operation = 0; operation < this.vanillaAchievementList.get(type).size(); ++operation) {
@@ -286,4 +286,5 @@ public class AchievementPages
             }
         }
     }
+    */
 }

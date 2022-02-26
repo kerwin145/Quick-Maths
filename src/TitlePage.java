@@ -77,8 +77,12 @@ public class TitlePage
         g.setColor(Color.gray);
         if (!this.setFinished || !this.setSpecialFinished) {
             if (questionPage == PreviousPage.Normal || questionPage == PreviousPage.Special) {
-                g.drawString("Q " + this.qPage.currentQuestion + "/" + this.qPage.numQuestions, (int)(600 * 2 - this.qPage.HomePage.width * 2.2), (int)(this.qPage.HomePage.y + this.qPage.HomePage.height * 1.5));
-                g.drawString("Correct: " + this.qPage.numCorrect + "/" + (this.qPage.currentQuestion - 1), (int)(600 * 2 - this.qPage.HomePage.width * 2.2), (int)(this.qPage.HomePage.y + this.qPage.HomePage.height * 2.75));
+            	if(gui.getQuestionPage().endlessQuestions) {
+                    g.drawString("Q " + this.qPage.currentQuestion + "/ --" , (int)(600 * 2 - this.qPage.HomePage.width * 2.2), (int)(this.qPage.HomePage.y + this.qPage.HomePage.height * 1.5));
+            	}else
+            		g.drawString("Q " + this.qPage.currentQuestion + "/" + this.qPage.numQuestions, (int)(600 * 2 - this.qPage.HomePage.width * 2.2), (int)(this.qPage.HomePage.y + this.qPage.HomePage.height * 1.5));
+               
+            	g.drawString("Correct: " + this.qPage.numCorrect + "/" + (this.qPage.currentQuestion - 1), (int)(600 * 2 - this.qPage.HomePage.width * 2.2), (int)(this.qPage.HomePage.y + this.qPage.HomePage.height * 2.75));
                 g.drawString("Timer: " + this.qPage.timeMinutes + "' " + this.qPage.timeSeconds + "\"", (int)(600 * 2 - this.qPage.HomePage.width * 2.2), this.qPage.HomePage.y + this.qPage.HomePage.height * 4);
             }
             else if (questionPage == PreviousPage.SpecialYN) {

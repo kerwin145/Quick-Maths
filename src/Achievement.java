@@ -1,8 +1,5 @@
 import java.util.ArrayList;
 
-// 
-// Decompiled by Procyon v0.5.36
-// 
 
 public class Achievement
 {

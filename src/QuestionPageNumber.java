@@ -40,6 +40,7 @@ public class QuestionPageNumber {
 	public boolean warned = false;
 
 	protected Question question;
+	private AchievementCheck achCheck;
 	Random rnd = new Random();
 	private dataUpdater dataUpdater;
 
@@ -97,10 +98,9 @@ public class QuestionPageNumber {
 	Font fntSubmit = new Font("Garamond", Font.PLAIN, 30);
 
 	//state one is normal, two is incorrect, three is warn
-	Color[] submitColor1 ={MoColors.dodgerBlue, MoColors.orange, MoColors.orange};
-	Color[] submitColor2 = {MoColors.aqua, MoColors.salmon, MoColors.aqua};
+	Color[][] submitBackgroundColor = new Color[][] {new Color[] {MoColors.dodgerBlue, MoColors.aqua}, 
+		new Color[] {MoColors.orange, MoColors.salmon}, new Color[] {MoColors.orange, MoColors.aqua}};
 	Color[] submitBorderColor = {MoColors.chartreuse, MoColors.orange};
-	Color[] submitTextColor = {Color.white, Color.white};
 	
 	Rectangle_ submitAnswer;
 	
@@ -122,15 +122,15 @@ public class QuestionPageNumber {
 
 	public QuestionPageNumber (GUI gui){
 		this.gui = gui;
-		dataUpdater = new dataUpdater(gui.getUdata());
+		achCheck = gui.getAchCheck();
+		dataUpdater = gui.getDataUpdater();
 		
 		submitAnswer = new Rectangle_(inputTextAnswer.getX() + inputTextAnswer.getWidth()+ 10, inputTextAnswer.getY(), 50, 50);	
 		submitAnswer.setGradientFormat(Rectangle_.gradientFormat.vertical);
-		submitAnswer.setBackgroundColors(submitColor1);
-		submitAnswer.setBackgroundColors2(submitColor2);
+		submitAnswer.setBackgroundColors(submitBackgroundColor);
 		submitAnswer.setBorderColors(submitBorderColor);
 		submitAnswer.setFont(fntSubmit);
-		submitAnswer.setFontColors(submitTextColor);
+		submitAnswer.setFontColor(Color.white);
 		submitAnswer.setBorderThickness(2);
 		submitAnswer.setText("→");
 	}
@@ -144,9 +144,9 @@ public class QuestionPageNumber {
 			if(gui.getTitlePage().questionPage == gui.getTitlePage().questionPage.Normal && challengeLvl > 0 && !askForConfirm) {
 				long timeSpent = System.currentTimeMillis()-timeQuestionStartMillis;
 				if(timeSpent < questionDisplayTime) {
-					System.out.println("Time spent:" + timeSpent + ". Now, under display time");
+					//System.out.println("Time spent:" + timeSpent + ". Now, under display time");
 					if(timeSpent > decayStartTime) {
-						System.out.println("Time spent:" + timeSpent + ". Now, over decay start time");
+						//System.out.println("Time spent:" + timeSpent + ". Now, over decay start time");
 
 						g.setColor(new Color(255, 255, 255, (int)((255 *(1 - (timeSpent-decayStartTime)/((double)questionDisplayTime-decayStartTime))))));
 
@@ -293,7 +293,7 @@ public class QuestionPageNumber {
 		}
 
 	}
-	//warn will not have user analytics update
+	//will also update user analytics and achievement pages
 	public void checkAnswer() {
 		if(inputAnswer == question.getAnswer())
 			correct();
@@ -303,6 +303,8 @@ public class QuestionPageNumber {
 			warn();
 		else
 			incorrect();
+		
+		achCheck.updateAchievements();
 	}
 
 	public void correct() {
@@ -519,6 +521,17 @@ public class QuestionPageNumber {
 			System.out.println("deltamillisfix: " + deltaMillisFix + "Timer resume!");
 		}
 	}
+	
+	public double getAccuracy() {
+		if(currentQuestion == 0)
+			return 0;
+		else {
+			System.out.println("Accuracy: " + (double)numCorrect/(currentQuestion-1));
+			return (double)numCorrect/(currentQuestion-1);
+		}
+			
+	}
+	
 	public String randFromArray(String[] input){
 		int random = rnd.nextInt(input.length);
 		//System.out.println("Array Lenght:" + random);
