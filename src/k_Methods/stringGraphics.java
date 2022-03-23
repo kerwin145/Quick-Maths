@@ -136,8 +136,8 @@ public class stringGraphics extends Canvas
          	words[i]+= " ";
          } //puts a space at the end of the last word, except for the last
          
-         int numRows = (int)(Math.ceil(totalWidth/rect.width)); //minimum number of rows needed to fit text
-         double rowWidth = totalWidth/numRows; //makes each row have similar width in text
+       //  int numRows = (int)(Math.ceil(totalWidth/rect.width)); //minimum number of rows needed to fit text
+        // double rowWidth = Math.ceil(totalWidth/numRows); //makes each row have similar width in text
          
          ArrayList<String> rows = new ArrayList<String>();
          String currentRow = "";
@@ -145,7 +145,7 @@ public class stringGraphics extends Canvas
          
          for(int i = 0; i < words.length; i++) {
  			currentRowLength += g.getFontMetrics().stringWidth(words[i]);
-         	if(currentRowLength > rowWidth) {
+         	if(currentRowLength > rect.width) {
          		rows.add(currentRow);
          		
          		currentRowLength = 0;

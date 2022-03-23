@@ -6,21 +6,13 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Stroke;
-import java.io.Serializable;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
-import k_Methods.RectanglePlus.gradientFormat;
-import k_Methods.Rectangle_.textPosition;
 
-public class Rectangle_ extends Rectangle implements Shape, Serializable{
-	
-	//the bare-bones constructor
-    public Rectangle_(int x, int y, int width, int height){
-        super(x, y, width, height);
+public class Rectangle_ extends Rectangle implements Shape{
 
-    }
-	
 	//Here are all the properties of the rectangle	
 	String text = ""; 
 	public enum textPosition {
@@ -31,14 +23,18 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
 	
 	textPosition textPos = textPosition.middle;
 	
-	Font font = null;
-	
+	Font font = new Font("Arial", Font.PLAIN, 12);
 	
 	//COLOR PROPERTIES
 	private ArrayList<Color> borderColors = new ArrayList<Color>();
 	//this will be a list of colors for a single mode
 	//this is the compilation of the color modes.
 	private ArrayList<ArrayList<Color>> backgroundColors = new ArrayList<ArrayList<Color>>();
+	
+	private Color borderDarkened; //Darkned can either be highlighted or selected. The draw will default to these variables 
+	private Color[] backgroundDarkened;
+	boolean highlighted = false, selected = false; //Selected has if statement priority over highlighted; look at the draw method
+	
 	Color fontColor;
 	
 	//the size of backgroundColors and borderColors should be the same, but it isn't critical
@@ -52,7 +48,7 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
 	 * These three modes will be put together into the backgroundColors 
 	*/
 	
-	double backgroundOpacity = 1;
+	double backgroundOpacity = 255;
 	int borderThickness = 1;
 	
 	gradientFormat gFormat = gradientFormat.none;
@@ -65,11 +61,50 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     }
     
     boolean hasDarkenedColors = false;
+	
+	//the bare-bones constructor
+    public Rectangle_(int x, int y, int width, int height){
+        super(x, y, width, height);
+        
+
+    }
+    //the maximum constructor with arraylists
+    public Rectangle_(int x, int y, int width, int height,String text, textPosition textPos, Font font, Color fontColor,
+    		ArrayList<Color> borderColors,  ArrayList<ArrayList<Color>> backgroundColors,gradientFormat gFormat, int backgroundOpacity, int borderThickness, boolean hasDarkenedColors){
+        super(x, y, width, height);
+        
+        if(text != null)this.text = text;
+        if(textPos != null) this.textPos = textPos;
+        if(font != null) this.font = font;
+        if(fontColor != null) this.fontColor = fontColor;
+        if(borderColors != null) this.borderColors = borderColors;
+        if(backgroundColors != null) this.backgroundColors = backgroundColors;
+    	if(gFormat != null) this.gFormat = gFormat;
+        if(backgroundOpacity >= 0) this.backgroundOpacity = backgroundOpacity*255;
+        if(borderThickness >= 0) this.borderThickness = borderThickness;
+        this.hasDarkenedColors = hasDarkenedColors;
+
+    }
     
-    
+    public Rectangle_(int x, int y, int width, int height, String text, textPosition textPos, Font font, Color fontColor,
+    		Color[] borderColors,  Color[][] backgroundColors, gradientFormat gFormat, int backgroundOpacity, int borderThickness, boolean hasDarkenedColors){
+    	super(x, y, width, height);
+    	
+        if(text != null)this.text = text;
+    	if(textPos != null) this.textPos = textPos;
+    	if(font != null) this.font = font;
+    	if(fontColor != null) this.fontColor = fontColor;
+    	if(borderColors != null) setBorderColors(borderColors);
+    	if(backgroundColors != null) setBackgroundColors(backgroundColors);
+    	if(gFormat != null) this.gFormat = gFormat;
+    	if(backgroundOpacity >= 0) this.backgroundOpacity = backgroundOpacity*255;
+    	if(borderThickness >= 0) this.borderThickness = borderThickness;
+        this.hasDarkenedColors = hasDarkenedColors;
+
+    }
     //drawing 
     public void draw(Graphics2D g) {
-    	
+  
     	//equalize size of background and border arrayList by adding last element until they are the same
     	int maxSize =  Math.max(borderColors.size(), backgroundColors.size());
     	if(borderColors.size() != 0 && backgroundColors.size() != 0) {
@@ -90,38 +125,66 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     		ArrayList<Color> bgColors = backgroundColors.get(currentBackgroundColor);
 
     		if(bgColors.size() == 1) {
-    			
-    			//draw an ordinary rectangle
-    			g.setColor(new Color(bgColors.get(0).getRed(), bgColors.get(0).getGreen(), bgColors.get(0).getBlue(), (int)(backgroundOpacity*255)));
+    		  	
+    			//darkened colors if statements appear three times in draw background, once in draw border, once in font color 
+    	    	if (hasDarkenedColors && highlighted || selected) {
+    	    		if (highlighted) 
+    	    			g.setColor(getHighlightedColor(bgColors.get(0), backgroundOpacity));
+    	    		else 
+    	    			g.setColor(getSelectedColor(bgColors.get(0), backgroundOpacity));
+    	    	}else //fill an ordinary rectangle
+	    			g.setColor(new Color(bgColors.get(0).getRed(), bgColors.get(0).getGreen(), bgColors.get(0).getBlue(), (int)backgroundOpacity));
+    	    	//draw
     			g.fillRect(x, y, width, height);
+
     		}
     		else if(bgColors.size() > 1){ //not just an else, since you want to make sure that mode is not empty
 
     			int begin, end; //the beginning and ending portion for a group of two colors.
     			int span;
     			int rRange, gRange, bRange; //the second color minus the first
+    			Color darkenedColorTop, darkenedColorBottom;
     			int red, green, blue;//correspond to the values of the first color
-    			
+
     			if(gFormat == gradientFormat.horizontal) {
     				//creates gradients from a color and its next color, mapping it to the correct portion of the rectangle
     				for(int i = 0; i < bgColors.size()-1; i++) {
+    					
     					begin = x + (int)((double)i / (bgColors.size()-1) * width);
     					end = x + (int)((double)(i+1) / (bgColors.size()-1) * width);
     					span = end-begin;
     					
-    					red = bgColors.get(i).getRed();
-    					green = bgColors.get(i).getGreen();
-    					blue = bgColors.get(i).getBlue();
-    					rRange = bgColors.get(i+1).getRed() - red;
-    					gRange = bgColors.get(i+1).getGreen() - green;
-    					bRange = bgColors.get(i+1).getBlue() - blue;
+    					if (hasDarkenedColors && highlighted || selected) {
+    	    	    		if (highlighted) {
+    	    	    			darkenedColorTop = getHighlightedColor(bgColors.get(i), backgroundOpacity);
+    	    	    			darkenedColorBottom = getHighlightedColor(bgColors.get(i+1), backgroundOpacity);
+    	    	    		}
+    	    	    		else {
+    	    	    			darkenedColorTop = getSelectedColor(bgColors.get(i), backgroundOpacity);
+	    	    				darkenedColorBottom = getSelectedColor(bgColors.get(i+1), backgroundOpacity);
+    	    	    		}
+    	    	    		
+    	    	    		red = darkenedColorTop.getRed();
+	    					green = darkenedColorTop.getGreen();
+	    					blue = darkenedColorTop.getBlue();
+	    					rRange = darkenedColorBottom.getRed() - red;
+	    					gRange = darkenedColorBottom.getGreen() - green;
+	    					bRange = darkenedColorBottom.getBlue() - blue;
+    	    	    	}else {
+	    					red = bgColors.get(i).getRed();
+	    					green = bgColors.get(i).getGreen();
+	    					blue = bgColors.get(i).getBlue();
+	    					rRange = bgColors.get(i+1).getRed() - red;
+	    					gRange = bgColors.get(i+1).getGreen() - green;
+	    					bRange = bgColors.get(i+1).getBlue() - blue;
+    	    	    	}    					
     					
     					//the drawing part
     					for(int j = 0; j < span-1; j++) {
-    						g.setColor(new Color((int)(red + rRange * ((double)j/end)),
-    								(int)(green + gRange * ((double)j/end)),
-    								(int)(blue + bRange * ((double)j/end)),
-    								(int)(backgroundOpacity*255)));
+    						g.setColor(new Color((int)(red + rRange * ((double)j/span)),
+    								(int)(green + gRange * ((double)j/span)),
+    								(int)(blue + bRange * ((double)j/span)),
+    								(int)backgroundOpacity));
     	                    g.fillRect(begin+j, y, 2, height);
     					}
     				}
@@ -134,36 +197,70 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     					end = y + (int)((double)(i+1) / (bgColors.size()-1) * height);
     					span = end-begin;
     					
-    					red = bgColors.get(i).getRed();
-    					green = bgColors.get(i).getGreen();
-    					blue = bgColors.get(i).getBlue();
-    					rRange = bgColors.get(i+1).getRed() - red;
-    					gRange = bgColors.get(i+1).getGreen() - green;
-    					bRange = bgColors.get(i+1).getBlue() - blue;
+    					if (hasDarkenedColors && highlighted || selected) {
+    	    	    		if (highlighted) {
+    	    	    			darkenedColorTop = getHighlightedColor(bgColors.get(i), backgroundOpacity);
+    	    	    			darkenedColorBottom = getHighlightedColor(bgColors.get(i+1), backgroundOpacity);
+    	    	    		}
+    	    	    		else {
+    	    	    			darkenedColorTop = getSelectedColor(bgColors.get(i), backgroundOpacity);
+	    	    				darkenedColorBottom = getSelectedColor(bgColors.get(i+1), backgroundOpacity);
+    	    	    		}
+    	    	    		
+    	    	    		red = darkenedColorTop.getRed();
+	    					green = darkenedColorTop.getGreen();
+	    					blue = darkenedColorTop.getBlue();
+	    					rRange = darkenedColorBottom.getRed() - red;
+	    					gRange = darkenedColorBottom.getGreen() - green;
+	    					bRange = darkenedColorBottom.getBlue() - blue;
+    	    	    	}else {
+
+	    					red = bgColors.get(i).getRed();
+	    					green = bgColors.get(i).getGreen();
+	    					blue = bgColors.get(i).getBlue();
+	    					rRange = bgColors.get(i+1).getRed() - red;
+	    					gRange = bgColors.get(i+1).getGreen() - green;
+	    					bRange = bgColors.get(i+1).getBlue() - blue;
+    	    	    	}    
     					
     					//the drawing part
     					for(int j = 0; j < span-1; j++) {
     						g.setColor(new Color((int)(red + rRange * ((double)j/span)),
     								(int)(green + gRange * ((double)j/span)),
     								(int)(blue + bRange * ((double)j/span)),
-    								(int)(backgroundOpacity*255)));
+    								(int)backgroundOpacity));
     	                    g.fillRect(x, begin+j, width, 2);
     					}
     				}
     			}
     			else if (gFormat == gradientFormat.none) {
-    				g.setColor(new Color(bgColors.get(0).getRed(), bgColors.get(0).getGreen(), bgColors.get(0).getBlue(), (int)(backgroundOpacity*255)));
+    				g.setColor(new Color(bgColors.get(0).getRed(), bgColors.get(0).getGreen(), bgColors.get(0).getBlue(), (int)backgroundOpacity));
         			g.fillRect(x, y, width, height);
     			}
     		}
+    	}
 
-      	
     	//draw border
     	if(borderColors.size() > 0) {
-    		if(borderColors.size() > 1)
-        		g.setColor(borderColors.get(currentBorderColor));
-    		else
-        		g.setColor(borderColors.get(0));
+    		
+    		if(borderColors.size() > 1) {
+    			if (hasDarkenedColors && highlighted || selected) {
+    	    		if (highlighted) 
+    	    			g.setColor(getHighlightedColor(borderColors.get(currentBorderColor), 1));
+    	    		else 
+    	    			g.setColor(getSelectedColor(borderColors.get(currentBorderColor), 1));
+    	    	}else 
+            		g.setColor(borderColors.get(currentBorderColor));
+    		}
+    		else {
+    			if (hasDarkenedColors && highlighted || selected) {
+    	    		if (highlighted) 
+    	    			g.setColor(getHighlightedColor(borderColors.get(0), 1));
+    	    		else 
+    	    			g.setColor(getSelectedColor(borderColors.get(0), 1));
+    	    	}else 
+            		g.setColor(borderColors.get(0));
+    		}
     		
     		g.setStroke(new BasicStroke(borderThickness));
     		g.drawRect(x, y, width, height);
@@ -172,22 +269,65 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     	}
 
 
-    		
     	//draw text
     	if(font != null) { g.setFont(font);}
-    	if(fontColor != null) g.setColor(fontColor);
+    	if(fontColor != null) {
+    		/*if (highlighted || selected) {
+	    		if (highlighted) 
+	    			g.setColor(getHighlightedColor(fontColor, 1));
+	    		else 
+	    			g.setColor(getSelectedColor(fontColor, 1));
+	    	}else 
+	    	*/
+	    		g.setColor(fontColor);
+    	}
 
     	if(textPos == textPosition.top) {
             stringGraphics.drawStringFlow(text, this.getBounds(), textPosition.top, g);
     	}else {
             stringGraphics.drawStringFlow(text, this.getBounds(), textPosition.middle, g);
     	}
-    	
-    	
-    	}
+
     }
     
+    public void setHasDarkenedColors(boolean hasDarkenedColors) {
+		this.hasDarkenedColors = hasDarkenedColors;
+	}
     
+	private Color getHighlightedColor(Color input, double opacity) {
+    	double red, blue, green;
+    	if(input.getRed() > 128)
+    		red = input.getRed() * .9;
+    	else
+    		red = input.getRed() * 1.12;
+     	if(input.getGreen() > 128)
+    		green = input.getGreen() * .9;
+    	else
+    		green = input.getGreen() * 1.12;
+     	if(input.getBlue() > 128)
+     		blue = input.getBlue() * .9;
+     	else
+     		blue = input.getBlue() * 1.12;
+     	return new Color((int)red, (int) green, (int) blue, (opacity >= 0 && opacity <= 1) ? (int)(opacity * 255) : input.getAlpha());
+    }
+    
+    //same as highlighted, but we'll change the coefficients. Keeping them their own to avoid overhead within the loop
+    private Color getSelectedColor(Color input, double opacity) {
+    	double red, blue, green;
+    	if(input.getRed() > 128)
+    		red = input.getRed() * .75;
+    	else
+    		red = input.getRed() * 1.33;
+     	if(input.getGreen() > 128)
+    		green = input.getGreen() * .75;
+    	else
+    		green = input.getGreen() * 1.33;
+     	if(input.getBlue() > 128)
+     		blue = input.getBlue() * .75;
+     	else
+     		blue = input.getBlue() * 1.33;
+     	return new Color((int)red, (int) green, (int) blue, (opacity >= 0 && opacity <= 1) ? (int)(opacity * 255) : input.getAlpha());
+    }
 
     
     //attribute editors--------------------------
@@ -207,6 +347,9 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     	fontColor = color;
     }
 
+    public Font getFont() {
+    	return font;
+    }
     
     //borderColors setters
     public void setBorderColor(Color color) {
@@ -227,9 +370,9 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     
     //opacity
     public void setBackgroundOpacity(double opacity) {
-    	if(opacity > 1) opacity = 1;
+    	if(opacity > 1) opacity = 255;
     	else if(opacity < 0)opacity = 0;
-    	backgroundOpacity = opacity;
+    	else backgroundOpacity = opacity * 255;
     }
     //border thickness
     public void setBorderThickness(int thickness) {
@@ -278,25 +421,31 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     }
     //--
     public void setBackgroundColor(int i, Color color) {
+    	ArrayList<Color> backgroundColor = new ArrayList<Color>();	
     	if(i < backgroundColors.size()) {
-        	ArrayList<Color> backgroundColor = new ArrayList<Color>();	
         	backgroundColor.add(color);
     		backgroundColors.set(i, backgroundColor);
-    	}
+    	}else
+    		backgroundColors.add(backgroundColor);
     }
     public void setBackgroundColor(int i, ArrayList<Color> colors) {
     	if(i < backgroundColors.size()) 
     		backgroundColors.set(i, colors);
+    	else
+    	    backgroundColors.add(colors);
     }
 
+
     public void setBackgroundColor(int i, Color[] Color) {
+    	ArrayList<Color> backgroundColor = new ArrayList<Color>();	
     	if(i < backgroundColors.size()) {
-        	ArrayList<Color> backgroundColor = new ArrayList<Color>();	
         	for(Color j: Color)
         		backgroundColor.add(j);
-        	backgroundColors.set(i, backgroundColor);
-        		
-    	}
+        	backgroundColors.set(i, backgroundColor);	
+    	}else
+    		backgroundColors.add(backgroundColor);
+
+    	
 
     }
     //--
@@ -372,6 +521,7 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     	}
 
     }
+    
 
     /*
     //Set darkened colors for a given base color (bg colors size has to be 1)
@@ -430,5 +580,14 @@ public class Rectangle_ extends Rectangle implements Shape, Serializable{
     public int getCurrentBorderColorIndex() {
     	return currentBorderColor;
     }
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
+	}
+    
+    
+
 
 }
