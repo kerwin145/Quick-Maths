@@ -1,6 +1,7 @@
 package src.main;
 import k_Methods.stringGraphics;
 import k_Methods.Rectangle_.gradientFormat;
+import k_Methods.Rectangle_.textPosition;
 
 import java.awt.Shape;
 import java.awt.Graphics2D;
@@ -30,6 +31,7 @@ public abstract class QuestionSelectPage
     Font fnt3;
     Font fntBegin;
     Font fntHeader;
+    Font fntHeader2;
     Font fntNormal;
     Font fntSmall;
     Font fntNormal2;
@@ -42,7 +44,7 @@ public abstract class QuestionSelectPage
     Color[] EndlessBorderColor;
     Color[] EndlessTextColor;
     public NumberTextField numQuestionsInput;
-    public RectanglePlus HomePage;
+    public Rectangle_ Home;
     public Rectangle_ GenerateSet;
     public Rectangle_ Endless;
     public Rectangle InfoBox;
@@ -73,33 +75,46 @@ public abstract class QuestionSelectPage
         buttonHeight1 = 60;
         difficulty = -1;
         endlessQuestions = false;
-        fnt0 = new Font("Ebrima", Font.BOLD, (int)(buttonHeight1 / 1.6));
+        fnt0 = new Font("Ebrima", Font.PLAIN, (int)(buttonHeight1 / 1.6));
         fnt1 = new Font("Lucida Bright", 1, 15);
-        fnt2 = new Font("Microsoft Uighur", Font.BOLD, 32);
+        fnt2 = new Font("Microsoft Uighur", Font.PLAIN, 32);
         fnt3 = new Font("Georgia", 0, 17);
         fntBegin = new Font("Georgia", 0, 22);
         fntHeader = new Font("Lucida Bright", 1, buttonHeight1 / 2);
+        fntHeader2 = new Font("Garamond", 1, (int)(buttonHeight1 / 2.3)); 
         fntNormal = new Font("Garamond", 0, buttonHeight1 / 4);
         fntSmall = new Font("Times", 0, buttonHeight1 / 6);
         fntNormal2 = new Font("Garamond", 0, (int)(buttonHeight1 / 3.5));
         
               
         numQuestionsInput = new NumberTextField((int)(gui.WIDTH * gui.SCALE -260), (int)(gui.HEIGHT * gui.SCALE - 120), 220, 35, "0", false);
+        numQuestionsInput.setAlwaysFocused(true);
         
-        HomePage = new RectanglePlus((int)(gui.WIDTH * gui.SCALE - 140), 15, 120, 20, MoColors.royalBlue, MoColors.deepSkyBlue, true, RectanglePlus.gradientFormat.horizontal, MoColors.navy, fnt1, Color.white, "Home");
-       
+        Home = new Rectangle_((int)(gui.WIDTH * gui.SCALE - 140), 15, 120, 20);
+        Home.addBackgroundColor(new Color[]{MoColors.royalBlue, MoColors.deepSkyBlue});
+        Home.setGradientFormat(gradientFormat.vertical);
+        Home.setBorderColor(MoColors.navy);
+        Home.setFont(fnt1);
+        Home.setFontColor(Color.white);
+        Home.setText("Back");
+        Home.setHasDarkenedColors(true);
+		
         GenerateSet = new Rectangle_((int)(numQuestionsInput.getX() + numQuestionsInput.getWidth() * 2.0 / 5.0), (int)(numQuestionsInput.getY() + numQuestionsInput.getHeight() * 1.25), (int)(numQuestionsInput.getWidth() * 3.0/5), numQuestionsInput.getHeight());
         GenerateSet.setGradientFormat(gradientFormat.vertical);
         GenerateSet.setBackgroundColors(generateSetBackgroundColors);
         GenerateSet.setBorderColor(MoColors.skyBlue);
         GenerateSet.setFont(fntBegin);
         GenerateSet.setText("---");
+        GenerateSet.setHasDarkenedColors(true);
+
   
         Endless = new Rectangle_(numQuestionsInput.getX(), (int)(numQuestionsInput.getY() + numQuestionsInput.getHeight() * 1.25), (int)(numQuestionsInput.getWidth() * 2.0 / 5.0 - 15), numQuestionsInput.getHeight());
         Endless.setGradientFormat(gradientFormat.vertical);
         Endless.setBackgroundColors(endlessBackgroundColors);
         Endless.setFont(fnt3);
         Endless.setText("Endless");
+        Endless.setHasDarkenedColors(true);
+
         
         //Endless = new RectanglePlus(numQuestionsInput.getX(), (int)(numQuestionsInput.getY() + numQuestionsInput.getHeight() * 1.25), (int)(numQuestionsInput.getWidth() * 2.0 / 5.0 - 15), numQuestionsInput.getHeight(), 
         //EndlessColor1, EndlessColor2, true, RectanglePlus.gradientFormat.horizontal, EndlessBorderColor, fnt1, EndlessTextColor, "Endless");
@@ -112,7 +127,7 @@ public abstract class QuestionSelectPage
     public void render(final Graphics g) {
         g.drawImage(background, 0, 0, null);
         final Graphics2D g2d = (Graphics2D)g;
-        HomePage.draw(g2d);
+        Home.draw(g2d);
         g.setColor(Color.white);
         g.setFont(fnt1);
         g.drawString("Number of Questions", numQuestionsInput.getX(), numQuestionsInput.getY() - numQuestionsInput.getHeight() / 2);

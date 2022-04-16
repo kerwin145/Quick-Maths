@@ -75,7 +75,7 @@ public class MouseInput implements MouseListener, MouseMotionListener{
 			
 			levSelectPage.numQuestionsInput.attemptFocus(mx, my);
 			
-			if(clickInBounds(levSelectPage.HomePage)) {
+			if(clickInBounds(levSelectPage.Home)) {
 				gui.State = gui.State.TITLE;
 			}
 			if(clickInBounds(levSelectPage.AddChoose)) {levSelectPage.AddChosen();}
@@ -88,11 +88,9 @@ public class MouseInput implements MouseListener, MouseMotionListener{
 			if(clickInBounds(levSelectPage.hardDif)) {levSelectPage.setDifficulty(2);}
 			if(clickInBounds(levSelectPage.insaneDif)) {levSelectPage.setDifficulty(3);}
 			
-			//if(clickInBounds(levSelectPage.challenge0)) {levSelectPage.setChallengeLvl(0);};
-			if(clickInBounds(levSelectPage.challenge1)) {levSelectPage.setChallengeLvl(1);};
-			if(clickInBounds(levSelectPage.challenge2)) {levSelectPage.setChallengeLvl(2);};
-			if(clickInBounds(levSelectPage.challenge3)) {levSelectPage.setChallengeLvl(3);};
-
+			if(clickInBounds(levSelectPage.vanishChallenge)) {levSelectPage.cycleVanishLevel();}
+			if(clickInBounds(levSelectPage.strikeOutChallenge)) {levSelectPage.cycleStrikeOutLevel();}
+			
 			if(clickInBounds(levSelectPage.Endless)){levSelectPage.endlessQuestions  = !levSelectPage.endlessQuestions;}
 
 			if(clickInBounds(levSelectPage.GenerateSet) && levSelectPage.isSetReady()) {
@@ -141,7 +139,7 @@ public class MouseInput implements MouseListener, MouseMotionListener{
 			else if (clickInBounds(levSelectPageSpecial.isItDivisible)){
 				levSelectPageSpecial.setQuestionType(8);
 			}
-			else if (clickInBounds(levSelectPageSpecial.squaringNumberThatEndIn5)){
+			else if (clickInBounds(levSelectPageSpecial.squaringNumberThatEndsIn5)){
 				levSelectPageSpecial.setQuestionType(9);
 			}
 			else if (clickInBounds(levSelectPageSpecial.multBy11)){
@@ -166,7 +164,7 @@ public class MouseInput implements MouseListener, MouseMotionListener{
 
 			if(clickInBounds(levSelectPageSpecial.Endless)){levSelectPageSpecial.endlessQuestions  = !levSelectPageSpecial.endlessQuestions;}
 
-			if(clickInBounds(levSelectPageSpecial.HomePage))gui.State = gui.State.TITLE;
+			if(clickInBounds(levSelectPageSpecial.Home))gui.State = gui.State.TITLE;
 				
 		}
 		
@@ -313,7 +311,99 @@ public class MouseInput implements MouseListener, MouseMotionListener{
 		
 		
 		if(GUI.State == STATE.TITLE) {
-			
+			if(highlighted == null) {	
+				if (clickInBounds(gui.getTitlePage().playButton))
+					highlighted = gui.getTitlePage().playButton;
+				else if (clickInBounds(gui.getTitlePage().playSpecialButton))
+					highlighted = gui.getTitlePage().playSpecialButton;
+				else if (clickInBounds(gui.getTitlePage().resumeButton))
+					highlighted = gui.getTitlePage().resumeButton;
+				else if (clickInBounds(gui.getTitlePage().achievementsButton))
+					highlighted = gui.getTitlePage().achievementsButton;
+				else if (clickInBounds(gui.getTitlePage().quitButton))
+					highlighted = gui.getTitlePage().quitButton;
+				try{highlighted.setHighlighted(true);}catch(Exception ex){}
+
+			}else if(!clickInBounds(highlighted)) {
+				highlighted.setHighlighted(false);	
+				highlighted = null;
+			}
+		}
+		else if(GUI.State == STATE.LEVELSELECT) {
+		 	if(highlighted == null) {	
+		 		if (clickInBounds(gui.getLevSelect().AddChoose))
+					highlighted = gui.getLevSelect().AddChoose;
+		 		else if (clickInBounds(gui.getLevSelect().SubChoose))
+		 			highlighted = gui.getLevSelect().SubChoose;
+		 		else if (clickInBounds(gui.getLevSelect().MultChoose))
+		 			highlighted = gui.getLevSelect().MultChoose;
+		 		else if (clickInBounds(gui.getLevSelect().DivChoose))
+		 			highlighted = gui.getLevSelect().DivChoose;
+		 		else if (clickInBounds(gui.getLevSelect().easyDif))
+					highlighted = gui.getLevSelect().easyDif;
+				else if (clickInBounds(gui.getLevSelect().medDif))
+					highlighted = gui.getLevSelect().medDif;
+				else if (clickInBounds(gui.getLevSelect().hardDif))
+					highlighted = gui.getLevSelect().hardDif;
+				else if (clickInBounds(gui.getLevSelect().insaneDif))
+					highlighted = gui.getLevSelect().insaneDif;
+				else if (clickInBounds(gui.getLevSelect().vanishChallenge)) 
+					highlighted = gui.getLevSelect().vanishChallenge;
+				else if (clickInBounds(gui.getLevSelect().Endless)) 
+					highlighted = gui.getLevSelect().Endless;
+				else if (clickInBounds(gui.getLevSelect().GenerateSet)) 
+					highlighted = gui.getLevSelect().GenerateSet;
+				else if(clickInBounds(gui.getLevSelect().Home))
+					highlighted = gui.getLevSelect().Home;
+
+				try{highlighted.setHighlighted(true);}catch(Exception ex){}
+
+			}else if(!clickInBounds(highlighted)) {
+				highlighted.setHighlighted(false);	
+				highlighted = null;
+			}
+		}
+		else if(GUI.State == STATE.LEVELSELECTSPECIAL) {
+			if(highlighted == null) {	
+				if (clickInBounds(gui.getLevelSelectSpecial().easyDif))
+					highlighted = gui.getLevelSelectSpecial().easyDif;
+				else if (clickInBounds(gui.getLevelSelectSpecial().medDif))
+					highlighted = gui.getLevelSelectSpecial().medDif;
+				else if (clickInBounds(gui.getLevelSelectSpecial().hardDif))
+					highlighted = gui.getLevelSelectSpecial().hardDif;
+				else if (clickInBounds(gui.getLevelSelectSpecial().insaneDif))
+					highlighted = gui.getLevelSelectSpecial().insaneDif;
+				else if (clickInBounds(gui.getLevelSelectSpecial().multBy2))
+					highlighted = gui.getLevelSelectSpecial().multBy2;
+				else if (clickInBounds(gui.getLevelSelectSpecial().multBy3))
+					highlighted = gui.getLevelSelectSpecial().multBy3;
+				else if (clickInBounds(gui.getLevelSelectSpecial().multBy4))
+					highlighted = gui.getLevelSelectSpecial().multBy4;
+				else if (clickInBounds(gui.getLevelSelectSpecial().multBy5))
+					highlighted = gui.getLevelSelectSpecial().multBy5;
+				else if (clickInBounds(gui.getLevelSelectSpecial().divBy2))
+					highlighted = gui.getLevelSelectSpecial().divBy2;
+				else if (clickInBounds(gui.getLevelSelectSpecial().divBy3))
+					highlighted = gui.getLevelSelectSpecial().divBy3;
+				else if (clickInBounds(gui.getLevelSelectSpecial().divBy4))
+					highlighted = gui.getLevelSelectSpecial().divBy4;
+				else if (clickInBounds(gui.getLevelSelectSpecial().divBy5))
+					highlighted = gui.getLevelSelectSpecial().divBy5;
+				else if (clickInBounds(gui.getLevelSelectSpecial().isItDivisible))
+					highlighted = gui.getLevelSelectSpecial().isItDivisible;
+				else if (clickInBounds(gui.getLevelSelectSpecial().Endless)) 
+					highlighted = gui.getLevelSelectSpecial().Endless;
+				else if (clickInBounds(gui.getLevelSelectSpecial().GenerateSet)) 
+					highlighted = gui.getLevelSelectSpecial().GenerateSet;
+				else if(clickInBounds(gui.getLevelSelectSpecial().Home))
+					highlighted = gui.getLevelSelectSpecial().Home;
+				
+				try{highlighted.setHighlighted(true);}catch(Exception ex){}
+				
+			}else if(!clickInBounds(highlighted)) {
+				highlighted.setHighlighted(false);	
+				highlighted = null;
+			}
 		}
 		else if (GUI.State == STATE.ACHIEVEMENTMENU) {
 				

@@ -6,15 +6,15 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 
 public class Rectangle_ extends Rectangle implements Shape{
 
 	//Here are all the properties of the rectangle	
-	String text = ""; 
+	ArrayList<String> text = new ArrayList<>(); 
 	public enum textPosition {
 		top,
 		middle,
@@ -40,6 +40,8 @@ public class Rectangle_ extends Rectangle implements Shape{
 	//the size of backgroundColors and borderColors should be the same, but it isn't critical
 	int currentBackgroundColor = 0;
 	int currentBorderColor = 0;
+	int currentText
+	= 0;
 	/*An example for the background Color: You have a rectangle with three modes. 
 	 * The first will be a gradient from red to blue
 	 * Second will be solid purple
@@ -69,7 +71,7 @@ public class Rectangle_ extends Rectangle implements Shape{
 
     }
     //the maximum constructor with arraylists
-    public Rectangle_(int x, int y, int width, int height,String text, textPosition textPos, Font font, Color fontColor,
+    public Rectangle_(int x, int y, int width, int height, ArrayList<String> text, textPosition textPos, Font font, Color fontColor,
     		ArrayList<Color> borderColors,  ArrayList<ArrayList<Color>> backgroundColors,gradientFormat gFormat, int backgroundOpacity, int borderThickness, boolean hasDarkenedColors){
         super(x, y, width, height);
         
@@ -86,11 +88,28 @@ public class Rectangle_ extends Rectangle implements Shape{
 
     }
     
+    public Rectangle_(int x, int y, int width, int height, String[] text, textPosition textPos, Font font, Color fontColor,
+    		Color[] borderColors,  Color[][] backgroundColors, gradientFormat gFormat, int backgroundOpacity, int borderThickness, boolean hasDarkenedColors){
+    	super(x, y, width, height);
+    	
+        if(text != null)this.setText(text);
+    	if(textPos != null) this.textPos = textPos;
+    	if(font != null) this.font = font;
+    	if(fontColor != null) this.fontColor = fontColor;
+    	if(borderColors != null) setBorderColors(borderColors);
+    	if(backgroundColors != null) setBackgroundColors(backgroundColors);
+    	if(gFormat != null) this.gFormat = gFormat;
+    	if(backgroundOpacity >= 0) this.backgroundOpacity = backgroundOpacity*255;
+    	if(borderThickness >= 0) this.borderThickness = borderThickness;
+        this.hasDarkenedColors = hasDarkenedColors;
+
+    }
+    
     public Rectangle_(int x, int y, int width, int height, String text, textPosition textPos, Font font, Color fontColor,
     		Color[] borderColors,  Color[][] backgroundColors, gradientFormat gFormat, int backgroundOpacity, int borderThickness, boolean hasDarkenedColors){
     	super(x, y, width, height);
     	
-        if(text != null)this.text = text;
+        if(text != null)this.text.add(text);
     	if(textPos != null) this.textPos = textPos;
     	if(font != null) this.font = font;
     	if(fontColor != null) this.fontColor = fontColor;
@@ -112,6 +131,10 @@ public class Rectangle_ extends Rectangle implements Shape{
 	    		borderColors.add(borderColors.get(borderColors.size()-1));
 	    	while(backgroundColors.size() < maxSize)
 	    		backgroundColors.add(backgroundColors.get(backgroundColors.size()-1));
+    	}//equalize text
+    	if(text.size() != 0) {
+    		while(text.size() < maxSize)
+    			text.add(text.get(text.size()-1));
     	}
     	
     	//To draw, we will check if there is a backgroundColor
@@ -282,10 +305,14 @@ public class Rectangle_ extends Rectangle implements Shape{
 	    		g.setColor(fontColor);
     	}
 
-    	if(textPos == textPosition.top) {
-            stringGraphics.drawStringFlow(text, this.getBounds(), textPosition.top, g);
-    	}else {
-            stringGraphics.drawStringFlow(text, this.getBounds(), textPosition.middle, g);
+    	if(text.size() > 0) {
+	    	if(textPos == textPosition.top) {
+	            stringGraphics.drawStringFlow(text.get(currentText), this.getBounds(), textPosition.top, g);
+	    	}else if(textPos == textPosition.middle) {
+	            stringGraphics.drawStringFlow(text.get(currentText), this.getBounds(), textPosition.middle, g);
+	    	}else if (textPos == textPosition.left) { //centers on y axis
+	    		g.drawString(text.get(currentText), x, (int) (y + height));
+	    	}
     	}
 
     }
@@ -297,17 +324,17 @@ public class Rectangle_ extends Rectangle implements Shape{
 	private Color getHighlightedColor(Color input, double opacity) {
     	double red, blue, green;
     	if(input.getRed() > 128)
-    		red = input.getRed() * .9;
+    		red = input.getRed() - 20;
     	else
-    		red = input.getRed() * 1.12;
+    		red = input.getRed() + 20;
      	if(input.getGreen() > 128)
-    		green = input.getGreen() * .9;
+    		green = input.getGreen() - 20;
     	else
-    		green = input.getGreen() * 1.12;
+    		green = input.getGreen() + 20;
      	if(input.getBlue() > 128)
-     		blue = input.getBlue() * .9;
+     		blue = input.getBlue() - 20;
      	else
-     		blue = input.getBlue() * 1.12;
+     		blue = input.getBlue() + 20;
      	return new Color((int)red, (int) green, (int) blue, (opacity >= 0 && opacity <= 1) ? (int)(opacity * 255) : input.getAlpha());
     }
     
@@ -331,8 +358,43 @@ public class Rectangle_ extends Rectangle implements Shape{
 
     
     //attribute editors--------------------------
-    public void setText(String text) {
-    	this.text = text;
+    public void setText(int pos, String t) {
+    	if(pos < this.text.size()) {
+        	text.set(pos, t);
+    	}else
+    		text.add(t);
+    }
+    
+    public void setText(String[] t) {
+    	ArrayList<String> newText = new ArrayList<String>();
+    	for(String s: t) {
+    		newText.add(s);
+    	}
+    	this.text = newText;
+    }
+    
+    public void setText(ArrayList<String> t) {
+    	this.text = t;
+    }
+    
+    public void setText(String t) {
+    	text.clear();
+    	text.add(t);
+    }
+    
+    public void addText(String t) {
+    	text.add(t);
+    }
+    
+    public void appendText(ArrayList<String> t) {	
+    	for(String s:t) {
+    		text.add(s);
+    	}
+    }
+    public void appendText(String[] t) {
+    	for(String s:t) {
+    		text.add(s);
+    	}
     }
     
     public void setTextPosition(textPosition pos) {
@@ -508,6 +570,7 @@ public class Rectangle_ extends Rectangle implements Shape{
     public void setColors(int index) {
     	currentBorderColor = index;
     	currentBackgroundColor = index;
+    	currentText = index;
     	
     	if(index >= backgroundColors.size())
     		currentBackgroundColor = backgroundColors.size()-1;
@@ -515,9 +578,13 @@ public class Rectangle_ extends Rectangle implements Shape{
     	if(index >= borderColors.size())
         	currentBorderColor = borderColors.size()-1;
     	
+    	if(index >= text.size())
+    		currentText = text.size()-1;
+    	
     	if(index < 0) {
     		currentBackgroundColor = 0;
     		currentBorderColor = 0;
+    		currentText = 0;
     	}
 
     }
@@ -587,6 +654,16 @@ public class Rectangle_ extends Rectangle implements Shape{
 		this.highlighted = highlighted;
 	}
     
+	public void setWidthMatchText() {
+		if(text.size() > 0) {
+			FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
+			this.width = (int)(font.getStringBounds(text.get(0), frc).getWidth());
+		}
+	}
+	
+	public void setXCenteredTo(Rectangle_ r) {
+		x = (r.width-width)/2 + r.x;
+	}
     
 
 

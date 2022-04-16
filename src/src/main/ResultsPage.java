@@ -24,14 +24,19 @@ public class ResultsPage {
 	int correct;
 	int totalQ;
 	String difficulty;
-	int challengeLvl;
+	int vanishLvl;
+	int strikeOutLvl;
+	
 	String splashText;
 	double percentCorrect;
 	String correctText;
 	String questionType;
+	String challengeModeString;
+	String[] challengeModesText;
 	Color percentColor;
 	Random rnd = new Random();
 	
+	String[] romanNumerals = {"0", "I", "II", "III", "IV", "V"};
 	String[] perfect = {"UNIVVVERSSSE BRAIN", "Absolute POGCHAMP", "You kno da wae", "WawaWeewa", "SHEEEeeesh"};
 	String[] good = {"GALAXY BRAIN", "Lessgo", "NOICE", "Poggers", "*clap* *clap* *clap*", "Verryyy nice"};
 	String[] ok = {"Not bad", "A is for Average. B is for Dissapoint. DONT BE A DISSAPOINTMENT", "Hmmmmm", "Eeetss...ok"};
@@ -127,13 +132,12 @@ public class ResultsPage {
 		else
 			g.drawString("Time Spent: " + qPage.timeMinutes + "' " +  qPage.timeSeconds + "\"", x1, y2 + spacing*3);
 		
-		if(challengeLvl > 0) 
-				g.drawString("Vanish Challenge Level: " + challengeLvl, x1, y2 + spacing*4);
+	    for (int i = 0; i < challengeModesText.length; i++)
+	        g.drawString(challengeModesText[i], x1, y2 + spacing * 4 + g.getFontMetrics().getHeight() * i);
 
 		
-		
 		g.setColor(splashTextColor);
-		g.drawString(splashText, x1, y2 + (int)(spacing*5.5));
+		g.drawString(splashText, x1, y2 + (int)(spacing* (4 + challengeModesText.length)));
 
 		g.setColor(Color.white);
 		g.setFont(fnt0);
@@ -170,10 +174,26 @@ public class ResultsPage {
 				
 		correct = qPage.numCorrect;
 		totalQ = qPage.numQuestions;
+		
 		calculateScore(correct, totalQ);
 		difficulty = "" + qPage.getDifficulty();
 		dififcultyToString();
-		challengeLvl = gui.getLevSelect().challengeLvl;
+		
+		
+		vanishLvl = gui.getLevSelect().vanishLvl;
+		strikeOutLvl = gui.getLevSelect().strikeOutLvl;
+		
+			challengeModeString = "Challenge Modes: \n";
+		if(vanishLvl == 0 && strikeOutLvl == 0) {
+			challengeModeString = "none";
+		}else {
+			if(vanishLvl > 0 )
+				challengeModeString += "   Vanish Mode " + romanNumerals[vanishLvl] + "\n";
+			if(strikeOutLvl > 0)
+				challengeModeString += "   Strike Out Mode " + romanNumerals[strikeOutLvl] + "\n";
+		}
+		challengeModesText = challengeModeString.split("\n");
+
 		
 		rolledBack = false;		
 		
@@ -195,7 +215,7 @@ public class ResultsPage {
 		calculateScore(correct, totalQ);
 		difficulty = "" + qPage.getDifficulty();
 		dififcultyToString();
-		challengeLvl = -1;
+		vanishLvl = -1;
 		
 		rolledBack = false;		
 

@@ -1,13 +1,16 @@
 package src.main;
-import java.awt.image.ImageObserver;
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import javax.swing.ImageIcon;
 import java.awt.Color;
-import k_Methods.MoColors;
-import java.awt.Image;
-import k_Methods.RectanglePlus;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
+import k_Methods.MoColors;
+import k_Methods.Rectangle_;
+import k_Methods.Rectangle_.gradientFormat;
+import k_Methods.Rectangle_.textPosition;
 
 
 public class TitlePage
@@ -18,25 +21,31 @@ public class TitlePage
     Font fnt0;
     Font fnt1;
     Font fnt2;
-    public RectanglePlus playButton;
-    public RectanglePlus playSpecialButton;
-    public RectanglePlus resumeButton;
-    public RectanglePlus achievementsButton;
-    public RectanglePlus quitButton;
+    public Rectangle_ playButton;
+    public Rectangle_ playSpecialButton;
+    public Rectangle_ resumeButton;
+    public Rectangle_ achievementsButton;
+    public Rectangle_ quitButton;
     Image background;
     public boolean setFinished;
     public boolean setSpecialFinished;
     public PreviousPage questionPage;
     
+    int buttonsy1 = 150, buttonSpacing = 80;
+    Color[][] titleBackgroundColors = {{MoColors.royalBlue, MoColors.deepSkyBlue}};
+    
+    
     TitlePage(final GUI gui) {
         this.fnt0 = new Font("Linux Libertine Display G", 1, 50);
         this.fnt1 = new Font("Bodoni MT", 1, 25);
         this.fnt2 = new Font("Garamond", 1, 20);
-        this.playButton = new RectanglePlus(100, 150, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, true, RectanglePlus.gradientFormat.horizontal, MoColors.orange, this.fnt1, Color.white, "Start");
-        this.playSpecialButton = new RectanglePlus(100, 230, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, true, RectanglePlus.gradientFormat.horizontal, MoColors.magenta, this.fnt1, Color.white, "Special");
-        this.resumeButton = new RectanglePlus(100, 310, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, true, RectanglePlus.gradientFormat.horizontal, MoColors.blue, this.fnt1, Color.white, "Resume");
-        this.achievementsButton = new RectanglePlus(100, 390, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, MoColors.dodgerBlue, MoColors.blueViolet, RectanglePlus.gradientFormat.horizontal, MoColors.gold, this.fnt1, Color.white, "Medals");
-        this.quitButton = new RectanglePlus(100, 470, 150, 50, MoColors.royalBlue, MoColors.deepSkyBlue, MoColors.dodgerBlue, MoColors.blueViolet, RectanglePlus.gradientFormat.horizontal, MoColors.red, this.fnt1, Color.white, "Quit");
+        
+        playButton = new Rectangle_(100, buttonsy1 ,150,50, "Start", textPosition.middle, fnt1, Color.white, new Color[] {MoColors.orange}, titleBackgroundColors, gradientFormat.vertical, 1, 2, true);
+        playSpecialButton = new Rectangle_(100, buttonsy1 + buttonSpacing ,150,50, "Special", textPosition.middle, fnt1, Color.white, new Color[] {MoColors.magenta}, titleBackgroundColors, gradientFormat.vertical, 1, 2, true);
+        resumeButton = new Rectangle_(100, buttonsy1 + buttonSpacing * 2,150,50, "Resume", textPosition.middle, fnt1, Color.white, new Color[] {MoColors.aqua}, titleBackgroundColors, gradientFormat.vertical, 1, 2, true);
+        achievementsButton = new Rectangle_(100, buttonsy1 + buttonSpacing * 3,150,50, "Achievements", textPosition.middle, fnt1, Color.white, new Color[] {MoColors.gold}, titleBackgroundColors, gradientFormat.vertical, 1, 2, true);
+        quitButton = new Rectangle_(100, buttonsy1 + buttonSpacing * 4,150,50, "Quit", textPosition.middle, fnt1, Color.white, new Color[] {MoColors.red}, titleBackgroundColors, gradientFormat.vertical, 1, 2, true);
+              
         this.background = new ImageIcon("images/quickMathsLevelSelectBackground2.jpg").getImage().getScaledInstance(600 * 2, 333 * 2, 1);
         this.setFinished = true;
         this.setSpecialFinished = true;
@@ -69,11 +78,11 @@ public class TitlePage
         else {
             this.resumeButton.setText("___");
         }
-        this.playButton.draw(g2d);
-        this.playSpecialButton.draw(g2d);
-        this.resumeButton.draw(g2d);
-        this.achievementsButton.draw(g2d);
-        this.quitButton.draw(g2d);
+        playButton.draw(g2d);
+        playSpecialButton.draw(g2d);
+        resumeButton.draw(g2d);
+        achievementsButton.draw(g2d);
+        quitButton.draw(g2d);
         g.setFont(this.fnt2);
         g.setColor(Color.gray);
         if (!this.setFinished || !this.setSpecialFinished) {

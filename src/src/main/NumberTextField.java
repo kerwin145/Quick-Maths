@@ -20,6 +20,7 @@ public class NumberTextField
     private Rectangle_ box;
     boolean allowNegatives;
     private boolean inFocus;
+    private boolean alwaysFocused = false;
     
     NumberTextField(final int x, final int y, final int width, final int height, final String text, final boolean allowNegatives) {
         this.inFocus = false;
@@ -49,7 +50,7 @@ public class NumberTextField
         }
         stringGraphics.drawStringCentered(this.text, box, textPosition.left, g);
         
-        if (inFocus) {
+        if (inFocus || alwaysFocused) {
         	box.setBorderColor(MoColors.lightGreen);
         	//g.setColor(Color.green);
         }
@@ -62,7 +63,7 @@ public class NumberTextField
     }
     
     public void updateText(final int keyCode) {
-        if (this.inFocus) {
+        if (this.inFocus || alwaysFocused) {
             switch (keyCode) {
                 case 48: {
                 	appendNum(0);
@@ -272,5 +273,9 @@ public class NumberTextField
     
     public void setHeight(final int height) {
         this.height = height;
+    }
+    
+    public void setAlwaysFocused(boolean t) {
+    	alwaysFocused = t;
     }
 }

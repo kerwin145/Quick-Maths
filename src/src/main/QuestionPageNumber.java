@@ -26,7 +26,8 @@ public class QuestionPageNumber {
 	public int numCorrect = 0;
 	public int currentQuestion = 0;
 	protected int difficulty; //from 1 as easy to 4 as insane
-	public int challengeLvl = 0;
+	public int vanishLvl = 0;
+	public int strikeOutLvl = 0;
 	public int questionSpecialNum2 = -1; //used for specific mult or division
 	public int questionSpecialType = -1; //2 for mult, 3 for division
 	private boolean onlyPositive, perfectDivisor;
@@ -56,6 +57,7 @@ public class QuestionPageNumber {
 	
 	public long questionDisplayTime = 0;
 	public long decayStartTime = 0;
+	public int strikeOutLives = 0;
 
 	public double timeAverageDeviationSum = 0; //calculates the cumulative time dif ratio of individual question time to the average time. If greater than 2, than you can revoke time data for that round.
 	public int timeAverageDeviationCount = 0;
@@ -73,9 +75,9 @@ public class QuestionPageNumber {
 
 	int inputAnswer;
 
-	String[] correct = {"Nice!", "Correct!", "Keep it up!", "BIG BRAIN", "U r very smart", "Yessir", "Show me da wae", "I call hacks", "Valid Fo' Sho'"};
+	String[] correct = {"Nice!", "Correct!", "Keep it up!", "BIG BRAIN", "U r very smart", "Yessir", "Show me da wae", "I call hacks", "Valid Fo' Sho'", "Based", "You're cracked"};
 	String[] incorrect = {"Oops!", "You still got this!", "Tiny brain?", "Come on man", "Not time to give up yet!", "NOOOOOOoooooooooo", "I II II L"};
-	String[] almostThere = {"Bah", "Oof", "Sadge"};
+	String[] almostThere = {"Bah", "Oof", "Sadge", "Crinj"};
 
 	String[] difList = {"Easy", "Medium", "Hard", "Insane"}; //used for getdifficulty method, nothing much else
 
@@ -84,11 +86,12 @@ public class QuestionPageNumber {
 	Font fnt1Small = new Font("Lucida Bright", Font.BOLD, 12);
 	Font fnt2 = new Font("Lucida Bright", Font.PLAIN, gui.HEIGHT * gui.SCALE / 15);
 	Font fntNormal = new Font("Garamond", Font.PLAIN, 15);
+	Font fntHeart = new Font("Garamond", Font.BOLD, 40);
 
 	int width1 = gui.WIDTH * gui.SCALE /4;
 	int textSpacing = 5;
 	
-	NumberTextField inputTextAnswer = new NumberTextField(fnt0.getSize() + fnt2.getSize() * 4, gui.HEIGHT * gui.SCALE / 2, width1, 52, "0", true);
+	NumberTextField inputTextAnswer = new NumberTextField(fnt0.getSize() + fnt2.getSize() * 4, gui.HEIGHT * gui.SCALE / 2, width1, 52, "0", true);	
 	
 	public RectanglePlus HomePage = new RectanglePlus(gui.WIDTH * gui.SCALE - 150, 15, 130, 20,  
 			MoColors.royalBlue, MoColors.deepSkyBlue, true, gradientFormat.horizontal, MoColors.navy,
@@ -127,6 +130,8 @@ public class QuestionPageNumber {
 		achCheck = gui.getAchCheck();
 		dataUpdater = gui.getDataUpdater();
 		
+		inputTextAnswer.setAlwaysFocused(true);
+		
 		submitAnswer = new Rectangle_(inputTextAnswer.getX() + inputTextAnswer.getWidth()+ 10, inputTextAnswer.getY(), 50, 50);	
 		submitAnswer.setGradientFormat(Rectangle_.gradientFormat.vertical);
 		submitAnswer.setBackgroundColors(submitBackgroundColor);
@@ -143,7 +148,7 @@ public class QuestionPageNumber {
 
 		if(question != null){
 			//this if sees if vanish mode applies
-			if(gui.getTitlePage().questionPage == gui.getTitlePage().questionPage.Normal && challengeLvl > 0 && !askForConfirm) {
+			if(gui.getTitlePage().questionPage == gui.getTitlePage().questionPage.Normal && vanishLvl > 0 && !askForConfirm) {
 				long timeSpent = System.currentTimeMillis()-timeQuestionStartMillis;
 				if(timeSpent < questionDisplayTime) {
 					//System.out.println("Time spent:" + timeSpent + ". Now, under display time");
@@ -167,6 +172,11 @@ public class QuestionPageNumber {
 			g.drawString("Answer", fnt0.getSize() , inputTextAnswer.getY() + fnt0.getSize()/2);
 			inputTextAnswer.render(g, true);
 
+			if(strikeOutLvl > 0) {
+				g.setFont(fntHeart);
+				g.setColor(Color.red);
+				g.drawString(getLifeText(strikeOutLives), inputTextAnswer.getX(), inputTextAnswer.getY() + inputTextAnswer.getHeight() + fntHeart.getSize());
+			}
 		}
 
 		if(renderHelp) renderHelp(g);
@@ -195,9 +205,9 @@ public class QuestionPageNumber {
 			splashText = "Are you sure?";
 		g.setFont(fntSplash);
 		g.setColor(Color.white);
-		g.drawString(splashText, fnt0.getSize(), (int)(inputTextAnswer.getY() + inputTextAnswer.getHeight() * 2));
+		g.drawString(splashText, fnt0.getSize(), (int)(inputTextAnswer.getY() + inputTextAnswer.getHeight() * 2.7));
 		g.setColor(new Color(39, 201, 14));
-		g.drawString(splashText2, fnt0.getSize(), (int)(inputTextAnswer.getY() + inputTextAnswer.getHeight() * 3));
+		g.drawString(splashText2, fnt0.getSize(), (int)(inputTextAnswer.getY() + inputTextAnswer.getHeight() * 3.7));
 
 		submitAnswer.draw(g2d);
 		HomePage.draw(g2d);
@@ -222,8 +232,8 @@ public class QuestionPageNumber {
 			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion - 1), HomePage.x - 200, (int) (HomePage.y + HomePage.height + fntTimer.getSize() + textSpacing));
 		}
 		else{
-			g.drawString("Q " + currentQuestion + "/ --", HomePage.x - 200, (int) (HomePage.y + HomePage.height));
-			g.drawString("Correct: " + numCorrect + "/ --", HomePage.x - 200, (int) (HomePage.y + HomePage.height  + fntTimer.getSize() + textSpacing));
+			g.drawString("Q " + currentQuestion + "/ --" , HomePage.x - 200, (int) (HomePage.y + HomePage.height));
+			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion-1), HomePage.x - 200, (int) (HomePage.y + HomePage.height  + fntTimer.getSize() + textSpacing));
 
 		}
 		timerTextLength = g.getFontMetrics().stringWidth(timerText);
@@ -279,7 +289,7 @@ public class QuestionPageNumber {
 		}
 
 		else if (askForConfirm){
-			//if u u got the question wrong, wait.
+			//if u got the question wrong, wait.
 			if(currentQuestion <= numQuestions || endlessQuestions){
 				genQuestion();
 				timerUnPause();
@@ -357,6 +367,9 @@ public class QuestionPageNumber {
 		dataUpdater.updateQuestionComplete(question.getType(), difficulty);
 		timerPause();
 		askForConfirm = true;
+		if(strikeOutLvl > 0) {
+			strikeOutLives--;
+		}
 	}
 
 	public void incorrect() {
@@ -366,12 +379,17 @@ public class QuestionPageNumber {
 		dataUpdater.updateQuestionComplete(question.getType(), difficulty);
 		timerPause();
 		askForConfirm = true;
+		if(strikeOutLvl > 0) {
+			strikeOutLives--;
+		}
+		
 	}
 
 	public void genQuestion(){
-		if(currentQuestion == numQuestions && !endlessQuestions){
+		if(currentQuestion == numQuestions && !endlessQuestions ||(strikeOutLvl > 0 && strikeOutLives == 0)){
 			timerPaused = false;
 			switchToResults();
+			return;
 		}
 
 		else {
@@ -401,9 +419,15 @@ public class QuestionPageNumber {
 		}
 		setType = 0;
 		
-		challengeLvl = gui.getLevSelect().getChallengeLvl();
-		questionDisplayTime = gui.getLevSelect().getChallengeLvlTime();
-		decayStartTime = gui.getLevSelect().getChallengeDecayStartTime();
+		vanishLvl = gui.getLevSelect().getVanishLvl();
+		strikeOutLvl = gui.getLevSelect().getStrikeOutLvl();
+		if(strikeOutLvl > 0) {
+			strikeOutLives = 4 - strikeOutLvl;
+		}
+		
+		questionDisplayTime = gui.getLevSelect().getVanishTime();
+		decayStartTime = gui.getLevSelect().getVanishDecayStartTime();
+		System.out.println(questionDisplayTime + " " + decayStartTime);
 		
 		gui.getTitlePage().questionPage = gui.getTitlePage().questionPage.Normal;
 		endlessQuestions = gui.getLevSelect().endlessQuestions;
@@ -436,6 +460,14 @@ public class QuestionPageNumber {
 	}
 
 	public void switchToResults() {
+		
+		//System.out.println("Num questions" + numQuestions + ", current Questions" + currentQuestion + ", questions correct" + numCorrect);
+		if(endlessQuestions) { //some botched code. 
+			numQuestions = currentQuestion;
+			if(!askForConfirm)
+				numQuestions--;
+		}
+		
 		gui.getTitlePage().setFinished = true;
 		gui.getTitlePage().setSpecialFinished = true;
 		if(setType == 0)
@@ -538,6 +570,20 @@ public class QuestionPageNumber {
 		int random = rnd.nextInt(input.length);
 		//System.out.println("Array Lenght:" + random);
 		return input[random];
+	}
+	
+	public String getLifeText(int lives) {
+		if(lives <= 0 || lives > 3) return "";
+		switch(lives) {
+		case 1:
+			return "♥";
+		case 2:
+			return "♥ ♥";
+		case 3: 
+			return "♥ ♥ ♥";
+		}
+		return "";
+			
 	}
 
 	public String getDifficultyList(){

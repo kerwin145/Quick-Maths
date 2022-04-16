@@ -14,6 +14,8 @@ import k_Methods.stringGraphics;
 public class LevelSelectSpecial extends QuestionSelectPage{
 	int x1 = 120, y1 = 150;
 	int buttonWidth1 = 60, buttonHeight1 = 60;
+	int buttonWidth2 = 100, buttonHeight = 50;
+
 	int spacing1 = (gui.WIDTH * gui.SCALE - buttonWidth1*8 - x1)/8;
 	int spacing2 = 80;
 	int y2 = (int)(y1 + buttonHeight1 * 2.5); 
@@ -26,46 +28,61 @@ public class LevelSelectSpecial extends QuestionSelectPage{
 	Color[] OperationsButtonColors2 = {MoColors.darkTurquoise, MoColors.mediumBlue};
 	Color[] OperationsBorderColors = {Color.gray, MoColors.chartreuse};
 	Color[] OperationsFontColors = {Color.white};	
-	//multiplciation game modes
-	public RectanglePlus multBy2 = new RectanglePlus(x1, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	//multiplciation game modes	
+	
+	public Rectangle_ multBy2 = new Rectangle_(x1 , y1, buttonWidth1, buttonHeight1, "x2", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ multBy3 = new Rectangle_(x1 + buttonWidth1 + spacing1, y1, buttonWidth1, buttonHeight1, "x3", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ multBy4 = new Rectangle_(x1 + buttonWidth1*2 + spacing1*2, y1, buttonWidth1, buttonHeight1, "x4", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ multBy5 = new Rectangle_(x1 + buttonWidth1*3 + spacing1*3, y1, buttonWidth1, buttonHeight1, "x5", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	
+	public Rectangle_ divBy2 = new Rectangle_(x1 + buttonWidth1*4 + spacing1*4, y1, buttonWidth1, buttonHeight1, "÷2", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ divBy3 = new Rectangle_(x1 + buttonWidth1*5 + spacing1*5, y1, buttonWidth1, buttonHeight1, "÷3", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ divBy4 = new Rectangle_(x1 + buttonWidth1*6 + spacing1*6, y1, buttonWidth1, buttonHeight1, "÷4", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ divBy5 = new Rectangle_(x1 + buttonWidth1*7 + spacing1*7, y1, buttonWidth1, buttonHeight1, "÷5", null, fnt0, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	
+	/*
+	public Rectangle_ multBy2 = new RectanglePlus(x1, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "x2");
-	public RectanglePlus multBy3 = new RectanglePlus(x1 + buttonWidth1 + spacing1, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ multBy3 = new RectanglePlus(x1 + buttonWidth1 + spacing1, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "x3");
-	public RectanglePlus multBy4 = new RectanglePlus(x1 + buttonWidth1*2 + spacing1*2, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ multBy4 = new RectanglePlus(x1 + buttonWidth1*2 + spacing1*2, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "x4");
-	public RectanglePlus multBy5 = new RectanglePlus(x1 + buttonWidth1*3 + spacing1*3, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ multBy5 = new RectanglePlus(x1 + buttonWidth1*3 + spacing1*3, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "x5");
 	
 	//division game modes
-	public RectanglePlus divBy2 = new RectanglePlus(x1 + buttonWidth1*4 + spacing1*4, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ divBy2 = new RectanglePlus(x1 + buttonWidth1*4 + spacing1*4, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "÷2");
-	public RectanglePlus divBy3 = new RectanglePlus(x1 + buttonWidth1*5 + spacing1*5, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ divBy3 = new RectanglePlus(x1 + buttonWidth1*5 + spacing1*5, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "÷3");
-	public RectanglePlus divBy4 = new RectanglePlus(x1 + buttonWidth1*6 + spacing1*6, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ divBy4 = new RectanglePlus(x1 + buttonWidth1*6 + spacing1*6, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "÷4");
-	public RectanglePlus divBy5 = new RectanglePlus(x1 + buttonWidth1*7 + spacing1*7, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ divBy5 = new RectanglePlus(x1 + buttonWidth1*7 + spacing1*7, y1, buttonWidth1, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "÷5");
-	
-	int buttonWidth2 = 100, buttonHeight = 50;
+	*/
 
-	//super special game modes	
-	//String[] IsItDivisibleText = {"Is it", "Divisible?"};
+	public Rectangle_ isItDivisible = new Rectangle_(x1 , y2, buttonWidth2, buttonHeight1, "Is it divisible", null, fnt2, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ squaringNumberThatEndsIn5 = new Rectangle_(x1 + buttonWidth1 + spacing2, y2, buttonWidth2, buttonHeight1, "", null, fnt2, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+	public Rectangle_ multBy11 = new Rectangle_(x1 + buttonWidth1*2 + spacing2*2, y2, buttonWidth2, buttonHeight1, "", null, fnt2, Color.white, new Color[]{Color.gray, MoColors.chartreuse}, new Color[][] {{MoColors.dodgerBlue, MoColors.darkTurquoise},  {MoColors.dodgerBlue, MoColors.mediumBlue}}, Rectangle_.gradientFormat.vertical, 1, 2, true);
+
 	
-	public RectanglePlus isItDivisible = new RectanglePlus(x1, y2, buttonWidth2, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	/*
+	public Rectangle_ isItDivisible = new RectanglePlus(x1, y2, buttonWidth2, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt2, OperationsFontColors, "Is it Divisible");
-	public RectanglePlus squaringNumberThatEndIn5 = new RectanglePlus(x1 + buttonWidth1 + spacing2, y2, buttonWidth2, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ squaringNumberThatEndsIn5 = new RectanglePlus(x1 + buttonWidth1 + spacing2, y2, buttonWidth2, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "");
-	public RectanglePlus multBy11 = new RectanglePlus(x1 + buttonWidth1*2 + spacing2*2, y2, buttonWidth2, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
+	public Rectangle_ multBy11 = new RectanglePlus(x1 + buttonWidth1*2 + spacing2*2, y2, buttonWidth2, buttonHeight1, OperationsButtonColors1, OperationsButtonColors2,	
 			true, gradientFormat.horizontal, OperationsBorderColors, fnt0, OperationsFontColors, "");
-
+	*/
+	
 	public Rectangle_ easyDif, medDif, hardDif, insaneDif;
 	public Rectangle_ insaneTextBox;
 	String[] insaneText = {"Don't tell me", "ur not gonna use", "ur calculator ;]"};
 	
 		
-	public RectanglePlus[] specialQChosen = {multBy2, multBy3, multBy4, multBy5, 
+	public Rectangle_[] specialQChosen = {multBy2, multBy3, multBy4, multBy5, 
 										 divBy2, divBy3, divBy4, divBy5,
-										 isItDivisible, squaringNumberThatEndIn5, multBy11};
+										 isItDivisible, squaringNumberThatEndsIn5, multBy11};
 	
 	public Rectangle_[] Difficulties;  
 
@@ -155,9 +172,9 @@ public class LevelSelectSpecial extends QuestionSelectPage{
 		
 		for(int i = 0; i < specialQChosen.length; i++) {
 			if(i == specialQChosenIndex)
-				specialQChosen[i].setColorState(1);
+				specialQChosen[i].setColors(1);
 			else
-				specialQChosen[i].setColorState(0);
+				specialQChosen[i].setColors(0);
 
 		}
 		

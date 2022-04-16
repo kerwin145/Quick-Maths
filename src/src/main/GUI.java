@@ -48,11 +48,9 @@ public class GUI extends Canvas implements Runnable, Serializable
     private KeyInput key;
     private MouseInput mouse;
     private Random r;
-    public static STATE State = STATE.ACHIEVEMENTMENU;
+    public static STATE State = STATE.LEVELSELECT;
     
 
-   
-    
     public GUI() {
         this.running = false;
         this.r = new Random();
@@ -127,7 +125,7 @@ public class GUI extends Canvas implements Runnable, Serializable
                 --delta;
             }
             if (System.currentTimeMillis() - timer > 1000L) {
-                timer += 1000L;
+                timer += 1000L;//for the question set timer
                 updates = 0;
                 frames = 0;
             }
@@ -155,40 +153,40 @@ public class GUI extends Canvas implements Runnable, Serializable
     private void render() {
         final BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
-            this.createBufferStrategy(3);
+            this.createBufferStrategy(2);
             return;
         }
         final Graphics g = bs.getDrawGraphics();
-        for (int x = 0; x < 1200; x += 100) {
-            g.drawString(new StringBuilder().append(x).toString(), x, 656);
-        }
-        for (int y = 0; y < 666; y += 100) {
-            g.drawString(new StringBuilder().append(y).toString(), 5, y);
-        }
+  
         g.clearRect(0, 0, 1200, 666);
-        final Graphics2D g2d = (Graphics2D)g;
-        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        if (GUI.State == STATE.TITLE) {
-            this.titlePage.render(g);
-        }
-        else if (GUI.State == STATE.LEVELSELECT) {
-            this.levSelectPage.render(g);
-        }
-        else if (GUI.State == STATE.QUESTIONROUNDNUMBER) {
-            this.questionPageNumber.render(g);
-        }
-        else if (GUI.State == STATE.QUESTIONROUNDYESNO) {
-            this.questionPageYN.render(g);
-        }
-        else if (GUI.State == STATE.RESULTS) {
-            this.resultsPage.render(g);
-        }
-        else if (GUI.State == STATE.ACHIEVEMENTMENU) {
+
+        switch(State) {
+        case TITLE:
+        	titlePage.render(g);
+        	break;
+        case LEVELSELECT:
+        	levSelectPage.render(g);
+        	break;
+        case LEVELSELECTSPECIAL:
+        	levSelectPageSpecial.render(g);
+        	break;
+        case QUESTIONROUNDNUMBER:
+            questionPageNumber.render(g);
+            break;
+        case QUESTIONROUNDYESNO:
+            questionPageYN.render(g);
+            break;
+        case RESULTS:
+        	resultsPage.render(g);
+        	break;
+        case ACHIEVEMENTMENU:
         	achMenu.render(g);
+        	break;
+        default:
+        	g.drawString("Page invalid", WIDTH * SCALE / 2, HEIGHT * SCALE / 2);
+
         }
-        else if (GUI.State == STATE.LEVELSELECTSPECIAL) {
-            this.levSelectPageSpecial.render(g);
-        }
+   
         g.dispose();
         bs.show();
     }

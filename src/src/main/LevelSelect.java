@@ -14,13 +14,13 @@ import java.awt.Color;
 
 public class LevelSelect extends QuestionSelectPage
 {
-    public boolean addChosen;
-    public boolean subChosen;
-    public boolean multChosen;
-    public boolean divChosen;
-    int spacing1;
-    int buttonWidth1;
-    int buttonHeight1;
+    public boolean addChosen = false;
+    public boolean subChosen = false;
+    public boolean multChosen = false;
+    public boolean divChosen = false;
+    int spacing1 = 80;
+    int buttonWidth1 = 60;
+    int buttonHeight1 = 60;
     Color[] OperationsButtonColors1a;
     Color[] OperationsButtonColors2a;
     Color[] OperationsButtonBorder_a;
@@ -28,201 +28,72 @@ public class LevelSelect extends QuestionSelectPage
     Color[] OperationsButtonColors2b;
     Color[] OperationsButtonBorder_b;
     Color[] OperationsFontColor;
-    public Rectangle_ AddChoose, SubChoose, MultChoose, DivChoose;
-    private Rectangle_[] qTypes;
-    private boolean[] qChosen;
-    public boolean onlyPositive;
-    public boolean perfectDivisors;
-    public Rectangle onlyPositiveTextBox;
-    public Rectangle perfectDivisorsTextBox;
-    int buttonY2;
-    int buttonWidth2;
-    int buttonHeight;
-    public Rectangle_ easyDif, medDif, hardDif, insaneDif;
+    public Rectangle_ AddChoose = new Rectangle_(120, 120, buttonWidth1, buttonHeight1, "+", null, fnt0, Color.white, new Color[] { Color.gray, MoColors.chartreuse}, new Color[][] {new Color[] { MoColors.orange, MoColors.salmon}, new Color[] {MoColors.dodgerBlue, MoColors.aqua }}, gradientFormat.vertical, 1, 2, true),
+            SubChoose = new Rectangle_(120 + buttonWidth1 + spacing1, 120, buttonWidth1, buttonHeight1, "-", null, fnt0, Color.white, new Color[] {Color.gray, MoColors.chartreuse, MoColors.chartreuse}, new Color[][] {new Color[] { MoColors.orange, MoColors.salmon}, new Color[] {MoColors.dodgerBlue, MoColors.aqua }, new Color[] {MoColors.aqua, MoColors.dodgerBlue}}, gradientFormat.vertical, 1, 2, true),
+            MultChoose = new Rectangle_(120 + buttonWidth1 * 2 + spacing1 * 2, 120, buttonWidth1, buttonHeight1, "x", null, fnt0, Color.white, new Color[] { Color.gray, MoColors.chartreuse}, new Color[][] {new Color[] { MoColors.orange, MoColors.salmon}, new Color[] {MoColors.dodgerBlue, MoColors.aqua }}, gradientFormat.vertical, 1, 2, true),
+            DivChoose = new Rectangle_(120 + buttonWidth1 * 3 + spacing1 * 3, 120, buttonWidth1, buttonHeight1, "/", null, fnt0, Color.white, new Color[] { Color.gray, MoColors.chartreuse}, new Color[][] {new Color[] { MoColors.orange, MoColors.salmon}, new Color[] {MoColors.dodgerBlue, MoColors.aqua }, new Color[] {MoColors.aqua, MoColors.dodgerBlue}}, gradientFormat.vertical, 1, 2, true);
 
-    public Rectangle insaneTextBox;
-    public Rectangle_[] Difficulties;
-    int buttonY3;
-    int challengeLvl = 0;
+    private Rectangle_[] qTypes = new Rectangle_[] { AddChoose, SubChoose, MultChoose, DivChoose };
+    private boolean[] qChosen  = new boolean[] { addChosen, subChosen, multChosen, divChosen };;
+    public boolean onlyPositive = false;
+    public boolean perfectDivisors = false;
+    public Rectangle onlyPositiveTextBox = new Rectangle(SubChoose.x - (int)(buttonWidth1 * 0.25), (int)(SubChoose.y + SubChoose.height * 1.05), (int)(buttonWidth1 * 1.5), buttonHeight1),
+            perfectDivisorsTextBox = new Rectangle(DivChoose.x - (int)(buttonWidth1 * 0.25), (int)(DivChoose.y + DivChoose.height * 1.05), (int)(buttonWidth1 * 1.5), buttonHeight1+30);
+
+    int buttonY2 = (int) (AddChoose.height * 2.5 + AddChoose.y);
+    int buttonWidth2 = 100;
+    int buttonHeight = 50;
     
-    Rectangle_ challenge0;
-    Rectangle_ challenge1;
-    Rectangle_ challenge2;
-    Rectangle_ challenge3;
+    public Rectangle_ easyDif = new Rectangle_(120, buttonY2, buttonWidth2, buttonHeight1, "Easy", null, fnt2, Color.white, easyDifBorder, easyDifBackgroundColors, gradientFormat.vertical, 1, 2, true),
+            medDif = new Rectangle_(120 + buttonWidth2 + spacing1, buttonY2, buttonWidth2, buttonHeight1, "Medium", null, fnt2, Color.white, medDifBorder, medDifBackgroundColors, gradientFormat.vertical, 1, 2, true),
+            hardDif = new Rectangle_(120 + buttonWidth2 * 2 + spacing1 * 2, buttonY2, buttonWidth2, buttonHeight1, "Hard", null, fnt2, Color.white, hardDifBorder, hardDifBackgroundColors, gradientFormat.vertical, 1, 2, true),
+            insaneDif = new Rectangle_(120 + buttonWidth2 * 3 + spacing1 * 3, buttonY2, buttonWidth2, buttonHeight1, "Insane", null, fnt2, Color.white, insaneDifBorder, insaneDifBackgroundColors, gradientFormat.vertical, 1, 2, true);
+
+    public Rectangle insaneTextBox = new Rectangle(insaneDif.x, (int)(insaneDif.y + insaneDif.height * 1.05), buttonWidth2, buttonHeight1);
+    public Rectangle_[] Difficulties = {easyDif, medDif, hardDif, insaneDif };
+
+	int challengeHeaderY1 = (int) (buttonHeight1*2 + easyDif.y);
+	int challengeHeaderY2 = (int) (buttonHeight1*2.4 + easyDif.y);
+	int buttonY3 = challengeHeaderY2 + (int)(buttonHeight1 *.2) + fnt2.getSize();
+    int vanishLvl = 0;
+    int strikeOutLvl = 0;
     
-    public Rectangle_[] challengeButtons;
+    //Hmm i could make these challenges inherit a challenge rectangle that extends rectangle_ but o well
+    Color[] vanishChallengeBorderColors = {MoColors.gray, MoColors.navajoWhite, MoColors.IndianRed, MoColors.mediumVioletRed};
+    Color[][] vanishChallengeBackgroundColors = {{MoColors.gainsboro, MoColors.gray}, {MoColors.papayaWhip, MoColors.silver}, {MoColors.pink, MoColors.silver},{MoColors.thistle, MoColors.silver}};
+    Rectangle_ vanishChallengeHeader = new Rectangle_(120 + buttonWidth1/2, challengeHeaderY2, 150, fntHeader2.getSize());;
+    Rectangle_  vanishChallenge = new Rectangle_(00, buttonY3, buttonWidth1, buttonHeight1, new String[] {"I", "I", "II", "III"}, null, fnt2, MoColors.slateGray, vanishChallengeBorderColors, vanishChallengeBackgroundColors, gradientFormat.vertical, 1, 2, true);
+    Rectangle vanishTextBox; 
+
+    Color[] strikeOutChallengeChallengeBorderColors = {MoColors.gray, MoColors.navajoWhite, MoColors.IndianRed, MoColors.mediumVioletRed};
+    Color[][] strikeOutChallengeBorderColors = {{MoColors.gainsboro, MoColors.gray}, {MoColors.papayaWhip, MoColors.silver}, {MoColors.pink, MoColors.silver},{MoColors.thistle, MoColors.silver}};
+    Rectangle_ strikeOutChallengeHeader = new Rectangle_(vanishChallengeHeader.x + vanishChallengeHeader.width, challengeHeaderY2, 150, fntHeader2.getSize());;
+    Rectangle_  strikeOutChallenge = new Rectangle_(00, buttonY3, buttonWidth1, buttonHeight1, new String[] {"I", "I", "II", "III"}, null, fnt2, MoColors.slateGray, vanishChallengeBorderColors, vanishChallengeBackgroundColors, gradientFormat.vertical, 1, 2, true);
+    Rectangle strikeOutTextBox; 
     
-    LevelSelect(final GUI gui) {
+    LevelSelect(GUI gui) {
         super(gui);
-        addChosen = false;
-        subChosen = false;
-        multChosen = false;
-        divChosen = false;
-        spacing1 = 80;
-        buttonWidth1 = 60;
-        buttonHeight1 = 60;
-        
-        /*
-        OperationsButtonColors1a = new Color[] { MoColors.orange, MoColors.dodgerBlue };
-        OperationsButtonColors2a = new Color[] { MoColors.salmon, MoColors.aqua };
-        OperationsButtonBorder_a = new Color[] { Color.gray, MoColors.chartreuse };
-        OperationsButtonColors1b = new Color[] { MoColors.orange, MoColors.dodgerBlue, MoColors.darkTurquoise };
-        OperationsButtonColors2b = new Color[] { MoColors.salmon, MoColors.aqua, MoColors.aqua };
-        OperationsButtonBorder_b = new Color[] { Color.gray, MoColors.chartreuse };
-        OperationsFontColor = new Color[] { Color.white };
-        */
-        
-        AddChoose = new Rectangle_(120, 120, buttonWidth1, buttonHeight1);
-        AddChoose.setGradientFormat(gradientFormat.vertical);
-        AddChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
-        											 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
-        AddChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse });
-        AddChoose.setBorderThickness(2);
-        AddChoose.setFont(fnt0);
-        AddChoose.setFontColor(Color.white);
-        AddChoose.setText("+");
-        
-        SubChoose = new Rectangle_(120 + buttonWidth1 + spacing1, 120, buttonWidth1, buttonHeight1);
-        SubChoose.setGradientFormat(gradientFormat.vertical);
-        SubChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
-													 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
-        SubChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse, MoColors.chartreuse });
-        SubChoose.setBorderThickness(2);
-        SubChoose.setFont(fnt0);
-        SubChoose.setFontColor(Color.white);
-        SubChoose.setText("-");
-        
-        MultChoose = new Rectangle_(120 + buttonWidth1 * 2 + spacing1 * 2, 120, buttonWidth1, buttonHeight1);
-        MultChoose.setGradientFormat(gradientFormat.vertical);
-        MultChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
-			 										 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
-        MultChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse });
-        MultChoose.setBorderThickness(2);
-        MultChoose.setFont(fnt0);
-        MultChoose.setFontColor(Color.white);
-        MultChoose.setText("x");
-        
-        DivChoose = new Rectangle_(120 + buttonWidth1 * 3 + spacing1 * 3, 120, buttonWidth1, buttonHeight1);
-        DivChoose.setGradientFormat(gradientFormat.vertical);
-        DivChoose.setBackgroundColors(new Color[][] {new Color[] { MoColors.orange, MoColors.salmon},
-			 									 	 new Color[] {MoColors.dodgerBlue, MoColors.aqua }});
-        DivChoose.setBorderColors(new Color[] { Color.gray, MoColors.chartreuse, MoColors.chartreuse });
-        DivChoose.setBorderThickness(2);
-        DivChoose.setFont(fnt0);
-        DivChoose.setFontColor(Color.white);
-        DivChoose.setText("/");
-        
-        
-       //AddChoose = new RectanglePlus(120, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1a, OperationsButtonColors2a, true, RectanglePlus.gradientFormat.vertical, OperationsButtonBorder_a, fnt0, OperationsFontColor, "+");
-       //SubChoose = new RectanglePlus(120 + buttonWidth1 + spacing1, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1b, OperationsButtonColors2b, true, RectanglePlus.gradientFormat.vertical, OperationsButtonBorder_b, fnt0, OperationsFontColor, "-");
-       // MultChoose = new RectanglePlus(120 + buttonWidth1 * 2 + spacing1 * 2, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1a, OperationsButtonColors2a, true, RectanglePlus.gradientFormat.vertical, OperationsButtonBorder_a, fnt0, OperationsFontColor, "x");
-       //DivChoose = new RectanglePlus(120 + buttonWidth1 * 3 + spacing1 * 3, 150, buttonWidth1, buttonHeight1, OperationsButtonColors1b, OperationsButtonColors2b, true, RectanglePlus.gradientFormat.vertical, OperationsButtonBorder_b, fnt0, OperationsFontColor, "\u00f7");
-       //qTypes = new RectanglePlus[] { AddChoose, SubChoose, MultChoose, DivChoose };
-        
-        qTypes = new Rectangle_[] { AddChoose, SubChoose, MultChoose, DivChoose };    
-        qChosen = new boolean[] { addChosen, subChosen, multChosen, divChosen };
-        onlyPositive = false;
-        perfectDivisors = false;
-        onlyPositiveTextBox = new Rectangle(SubChoose.x - (int)(buttonWidth1 * 0.25), (int)(SubChoose.y + SubChoose.height * 1.05), (int)(buttonWidth1 * 1.5), buttonHeight1);
-        perfectDivisorsTextBox = new Rectangle(DivChoose.x - (int)(buttonWidth1 * 0.25), (int)(DivChoose.y + DivChoose.height * 1.05), (int)(buttonWidth1 * 1.5), buttonHeight1+30);
-        
-        buttonY2 = (int) (AddChoose.height * 2.5 + AddChoose.y);
-        buttonWidth2 = 100;
-        buttonHeight = 50;
-        
-        
-        easyDif = new Rectangle_(120, buttonY2, buttonWidth2, buttonHeight1);
-        easyDif.setGradientFormat(gradientFormat.vertical);
-        easyDif.setBackgroundColors(easyDifBackgroundColors);
-        easyDif.setBorderColors(easyDifBorder);
-        easyDif.setFontColor(Color.white);
-        easyDif.setBorderThickness(3);
-        easyDif.setFont(fnt2);
-        easyDif.setText("Easy");
-        
-        medDif = new Rectangle_(120  + buttonWidth2 + spacing1, buttonY2, buttonWidth2, buttonHeight1);
-        medDif.setGradientFormat(gradientFormat.vertical);
-        medDif.setBackgroundColors(medDifBackgroundColors);
-        medDif.setBorderColors(medDifBorder);
-        medDif.setFontColor(Color.white);
-        medDif.setBorderThickness(3);
-        medDif.setFont(fnt2);
-        medDif.setText("Medium");
-        
-        hardDif = new Rectangle_(120  + buttonWidth2 * 2 + spacing1 * 2, buttonY2, buttonWidth2, buttonHeight1);
-        hardDif.setGradientFormat(gradientFormat.vertical);
-        hardDif.setBackgroundColors(hardDifBackgroundColors);
-        hardDif.setBorderColors(hardDifBorder);
-        hardDif.setFontColor(Color.white);
-        hardDif.setBorderThickness(3);
-        hardDif.setFont(fnt2);
-        hardDif.setText("Hard");
-        
-        insaneDif = new Rectangle_(120 + buttonWidth2 * 3 + spacing1 * 3, buttonY2, buttonWidth2, buttonHeight1);
-        insaneDif.setGradientFormat(gradientFormat.vertical);
-        insaneDif.setBackgroundColors(insaneDifBackgroundColors);
-        insaneDif.setBorderColors(insaneDifBorder);
-        insaneDif.setFontColor(Color.white);
-        insaneDif.setBorderThickness(3);
-        insaneDif.setFont(fnt2);
-        insaneDif.setText("Insane");
-        
-         
-        //easyDif = new RectanglePlus(120, buttonY2, buttonWidth2, buttonHeight1, easyDifColor1, easyDifColor2, true, RectanglePlus.gradientFormat.horizontal, easyDifBorder, fnt2, easyDifFontColor, "Easy");
-        //medDif = new RectanglePlus(120 + buttonWidth2 + spacing1, buttonY2, buttonWidth2, buttonHeight1, medDifColor1, medDifColor2, true, RectanglePlus.gradientFormat.horizontal, medDifBorder, fnt2, medDifFontColor, "Medium");
-        //hardDif = new RectanglePlus(120 + buttonWidth2 * 2 + spacing1 * 2, buttonY2, buttonWidth2, buttonHeight1, hardDifColor1, hardDifColor2, true, RectanglePlus.gradientFormat.horizontal, hardDifBorder, fnt2, hardDifFontColor, "Hard");
-        //insaneDif = new RectanglePlus(120 + buttonWidth2 * 3 + spacing1 * 3, buttonY2, buttonWidth2, buttonHeight1, insaneDifColor1, insaneDifColor2, true, RectanglePlus.gradientFormat.horizontal, insaneDifBorder, fnt2, insaneDifFontColor, "Insane");
-        insaneTextBox = new Rectangle(insaneDif.x, (int)(insaneDif.y + insaneDif.height * 1.05), buttonWidth2, buttonHeight1);
-        Difficulties = new Rectangle_[] { easyDif, medDif, hardDif, insaneDif };
-        
-        
-        buttonY3 = (int) (AddChoose.height*2.5 + easyDif.y);
-        /*
-        challenge0 = new Rectangle_(120, buttonY3, buttonWidth1, buttonHeight1);
-        challenge0.setGradientFormat(gradientFormat.vertical);
-        challenge0.setBackgroundColors(new Color[] {MoColors.lightGray, MoColors.honeydew});
-        challenge0.setBackgroundColors2(new Color[] {MoColors.gainsboro, MoColors.silver});
-        challenge0.setBorderColors(new Color[] {MoColors.gray, MoColors.springGreen});
-        challenge0.setFontColor(MoColors.darkSlateGray);
-        challenge0.setBorderThickness(2);
-        challenge0.setFont(fnt2);
-        challenge0.setText("OFF");
-        */
-        
-        challenge1 = new Rectangle_(120, buttonY3, buttonWidth1, buttonHeight1);
-        challenge1.setGradientFormat(gradientFormat.vertical);
-        challenge1.setBackgroundColors(new Color[][]{new Color[] {MoColors.silver, MoColors.gainsboro}, new Color[] {MoColors.papayaWhip, MoColors.silver}}); 
-        challenge1.setBorderColors(new Color[] {MoColors.gray, MoColors.navajoWhite});
-        challenge1.setFontColor(MoColors.darkSlateGray);
-        challenge1.setBorderThickness(2);
-        challenge1.setFont(fnt2);
-        challenge1.setText("I");
+    
+        vanishChallengeHeader.setFont(fntHeader2);
+        vanishChallengeHeader.setText("Vanish");
+        vanishChallengeHeader.setWidthMatchText();
+        vanishChallengeHeader.setTextPosition(textPosition.left);
+        vanishChallengeHeader.setFontColor(Color.white);
+        vanishChallenge.setXCenteredTo(vanishChallengeHeader);
 
+        strikeOutChallengeHeader.setFont(fntHeader2);
+        strikeOutChallengeHeader.setText("Strike Out");
+        strikeOutChallengeHeader.setWidthMatchText();
+        strikeOutChallengeHeader.setTextPosition(textPosition.left);
+        strikeOutChallengeHeader.setFontColor(Color.white);
+        strikeOutChallenge.setXCenteredTo(strikeOutChallengeHeader);
         
-        challenge2 = new Rectangle_(120 + buttonWidth1 + spacing1, buttonY3, buttonWidth1, buttonHeight1);
-        challenge2.setGradientFormat(gradientFormat.vertical);
-        challenge2.setBackgroundColors(new Color[][]{new Color[] {MoColors.gainsboro, MoColors.gray}, new Color[] {MoColors.pink, MoColors.silver}}); 
-        challenge2.setBorderColors(new Color[] {MoColors.gray, MoColors.IndianRed});
-        challenge2.setFontColor(MoColors.darkSlateGray);
-        challenge2.setBorderThickness(2);
-        challenge2.setFont(fnt2);
-        challenge2.setText("II");
+        strikeOutTextBox = new Rectangle(strikeOutChallenge.x, (int) (strikeOutChallenge.y + strikeOutChallenge.height * 1.2), buttonWidth1, buttonHeight1);    
+        vanishTextBox = new Rectangle(vanishChallenge.x - 20, (int) (vanishChallenge.y + vanishChallenge.height * 1.2), buttonWidth1 + 40, buttonHeight1);    
 
-        
-        challenge3 = new Rectangle_(120 + buttonWidth1*2 + spacing1*2, buttonY3, buttonWidth1, buttonHeight1);
-        challenge3.setGradientFormat(gradientFormat.vertical);
-        challenge3.setBackgroundColors(new Color[][]{new Color[] {MoColors.gray, MoColors.darkGray}, new Color[] {MoColors.thistle, MoColors.silver}}); 
-        challenge3.setBorderColors(new Color[] {MoColors.gray, MoColors.mediumVioletRed});
-        challenge3.setFontColor(MoColors.darkSlateGray);
-        challenge3.setBorderThickness(2);
-        challenge3.setFont(fnt2);
-        challenge3.setText("III");
-
-        challengeButtons = new Rectangle_[]{challenge1, challenge2, challenge3};
     }
     
-    @Override
-    public void render(final Graphics g) {
+    public void render(Graphics g) {
         super.render(g);
         final Graphics2D g2d = (Graphics2D)g;
         g.setColor(Color.gray);
@@ -261,9 +132,19 @@ public class LevelSelect extends QuestionSelectPage
         
         g.setColor(Color.white);
         g.setFont(fntHeader);
-        g.drawString("Vanishing Challenge", challenge1.x, challenge1.y - challenge1.height / 2);
-        for(Rectangle_ i: challengeButtons)
-        	i.draw(g2d);
+        g.drawString("Challenge Modes", easyDif.x, challengeHeaderY1);
+        vanishChallengeHeader.draw(g2d);
+        vanishChallenge.draw(g2d);
+        strikeOutChallengeHeader.draw(g2d);
+        strikeOutChallenge.draw(g2d);
+        
+        g.setFont(fntNormal);
+    	g.setColor(Color.white);
+        if(vanishLvl > 0) 
+        	stringGraphics.drawStringFlow("You will have " + getVanishTime()/1000 + " seconds before the question disappears.", vanishTextBox, textPosition.top, g2d);
+        if(strikeOutLvl > 0) 
+        	stringGraphics.drawStringFlow("You will have " + (4-strikeOutLvl) + ((strikeOutLvl == 3) ? " life." : " lives. "), strikeOutTextBox, textPosition.top, g2d);
+        
     }
     
     public void renderHelp(final Graphics g) {
@@ -277,11 +158,10 @@ public class LevelSelect extends QuestionSelectPage
         g.drawString("Medium: 3rd Grade - 8th Grade", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize() * 3);
         g.drawString("Hard: 6th Grade+", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize() * 4);
         g.drawString("Insane: ???", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize() * 5);
-        g.drawString("Number Text Field:", numQuestionsInput.getX() + numQuestionsInput.getWidth() + 5, numQuestionsInput.getY() + fntNormal.getSize());
-        g.drawString("Click to activate typing.", numQuestionsInput.getX() + numQuestionsInput.getWidth() + 5, numQuestionsInput.getY() + fntNormal.getSize() * 2);
-        g.drawString("Choose an operation, difficulty,", GenerateSet.x - GenerateSet.width * 2, GenerateSet.y + fntNormal.getSize());
-        g.drawString("and problem set length to begin.", GenerateSet.x - GenerateSet.width * 2, GenerateSet.y + fntNormal.getSize() * 2);
-        g.drawString("(Hot key: \"Enter\")", GenerateSet.x - GenerateSet.width * 2, GenerateSet.y + fntNormal.getSize() * 3);
+        g.drawString("Click to activate typing.", (int) (numQuestionsInput.getX() - numQuestionsInput.getWidth()/1.4), numQuestionsInput.getY() + fntNormal.getSize() * 2);
+        g.drawString("Choose an operation, difficulty,", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize());
+        g.drawString("and problem set length to begin.", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize() * 2);
+        g.drawString("(Hot key: \"Enter\")", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize() * 3);
     }
     
     public void tick() {
@@ -339,38 +219,41 @@ public class LevelSelect extends QuestionSelectPage
         }
     }
     
-    public void setChallengeLvl(int dif) {
-    	//if current one is already selected, and you want to turn challenge off
-    	if(dif == challengeLvl) {
-    		challengeButtons[dif-1].setColors(0);
-    		challengeLvl = 0;
-    	}else {
-    		challengeLvl = dif;
-			for(int i = 0; i < challengeButtons.length; i++) {
-				if(dif-1 == i)
-					challengeButtons[i].setColors(1);
-				else challengeButtons[i].setColors(0);
-			}
-    	}
+    public void cycleVanishLevel() {    	
+		vanishLvl++;
+		
+		if(vanishLvl > 3)
+			vanishLvl = 0;
+		vanishChallenge.setColors(vanishLvl);    	
 	}
     
-    public int getChallengeLvl() {return challengeLvl;}
-    public int getChallengeLvlTime() {
-    	if(challengeLvl == 1) 
+    public void cycleStrikeOutLevel() {
+		strikeOutLvl++;
+		
+		if(strikeOutLvl > 3)
+			strikeOutLvl = 0;
+		strikeOutChallenge.setColors(strikeOutLvl);
+    }
+    
+    public int getVanishLvl() {return vanishLvl;}
+    public int getStrikeOutLvl() {return strikeOutLvl;}
+    
+    public int getVanishTime() {
+    	if(vanishLvl == 1) 
     		return 13000;
-    	else if (challengeLvl == 2)
+    	else if (vanishLvl == 2)
     		return 8500;
-    	else if (challengeLvl == 3)
+    	else if (vanishLvl == 3)
     		return 5000;
     	else 
     		return -1;
     }
-    public int getChallengeDecayStartTime() {//marks the start of the decay
-    	if(challengeLvl == 1) 
+    public int getVanishDecayStartTime() {//marks the start of the decay
+    	if(vanishLvl == 1) 
     		return 7000;
-    	else if (challengeLvl == 2)
+    	else if (vanishLvl == 2)
     		return 5500;
-    	else if (challengeLvl == 3)
+    	else if (vanishLvl == 3)
     		return 3500;
     	else 
     		return -1;

@@ -195,7 +195,7 @@ public class QuestionPageYesNo extends QuestionPageNumber
 		gui.getTitlePage().setSpecialFinished = true;
 		gui.getTitlePage().setFinished = true;
 		gui.getResultsPage().initializeYN();
-		System.out.println("Switching from qPageYN to results");
+		//System.out.println("Switching from qPageYN to results");
 		gui.State = gui.State.RESULTS;
 	}
 
