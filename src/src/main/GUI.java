@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import src.main.Achievements.AchievementCheck;
 import src.main.Achievements.AchievementMenu;
+import src.main.Notifications.NotificationManager;
 
 import java.awt.Dimension;
 import java.io.File;
@@ -41,14 +42,15 @@ public class GUI extends Canvas implements Runnable, Serializable
     private LevelSelect levSelectPage;
     private LevelSelectSpecial levSelectPageSpecial;
     private ResultsPage resultsPage;
-    static UserData uData = new UserData();;
+    static UserData uData;
     private dataUpdater dataUpdater;
     private AchievementMenu achMenu;
     private AchievementCheck achCheck;
+    private NotificationManager notificationManager;
     private KeyInput key;
     private MouseInput mouse;
     private Random r;
-    public static STATE State = STATE.LEVELSELECT;
+    public static STATE State = STATE.TITLE;
     
 
     public GUI() {
@@ -67,9 +69,11 @@ public class GUI extends Canvas implements Runnable, Serializable
         this.achCheck = new AchievementCheck(this);
         this.achMenu = new AchievementMenu(this);
         this.resultsPage = new ResultsPage(this);
-
+        notificationManager = new NotificationManager(this);
+        
+        notificationManager.addNotification("Welcome!");
+      
         dataUpdater = new dataUpdater(uData);
-        this.dataUpdater = new dataUpdater(GUI.uData);
         this.questionPageNumber = new QuestionPageNumber(this);
         this.questionPageYN = new QuestionPageYesNo(this);
         
@@ -77,8 +81,8 @@ public class GUI extends Canvas implements Runnable, Serializable
         this.addMouseListener(this.mouse = new MouseInput(this));
         this.addMouseMotionListener(mouse);
         
-        
-        dataUpdater.resetData();
+        dataUpdater.loadData(this);
+        //dataUpdater.resetData();
        
     }
     
@@ -125,9 +129,9 @@ public class GUI extends Canvas implements Runnable, Serializable
                 --delta;
             }
             if (System.currentTimeMillis() - timer > 1000L) {
-                timer += 1000L;//for the question set timer
+                timer += 1000L;
                 updates = 0;
-                frames = 0;
+                frames = 0;       
             }
         }
         this.stop();
@@ -142,8 +146,11 @@ public class GUI extends Canvas implements Runnable, Serializable
                 this.questionPageNumber.tick();
             }
         }
+        
+        notificationManager.tick();
+        
         try {
-            writeObjectToDisk(GUI.uData, "userData.ser");
+            writeObjectToDisk(uData, "userData.ser");
         }
         catch (IOException ioe) {
             ioe.printStackTrace();
@@ -160,6 +167,7 @@ public class GUI extends Canvas implements Runnable, Serializable
   
         g.clearRect(0, 0, 1200, 666);
 
+        
         switch(State) {
         case TITLE:
         	titlePage.render(g);
@@ -187,24 +195,38 @@ public class GUI extends Canvas implements Runnable, Serializable
 
         }
    
+        notificationManager.render(g);
+        
         g.dispose();
         bs.show();
     }
     
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
+    	
+    	File file;
+    	 
         System.out.println("It's a great day to debug");
         final GUI gui = new GUI();
+        
         try {
-            GUI.uData = (UserData)objectLoader("userData.ser");
+        	System.out.println("Loading data from file...");
+            uData = (UserData)objectLoader("userData.ser");
         }
         catch (IOException ioe) {
-            ioe.printStackTrace();
-            final File file = new File("userData.ser");
+        	System.out.println("No file found, creating a new save file");
+            file = new File("userData.ser");
+            file.createNewFile();
+            try {
+            uData = new UserData();
+            } catch (Exception e){
+            	e.printStackTrace();
+            	System.out.println("The new file creation failed oof");
+        	}
         }
         catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
+            System.out.println("The new file creation failed oof");
         }
-        
+
 
         gui.setPreferredSize(new Dimension(1200, 666));
         gui.setMaximumSize(new Dimension(1200, 666));
@@ -274,7 +296,7 @@ public class GUI extends Canvas implements Runnable, Serializable
     }
     
     public UserData getUdata() {
-        return GUI.uData;
+        return uData;
     }
     
     
@@ -284,6 +306,10 @@ public class GUI extends Canvas implements Runnable, Serializable
     
     public AchievementCheck getAchCheck() {
     	return achCheck;
+    }
+    
+    public NotificationManager getNotificationManager() {
+    	return notificationManager;
     }
     
     public enum STATE

@@ -19,12 +19,12 @@ public class Question{
 	//Columnns go (diff1 low, diff1 high, diff2 low, diff2 high, diff low, diff3 high, diff4 low, diff4 high)
 	int[][][] numBounds = {
 						//num1
-						{{1, 10, 10, 100, 10, 1000, 10, 10000}, //addition bounds
+						{{1, 10, 10, 50, 10, 1000, 10, 10000}, //addition bounds
 						{1, 20, 10, 200, 100, 5000, 1000, 10000}, //subtraction bounds
 						{1, 10, 1, 10, 10, 50, 10, 100}, //multiplication bounds
 						{1, 10, 1, 40, 1, 100, 1, 1000}}, //division bounds
 						//num2
-						{{1, 10, 10, 1000, 10, 10000, 10, 10000}, //addition bounds
+						{{1, 10, 10, 100, 10, 10000, 10, 10000}, //addition bounds
 						{1, 20, 10, 200, 100, 5000, 1000, 10000}, //subtraction bounds
 						{1, 10, 10, 50, 10, 50, 10, 100}, //multiplication bounds
 						{1, 10, 2, 10, 2, 20, 2, 100}} //division bounds

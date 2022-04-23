@@ -25,6 +25,7 @@ public class QuestionPageNumber {
 	public int numQuestions = 0;
 	public int numCorrect = 0;
 	public int currentQuestion = 0;
+	public int quesionsCompleted = 0;
 	protected int difficulty; //from 1 as easy to 4 as insane
 	public int vanishLvl = 0;
 	public int strikeOutLvl = 0;
@@ -229,11 +230,11 @@ public class QuestionPageNumber {
 		g.setColor(Color.white);
 		if(!endlessQuestions) {
 			g.drawString("Q " + currentQuestion + "/" + numQuestions, HomePage.x - 200, (int) (HomePage.y + HomePage.height));
-			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion - 1), HomePage.x - 200, (int) (HomePage.y + HomePage.height + fntTimer.getSize() + textSpacing));
+			g.drawString("Correct: " + numCorrect + "/" + (quesionsCompleted), HomePage.x - 200, (int) (HomePage.y + HomePage.height + fntTimer.getSize() + textSpacing));
 		}
 		else{
 			g.drawString("Q " + currentQuestion + "/ --" , HomePage.x - 200, (int) (HomePage.y + HomePage.height));
-			g.drawString("Correct: " + numCorrect + "/" + (currentQuestion-1), HomePage.x - 200, (int) (HomePage.y + HomePage.height  + fntTimer.getSize() + textSpacing));
+			g.drawString("Correct: " + numCorrect + "/" + (quesionsCompleted), HomePage.x - 200, (int) (HomePage.y + HomePage.height  + fntTimer.getSize() + textSpacing));
 
 		}
 		timerTextLength = g.getFontMetrics().stringWidth(timerText);
@@ -307,16 +308,23 @@ public class QuestionPageNumber {
 	}
 	//will also update user analytics and achievement pages
 	public void checkAnswer() {
-		if(inputAnswer == question.getAnswer())
+		if(inputAnswer == question.getAnswer()) {
+			quesionsCompleted++;
 			correct();
-		else if ((inputAnswer > 0) && (inputAnswer == -question.getAnswer()))//if u put a positive answer instead of the negative one
+		}
+		else if ((inputAnswer > 0) && (inputAnswer == -question.getAnswer())){//if u put a positive answer instead of the negative one
+			quesionsCompleted++;
 			reversed();
+		}
 		else if(inputAnswer == 0 && question.getAnswer() != 0 && warned == false)
 			warn();
-		else
+		else {
+			quesionsCompleted++;
 			incorrect();
+		}
 		
 		achCheck.updateAchievements();
+
 	}
 
 	public void correct() {
@@ -486,6 +494,7 @@ public class QuestionPageNumber {
 		questionTypes.clear();
 		currentQuestion = 0;
 		numCorrect = 0;
+		quesionsCompleted = 0;
 
 		if(gui.getLevelSelectSpecial() == qPageSelect){
 			gui.getTitlePage().setSpecialFinished = false;
@@ -515,8 +524,8 @@ public class QuestionPageNumber {
 		long[][] timeAverageSumEmpty = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
 		int[][] timeAverageCountEmpty = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
 
-		gui.uData.tempTimeAverageCount = timeAverageCountEmpty;
-		gui.uData.tempTimeAverageSum = timeAverageSumEmpty;
+		GUI.uData.tempTimeAverageCount = timeAverageCountEmpty;
+		GUI.uData.tempTimeAverageSum = timeAverageSumEmpty;
 
 		//refTimeAverageSum = gui.uData.timeAverageSum;
 		//refTimeAverageCount = gui.uData.timeAverageCount;

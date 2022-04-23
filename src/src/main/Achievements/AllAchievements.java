@@ -18,8 +18,8 @@ public class AllAchievements {
 	GUI gui;
 	UserData uData;
 	
-	static int numAchTotal = 0;
-	static int numAchVanilla = 0;
+	public static int numAchTotal = 0;
+	public static int numAchVanilla = 0;
 	
 	Font iconFont = new Font("Sitka Text", Font.PLAIN, 28);
 	
@@ -99,11 +99,11 @@ public class AllAchievements {
 		            String expl = "Complete" + operations[operation] + "set at" + difficulties[type] + "difficulty with at least" + lengthText + "problems and a score of at least" + scoreText;
 		            stageExpl.add(expl);
             	}
-            	
-                tempAchievementList.add(new Achievement(vanillaAchievementNameList[type][operation], 
+            	Achievement ach = new Achievement(vanillaAchievementNameList[type][operation], 
                 			stageExpl, 
                 			numStages, 
-                			vanillaAchBoxes[type][operation]));
+                			vanillaAchBoxes[type][operation]);
+                tempAchievementList.add(ach);
             }
             vanillaAchievements.add(tempAchievementList);
         }

@@ -58,6 +58,8 @@ public class Achievement {
     
     public void setStage(int stage) {
     	this.stage = stage;
+		box.setText(romanNumerals[stage]);
+		box.setColors(stage);
     }
     
     public boolean stageUp() {
@@ -73,10 +75,20 @@ public class Achievement {
     	}
     }
     
-    public String getName() {
-    	return name;
-    }
-    
+    public String getFullName() {
+     	if(numStages > 1) {//multistage
+    		if (stage < numStages) 
+    			return name + " " + romanNumerals[stage];
+    		else  //stage = numStages
+    			return "** " + name + this.romanNumerals[stage] + " **";
+    	}
+    	else {//single stage
+    		if(stage == 0)
+    			return name;
+    		else
+    			return "**" + name + "**";
+    	}   
+ 	}
     public String getDisplayText() {
     	if(numStages > 1) {//multistage
     		if (stage < numStages) 

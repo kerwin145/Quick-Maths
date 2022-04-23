@@ -44,6 +44,9 @@ public class KeyInput extends KeyAdapter{
 				}
 			}
 			
+			if(e.getKeyCode() == KeyEvent.VK_E)
+				levSelectPage.endlessQuestions = !levSelectPage.endlessQuestions;
+			
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				gui.State = gui.State.TITLE;
 		}
@@ -60,7 +63,12 @@ public class KeyInput extends KeyAdapter{
 					qPageYN.initializeRound();
 					gui.State = gui.State.QUESTIONROUNDYESNO;
 				}
+				
+				
 			}
+			
+			if(e.getKeyCode() == KeyEvent.VK_E)
+				levSelectPageSpecial.endlessQuestions = !levSelectPageSpecial.endlessQuestions;
 			
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
 				gui.State = gui.State.TITLE;
@@ -90,6 +98,8 @@ public class KeyInput extends KeyAdapter{
 				}
 					gui.State = gui.State.TITLE;
 			}
+			
+		
 			
 
 		}	

@@ -15,9 +15,8 @@ public class AchievementCheck {
 	
 
 	public double[] vanillaSetScoreReq = {0.7, 0.75, .8, .85, .9};
-	//public int[] vanillaSetLengthReq = {1, 2, 3};
-	//public int[] vanillaSetLengthReq = {10, 15, 20, 25, 30};
-	public int[] vanillaSetLengthReq = {1,2,3,4,5};
+	public int[] vanillaSetLengthReq = {10, 15, 20, 25, 30};
+	//public int[] vanillaSetLengthReq = {1,2,3,4,5};
 	
 	
     
@@ -53,14 +52,17 @@ public class AchievementCheck {
 							&& tempAch.stage < tempAch.numStages 
 							&& qPage.getAccuracy() >= vanillaSetScoreReq[tempAch.getStage()] 
 							//note current question-1 gives the number of completed questions
-							&& qPage.currentQuestion >= vanillaSetLengthReq[tempAch.getStage()]) {
+							&& qPage.quesionsCompleted >= vanillaSetLengthReq[tempAch.getStage()]) {
 
 						
 						//update vanilla achievement list and data
 						if(tempAch.stageUp()) {
+							gui.getNotificationManager().addNotification("Vanilla Achievement: " + AllAchievements.vanillaAchievements.get(type).get(operation).getFullName() + " completed!");
 							AllAchievements.numAchVanilla++;
 							AllAchievements.numAchTotal++;
 							uData.vanillaAchLevel[type][operation] = tempAch.stage;
+							uData.numAchTotal++;
+							uData.numAchVanilla++;
 						}
 						
 

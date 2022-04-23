@@ -150,7 +150,6 @@ public class LevelSelect extends QuestionSelectPage
     public void renderHelp(final Graphics g) {
         g.setFont(fntNormal);
         g.setColor(Color.white);
-        g.drawString("Click to Select an operation", DivChoose.x + DivChoose.width + 5, AddChoose.y + fntNormal.getSize());
         g.drawString("You can also select more than one", DivChoose.x + DivChoose.width + 5, AddChoose.y + fntNormal.getSize() * 2);
         g.drawString("operation for your problem set. ", DivChoose.x + DivChoose.width + 5, AddChoose.y + fntNormal.getSize() * 3);
         g.drawString("Approximate grade level equivalencies", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize());
@@ -158,10 +157,11 @@ public class LevelSelect extends QuestionSelectPage
         g.drawString("Medium: 3rd Grade - 8th Grade", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize() * 3);
         g.drawString("Hard: 6th Grade+", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize() * 4);
         g.drawString("Insane: ???", (int)(insaneDif.x + insaneDif.width * 1.5), insaneDif.y + fntNormal.getSize() * 5);
-        g.drawString("Click to activate typing.", (int) (numQuestionsInput.getX() - numQuestionsInput.getWidth()/1.4), numQuestionsInput.getY() + fntNormal.getSize() * 2);
-        g.drawString("Choose an operation, difficulty,", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize());
-        g.drawString("and problem set length to begin.", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize() * 2);
-        g.drawString("(Hot key: \"Enter\")", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize() * 3);
+        g.drawString("Choose an operation, difficulty,", (int) (GenerateSet.x - GenerateSet.width * 2.3), numQuestionsInput.getY() + fntNormal.getSize());
+        g.drawString("and problem set length.", (int) (GenerateSet.x - GenerateSet.width * 2.3), numQuestionsInput.getY() + fntNormal.getSize() * 2);
+		g.drawString("or endless (Hot Key: \"e\") to begin.", (int) (GenerateSet.x - GenerateSet.width * 2.3), numQuestionsInput.getY() + fntNormal.getSize() * 3);
+		g.drawString("(Hot key: \"Enter\")", (int) (GenerateSet.x - GenerateSet.width * 2.3), GenerateSet.y + fntNormal.getSize() * 3);
+
     }
     
     public void tick() {

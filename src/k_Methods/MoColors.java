@@ -317,15 +317,7 @@ public class MoColors
         MoColors.whiteNames = new ArrayList<String>();
         MoColors.allColors = new ArrayList<ArrayList<Color>>();
         MoColors.allNames = new ArrayList<ArrayList<String>>();
-    }
-    
-    public static void main(final String[] args) {
-        final JFrame f = new JFrame();
-        f.setTitle("Drawing Graphics in a Frame by Adding a Component");
-        f.setBounds(80, 30, 1640, 960);
-        f.add(new MyComponent());
-        f.setVisible(true);
-        f.setDefaultCloseOperation(3);
+        
         MoColors.redColors.add(MoColors.maroon);
         MoColors.redColors.add(MoColors.darkRed);
         MoColors.redColors.add(MoColors.fireBrick);
@@ -612,6 +604,16 @@ public class MoColors
         MoColors.allNames.add(MoColors.blueNames);
         MoColors.allNames.add(MoColors.purpleNames);
         MoColors.allNames.add(MoColors.whiteNames);
+    }
+    
+    public static void main(final String[] args) {
+        final JFrame f = new JFrame();
+        f.setTitle("Drawing Graphics in a Frame by Adding a Component");
+        f.setBounds(80, 30, 1640, 960);
+        f.add(new MyComponent());
+        f.setVisible(true);
+        f.setDefaultCloseOperation(3);
+       
     }
     
     static class MyComponent extends Component

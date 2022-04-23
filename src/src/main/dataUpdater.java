@@ -3,6 +3,8 @@ package src.main;
 // Decompiled by Procyon v0.5.36
 // 
 
+import src.main.Achievements.AllAchievements;
+
 public class dataUpdater
 {
     UserData uData;
@@ -39,6 +41,9 @@ public class dataUpdater
         uData.timeAverageSum = timeAverageSum;
         uData.timeAverageCount = timeAverageCount;
         uData.recordTimeIndividual = recordTimeIndividual;
+        
+        uData.numAchTotal = 0;
+        uData.numAchVanilla = 0;
     }
     
     public void updateTime( int type,  int difficulty,  long timeMillis) {
@@ -66,5 +71,18 @@ public class dataUpdater
                 array2[n2] -= uData.tempTimeAverageCount[i][j];
             }
         }
+    }
+    
+    public void loadData(GUI gui) {
+    	if(gui.getUdata() == null) return;
+    	
+    	for(int i = 0; i < AllAchievements.vanillaAchievements.size(); i++) {
+    		for(int j = 0; j < AllAchievements.vanillaAchievements.get(i).size(); j++) {
+            	AllAchievements.vanillaAchievements.get(i).get(j).setStage(gui.getUdata().vanillaAchLevel[i][j]);
+            	//Have this as a field in uData and read from it directly
+    		}
+    	}
+    	AllAchievements.numAchTotal = uData.numAchTotal; 
+    	AllAchievements.numAchVanilla = uData.numAchVanilla; 
     }
 }
